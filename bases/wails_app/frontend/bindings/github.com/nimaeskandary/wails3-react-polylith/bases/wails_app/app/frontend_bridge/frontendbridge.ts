@@ -6,5 +6,5 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
 export function Greet(name: string): $CancellablePromise<string> {
-    return $Call.ByID(3074097444, name);
+    return $Call.ByID(4214531870, name);
 }

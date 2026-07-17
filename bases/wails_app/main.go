@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"embed"
 
 	"log"
 	"time"
 
-	"github.com/nimaeskandary/wails3-react-polylith/components/greet/go"
+	"github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app"
+	"github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app/frontend_bridge"
+	"github.com/nimaeskandary/wails3-react-polylith/components/greet/go/types"
+	"github.com/nimaeskandary/wails3-react-polylith/components/util/go"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -29,6 +33,21 @@ func init() {
 // and starts a goroutine that emits a time-based event every second. It subsequently runs the application and
 // logs any error that might occur.
 func main() {
+	ctx := context.Background()
+
+	var greetService greet_types.GreetService
+	fxApp := util.CreateFxAppAndExtract(app.ModuleList(), &greetService)
+
+	log.Println("starting dependency injection system...")
+	if err := fxApp.Start(ctx); err != nil {
+		log.Fatalf("dependency injection system failed to start: %v", err)
+	}
+	defer func() {
+		log.Println("stopping dependency injection system...")
+		if err := fxApp.Stop(ctx); err != nil {
+			log.Printf("dependency injection system failed to stop gracefully: %v", err)
+		}
+	}()
 
 	// Create a new Wails application by providing the necessary options.
 	// Variables 'Name' and 'Description' are for application metadata.
@@ -39,7 +58,7 @@ func main() {
 		Name:        "test-react",
 		Description: "A demo of using raw HTML & CSS",
 		Services: []application.Service{
-			application.NewService(&greet.GreetService{}),
+			application.NewService(frontend_bridge.NewFrontendBridge(greetService)),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

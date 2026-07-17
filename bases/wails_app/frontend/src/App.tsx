@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Events, WML } from '@wailsio/runtime'
-import { GreetService } from '@/wails-services'
+import { FrontendBridge } from '@/wails-services'
 import GreetView from './GreetView'
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
   const doGreet = () => {
     const n = name || 'anonymous'
     setTitleName(n)
-    GreetService.Greet(n).then(showToast).catch(console.error)
+    FrontendBridge.Greet(n).then(showToast).catch(console.error)
   }
 
   useEffect(() => {
