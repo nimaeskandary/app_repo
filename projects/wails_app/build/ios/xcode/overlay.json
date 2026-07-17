@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "../../bases/wails_app/main_ios.gen.go": "build/ios/xcode/gen/main_ios.gen.go"
+  }
+}

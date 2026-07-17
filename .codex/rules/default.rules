@@ -1,0 +1,35 @@
+prefix_rule(
+    pattern = ["aws"],
+    decision = "forbidden",
+    justification = "AWS commands are forbidden",
+    match = [
+        "aws --help"
+    ]
+)
+
+prefix_rule(
+    pattern = ["gcp"],
+    decision = "forbidden",
+    justification = "GCP commands are forbidden",
+    match = [
+        "gcp --help"
+    ]
+)
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "forbidden",
+    justification = "git push commands are forbidden",
+    match = [
+        "git push"
+    ]
+)
+
+prefix_rule(
+    pattern = ["docker", "exec"],
+    decision = "prompt",
+    justification = "Manual review required to run command in docker",
+    match = [
+        "docker exec"
+    ]
+)

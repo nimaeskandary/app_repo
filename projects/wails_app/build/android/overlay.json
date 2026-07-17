@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "../../bases/wails_app/main_android.gen.go": "build/android/gen/main_android.gen.go"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "wails3-react-polylith",
+  "private": true,
+  "workspaces": [
+    "bases/*/frontend",
+    "components/*"
+  ],
+  "scripts": {
+    "wails-app:dev": "npm --workspace @wails3-react-polylith/wails-app-frontend run dev",
+    "wails-app:build": "npm --workspace @wails3-react-polylith/wails-app-frontend run build",
+    "wails-app:build:dev": "npm --workspace @wails3-react-polylith/wails-app-frontend run build:dev",
+    "wails-app:preview": "npm --workspace @wails3-react-polylith/wails-app-frontend run preview"
+  }
+}
