@@ -56,6 +56,12 @@ npm run wails-app:build
 npm run wails-app:preview
 ```
 
+## Storybook
+
+Storybook is used to preview frontend components. See `./storybook`
+
+To launch the local storybook server: `npm run storybook`
+
 ## TypeScript imports
 
 The frontend uses TypeScript 7-compatible path aliases without `baseUrl`.

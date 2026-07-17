@@ -1,0 +1,39 @@
+import type { StorybookConfig } from '@storybook/react-vite'
+import react from '@vitejs/plugin-react'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const config: StorybookConfig = {
+  stories: ['./**/*.stories.@(ts|tsx)'],
+  staticDirs: ['../bases/wails_app/frontend/public'],
+  framework: {
+    name: '@storybook/react-vite',
+    options: {},
+  },
+  viteFinal(config) {
+    return {
+      ...config,
+      plugins: [...(config.plugins ?? []), react()],
+      optimizeDeps: {
+        ...config.optimizeDeps,
+        include: [
+          ...(config.optimizeDeps?.include ?? []),
+          'react',
+          'react-dom',
+          'react/jsx-runtime',
+        ],
+      },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          '@components': path.resolve(__dirname, '../components'),
+        },
+      },
+    }
+  },
+}
+
+export default config

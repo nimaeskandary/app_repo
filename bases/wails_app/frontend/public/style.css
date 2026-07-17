@@ -47,7 +47,7 @@ body {
 }
 
 /* Framework mount nodes (#app / #root) shouldn't affect layout, so the
-   body flex centering applies directly to .container. */
+   app shell flex centering applies directly to .container. */
 #app, #root { display: contents; }
 
 /* Interactive elements: clickable (not draggable) and, for the input, selectable. */
@@ -75,7 +75,7 @@ body {
         url("/bg-desktop.jpg") center / cover no-repeat;
 }
 
-body {
+.app-shell {
     min-height: 100vh;
     min-height: 100dvh;
     display: flex;
