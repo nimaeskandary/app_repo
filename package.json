@@ -13,5 +13,12 @@
     "wails-app:preview": "npm --workspace @wails3-react-polylith/wails-app-frontend run preview",
     "storybook": "npm --workspace @wails3-react-polylith/storybook run storybook",
     "build-storybook": "npm --workspace @wails3-react-polylith/storybook run build"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.0.5"
   }
 }
