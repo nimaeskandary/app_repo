@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useArgs } from 'storybook/preview-api'
-import GreetView from '@components/greet/frontend/GreetView'
+import GreetView from '../../bases/wails_app/frontend/src/GreetView'
 
 const meta = {
   title: 'Greet/GreetView',

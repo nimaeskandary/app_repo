@@ -3,7 +3,6 @@
   "private": true,
   "workspaces": [
     "bases/*/frontend",
-    "components/*",
     "storybook"
   ],
   "scripts": {

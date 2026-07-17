@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Events, WML } from '@wailsio/runtime'
-import GreetView from '@components/greet/frontend/GreetView'
 import { GreetService } from '@/wails-services'
+import GreetView from './GreetView'
 
 function App() {
   const [name, setName] = useState<string>('')

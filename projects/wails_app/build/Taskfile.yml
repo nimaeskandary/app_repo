@@ -86,7 +86,9 @@ tasks:
     dir: ../../bases/wails_app/frontend
     sources:
       - "**/*"
+      - "../../../components/**/*"
       - exclude: node_modules/**/*
+      - exclude: dist/**/*
     generates:
       - dist/**/*
     deps:
@@ -189,6 +191,8 @@ tasks:
       - exclude: ../../bases/wails_app/frontend/**/*
       - ../../bases/wails_app/frontend/bindings/**/*  # Rerun when switching between dev/production mode causes changes in output
       - "**/*.go"
+      - "../../bases/**/*.go"
+      - "../../components/**/*.go"
       - ../../go.mod
       - ../../go.sum
     generates:
