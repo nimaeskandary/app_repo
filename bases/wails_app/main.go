@@ -49,12 +49,8 @@ func main() {
 		}
 	}()
 
-	// Create a new Wails application by providing the necessary options.
-	// Variables 'Name' and 'Description' are for application metadata.
-	// 'Assets' configures the asset server with the 'FS' variable pointing to the frontend files.
-	// 'Bind' is a list of Go struct instances. The frontend has access to the methods of these instances.
-	// 'Mac' options tailor the application when running an macOS.
-	app := application.New(application.Options{
+
+	wailsApp := application.New(application.Options{
 		Name:        "test-react",
 		Description: "A demo of using raw HTML & CSS",
 		Services: []application.Service{
@@ -73,7 +69,7 @@ func main() {
 	// 'Mac' options tailor the window when running on macOS.
 	// 'BackgroundColour' is the background colour of the window.
 	// 'URL' is the URL that will be loaded into the webview.
-	app.Window.NewWithOptions(application.WebviewWindowOptions{
+	wailsApp.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title: "Window 1",
 		// Window sized to the golden ratio (1000 / 618 ≈ 1.618).
 		Width:  1000,
@@ -92,16 +88,16 @@ func main() {
 	go func() {
 		for {
 			now := time.Now().Format(time.RFC1123)
-			app.Event.Emit("time", now)
+			wailsApp.Event.Emit("time", now)
 			time.Sleep(time.Second)
 		}
 	}()
 
 	// Run the application. This blocks until the application has been exited.
-	err := app.Run()
+	err := wailsApp.Run()
 
 	// If an error occurred while running the application, log it and exit.
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 }

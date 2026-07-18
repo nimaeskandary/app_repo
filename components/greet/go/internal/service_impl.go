@@ -1,11 +1,13 @@
 package internal
 
-type GreetServiceImpl struct{}
+import greet_types "github.com/nimaeskandary/wails3-react-polylith/components/greet/go/types"
 
-func NewGreetServiceImpl() *GreetServiceImpl {
-	return &GreetServiceImpl{}
+type greetServiceImpl struct{}
+
+func NewGreetServiceImpl() greet_types.GreetService {
+	return &greetServiceImpl{}
 }
 
-func (g *GreetServiceImpl) Greet(name string) string {
+func (g *greetServiceImpl) Greet(name string) string {
 	return "Hello " + name + "!"
 }
