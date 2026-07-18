@@ -5,11 +5,11 @@
     <key>CFBundleExecutable</key>
     <string>wailsapp</string>
     <key>CFBundleIdentifier</key>
-    <string>com.mycompany.myproduct</string>
+    <string>com.nimaeskandary.nimaeskandary</string>
     <key>CFBundleName</key>
-    <string>My Product</string>
+    <string>NimaEskandary</string>
     <key>CFBundleDisplayName</key>
-    <string>My Product</string>
+    <string>NimaEskandary</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -49,11 +49,8 @@
     
     
     <key>NSHumanReadableCopyright</key>
-    <string>(c) 2025, My Company</string>
+    <string>(c) 2026, Nima Eskandary</string>
     
-    
-    <key>CFBundleGetInfoString</key>
-    <string>Some Product Comments</string>
     
 </dict>
 </plist>
