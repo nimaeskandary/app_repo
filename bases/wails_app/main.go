@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app"
-	"github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app/frontend_bridge"
+	"github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app/bridge"
 	"github.com/nimaeskandary/wails3-react-polylith/components/greet/go/types"
 	"github.com/nimaeskandary/wails3-react-polylith/components/util/go"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -54,7 +54,7 @@ func main() {
 		Name:        "test-react",
 		Description: "A demo of using raw HTML & CSS",
 		Services: []application.Service{
-			application.NewService(frontend_bridge.NewFrontendBridge(greetService)),
+			application.NewService(&bridge.GreetService{GreetService: greetService}),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

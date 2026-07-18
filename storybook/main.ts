@@ -29,7 +29,7 @@ const config: StorybookConfig = {
         ...config.resolve,
         alias: {
           ...config.resolve?.alias,
-          '@components': path.resolve(__dirname, '../components'),
+          '@': path.resolve(__dirname, '..'),
         },
       },
     }

@@ -70,14 +70,13 @@ To launch the local storybook server: `npm run storybook`
 
 ## TypeScript imports
 
-The frontend uses TypeScript 7-compatible path aliases without `baseUrl`.
+The frontend and Storybook use a TypeScript 7-compatible repository-root alias without `baseUrl`.
 
-Current aliases:
+Prefix repository paths with `@/`:
 
 ```text
-@/*            -> bases/wails_app/frontend/src/*
-@bindings/*   -> bases/wails_app/frontend/bindings/*
-@components/* -> components/*
+@/bases/wails_app/frontend/src/* -> bases/wails_app/frontend/src/*
+@/components/*                   -> components/*
 ```
 
 Generated Wails services are re-exported from:

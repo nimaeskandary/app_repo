@@ -10,8 +10,7 @@
 
 ## 1. Agent start up / Initialization
 
-* run the skill $caveman
-* read this project's ./README.md
+* read this project's ./README.md completely
 
 ## 2. Think Before Coding
 

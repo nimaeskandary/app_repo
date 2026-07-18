@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "paths": {
-      "@components/*": ["../components/*"]
+      "@/*": ["../*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,

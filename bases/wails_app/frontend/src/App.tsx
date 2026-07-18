@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Events, WML } from '@wailsio/runtime'
-import { FrontendBridge } from '@/wails-services'
+import { GreetService } from '@/bases/wails_app/frontend/bindings/github.com/nimaeskandary/wails3-react-polylith/bases/wails_app/app/bridge'
 import GreetView from './GreetView'
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
   const doGreet = () => {
     const n = name || 'anonymous'
     setTitleName(n)
-    FrontendBridge.Greet(n).then(showToast).catch(console.error)
+    GreetService.Greet(n).then(showToast).catch(console.error)
   }
 
   useEffect(() => {

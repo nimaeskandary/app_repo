@@ -12,9 +12,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@bindings": path.resolve(__dirname, "./bindings"),
-      "@components": path.resolve(__dirname, "../../../components"),
+      "@": path.resolve(__dirname, "../../.."),
     },
   },
   plugins: [react(), wails("./bindings")],

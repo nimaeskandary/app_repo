@@ -9,9 +9,7 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./src/*"],
-      "@bindings/*": ["./bindings/*"],
-      "@components/*": ["../../../components/*"]
+      "@/*": ["../../../*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
