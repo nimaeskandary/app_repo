@@ -53,7 +53,7 @@ tasks:
     cmds:
       - echo "Building iOS app {{.APP_NAME}} ({{.IOS_PLATFORM}})..."
       # Non-template: build the app package from the Polylith base.
-      - go build -buildmode=c-archive -overlay build/ios/xcode/overlay.json {{.BUILD_FLAGS}} -o {{.OUTPUT}}.a ../../bases/wails_app
+      - go build -buildmode=c-archive -overlay build/ios/xcode/overlay.json {{.BUILD_FLAGS}} -o {{.OUTPUT}}.a "{{.BASE_DIR}}"
     vars:
       BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production,ios -trimpath -buildvcs=false -ldflags="-w -s"{{else}}-tags ios,debug -buildvcs=false -gcflags=all="-l"{{end}}'
       DEFAULT_OUTPUT: '{{.BIN_DIR}}/{{.APP_NAME}}'
@@ -206,15 +206,15 @@ tasks:
     summary: Generates bindings for iOS with proper CGO flags
     sources:
       - "**/*.go"
-      - ../../go.mod
-      - ../../go.sum
+      - "{{.REPO_ROOT}}/go.mod"
+      - "{{.REPO_ROOT}}/go.sum"
     generates:
-      - ../../bases/wails_app/frontend/bindings/**/*
+      - "{{.FRONTEND_DIR}}/bindings/**/*"
     vars:
       SDK_PATH:
         sh: xcrun --sdk {{.IOS_SDK}} --show-sdk-path
     cmds:
-      - cd ../../bases/wails_app && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
+      - cd "{{.BASE_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
     env:
       GOOS: ios
       CGO_ENABLED: 1
@@ -276,7 +276,7 @@ tasks:
       # Non-template: generated overlay shim must be injected into the app base package.
       - |
         PROJECT_MAIN="$(pwd)/main_ios.gen.go"
-        BASE_MAIN="../../bases/wails_app/main_ios.gen.go"
+        BASE_MAIN="{{.BASE_DIR}}/main_ios.gen.go"
         GENERATED_MAIN_ABS="$(pwd)/build/ios/xcode/gen/main_ios.gen.go"
         GENERATED_MAIN="build/ios/xcode/gen/main_ios.gen.go"
         perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${BASE_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/ios/xcode/overlay.json

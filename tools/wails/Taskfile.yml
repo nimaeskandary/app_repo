@@ -7,8 +7,8 @@ tasks:
     # Universal/multi-arch builds invoke this concurrently from parallel deps;
     # two `go mod tidy` processes racing on go.mod can corrupt it (#4637).
     run: once
-    # Non-template: Go module files live at the repo root.
-    dir: ../..
+    # Polylith repositories keep Go module files at the repo root.
+    dir: "{{.REPO_ROOT}}"
     cmds:
       - go mod tidy
 
@@ -20,11 +20,11 @@ tasks:
 
   install:frontend:deps:npm:
     # Non-template: npm workspaces install from the repo root.
-    dir: ../..
+    dir: "{{.REPO_ROOT}}"
     sources:
       - package.json
       - package-lock.json
-      - bases/wails_app/frontend/package.json
+      - "{{.FRONTEND_PATH}}/package.json"
     generates:
       - node_modules
     preconditions:
@@ -34,7 +34,7 @@ tasks:
       - npm install
 
   install:frontend:deps:bun:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     sources:
       - package.json
       - bun.lock
@@ -48,7 +48,7 @@ tasks:
       - bun install
 
   install:frontend:deps:pnpm:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     sources:
       - package.json
       - pnpm-lock.yaml
@@ -61,7 +61,7 @@ tasks:
       - pnpm install
 
   install:frontend:deps:yarn:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     sources:
       - package.json
       - yarn.lock
@@ -83,7 +83,7 @@ tasks:
     # 'Could not resolve "./bindings/<pkg>"' (#4637).
     run: once
     # Non-template: frontend lives inside the Polylith base.
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     sources:
       - "**/*"
       - "../../../components/**/*"
@@ -117,69 +117,32 @@ tasks:
 
   frontend:run:npm:
     # Non-template: run frontend scripts through the root npm workspace.
-    dir: ../..
+    dir: "{{.REPO_ROOT}}"
     cmds:
-      - npm --workspace @wails3-react-polylith/wails-app-frontend run {{.SCRIPT}} -q
+      - npm --workspace "{{.FRONTEND_WORKSPACE}}" run {{.SCRIPT}} -q
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:yarn:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - yarn {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:pnpm:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - pnpm run {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:bun:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - bun run {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
-
-  frontend:vendor:puppertino:
-    summary: Fetches Puppertino CSS into frontend/public for consistent mobile styling
-    sources:
-      - ../../bases/wails_app/frontend/public/puppertino/puppertino.css
-    generates:
-      - ../../bases/wails_app/frontend/public/puppertino/puppertino.css
-    cmds:
-      - |
-        set -euo pipefail
-        mkdir -p ../../bases/wails_app/frontend/public/puppertino
-        # If bundled Puppertino exists, prefer it. Otherwise, try to fetch, but don't fail build on error.
-        if [ ! -f ../../bases/wails_app/frontend/public/puppertino/puppertino.css ]; then
-          echo "No bundled Puppertino found. Attempting to fetch from GitHub..."
-          if curl -fsSL https://raw.githubusercontent.com/codedgar/Puppertino/main/dist/css/full.css -o ../../bases/wails_app/frontend/public/puppertino/puppertino.css; then
-            curl -fsSL https://raw.githubusercontent.com/codedgar/Puppertino/main/LICENSE -o ../../bases/wails_app/frontend/public/puppertino/LICENSE || true
-            echo "Puppertino CSS downloaded to ../../bases/wails_app/frontend/public/puppertino/puppertino.css"
-          else
-            echo "Warning: Could not fetch Puppertino CSS. Proceeding without download since template may bundle it."
-          fi
-        else
-          echo "Using bundled Puppertino at ../../bases/wails_app/frontend/public/puppertino/puppertino.css"
-        fi
-        # Ensure index.html includes Puppertino CSS and button classes
-        INDEX_HTML=../../bases/wails_app/frontend/index.html
-        if [ -f "$INDEX_HTML" ]; then
-          if ! grep -q 'href="/puppertino/puppertino.css"' "$INDEX_HTML"; then
-            # Insert Puppertino link tag after style.css link
-            awk '
-              /href="\/style.css"\/?/ && !x { print; print "    <link rel=\"stylesheet\" href=\"/puppertino/puppertino.css\"/>"; x=1; next }1
-            ' "$INDEX_HTML" > "$INDEX_HTML.tmp" && mv "$INDEX_HTML.tmp" "$INDEX_HTML"
-          fi
-          # Replace default .btn with Puppertino primary button classes if present
-          sed -E -i'' 's/class=\"btn\"/class=\"p-btn p-prim-col\"/g' "$INDEX_HTML" || true
-        fi
-
-
 
   generate:bindings:
     summary: Generates bindings for the frontend
@@ -188,18 +151,18 @@ tasks:
       - task: go:mod:tidy
     sources:
       - "**/*.[jt]s"
-      - exclude: ../../bases/wails_app/frontend/**/*
-      - ../../bases/wails_app/frontend/bindings/**/*  # Rerun when switching between dev/production mode causes changes in output
+      - exclude: "{{.FRONTEND_DIR}}/**/*"
+      - "{{.FRONTEND_DIR}}/bindings/**/*"  # Rerun when switching between dev/production mode causes changes in output
       - "**/*.go"
-      - "../../bases/**/*.go"
-      - "../../components/**/*.go"
-      - ../../go.mod
-      - ../../go.sum
+      - "{{.REPO_ROOT}}/bases/**/*.go"
+      - "{{.REPO_ROOT}}/components/**/*.go"
+      - "{{.REPO_ROOT}}/go.mod"
+      - "{{.REPO_ROOT}}/go.sum"
     generates:
-      - ../../bases/wails_app/frontend/bindings/**/*
+      - "{{.FRONTEND_DIR}}/bindings/**/*"
     cmds:
       # Non-template: bindings are generated from the app base package.
-      - cd ../../bases/wails_app && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
+      - cd "{{.BASE_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
 
   generate:icons:
     summary: Generates Windows `.ico` and Mac `.icns` from an image; on macOS, `-iconcomposerinput appicon.icon -macassetdir darwin` also produces `Assets.car` from a `.icon` file (skipped on other platforms).
@@ -223,22 +186,22 @@ tasks:
 
   frontend:dev:npm:
     # Non-template: run Vite through the root npm workspace.
-    dir: ../..
+    dir: "{{.REPO_ROOT}}"
     cmds:
-      - npm --workspace @wails3-react-polylith/wails-app-frontend run dev -- --port {{.VITE_PORT}} --strictPort
+      - npm --workspace "{{.FRONTEND_WORKSPACE}}" run dev -- --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:yarn:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - yarn dev --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:pnpm:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - pnpm dev --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:bun:
-    dir: ../../bases/wails_app/frontend
+    dir: "{{.FRONTEND_DIR}}"
     cmds:
       - bun run dev --port {{.VITE_PORT}} --strictPort
 
@@ -273,7 +236,7 @@ tasks:
         msg: "garble is required for obfuscated builds. Install it with: go install mvdan.cc/garble@v0.16.0 (requires Go 1.24+). See https://github.com/burrowers/garble/releases for version/toolchain compatibility."
     cmds:
       # Non-template: build the server from the app base package.
-      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}" ../../bases/wails_app'
+      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}" "{{.BASE_DIR}}"'
     vars:
       BUILD_FLAGS: '-tags server{{if eq .DEV "true"}}{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -buildvcs=false -gcflags=all="-l"{{else}},production{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -trimpath -buildvcs=false -ldflags="-w -s"{{end}}'
 

@@ -109,7 +109,7 @@ tasks:
 
         # Non-template: build the app package from the Polylith base.
         go build -buildmode=c-shared -overlay build/android/overlay.json {{.BUILD_FLAGS}} \
-          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so ../../bases/wails_app
+          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so "{{.BASE_DIR}}"
     vars:
       BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production,android -trimpath -buildvcs=false -ldflags="-w -s"{{else}}-tags android,debug -buildvcs=false -gcflags=all="-l"{{end}}'
 
@@ -254,7 +254,7 @@ tasks:
       # Non-template: generated overlay shim must be injected into the app base package.
       - |
         PROJECT_MAIN="$(pwd)/main_android.gen.go"
-        BASE_MAIN="../../bases/wails_app/main_android.gen.go"
+        BASE_MAIN="{{.BASE_DIR}}/main_android.gen.go"
         GENERATED_MAIN_ABS="$(pwd)/build/android/gen/main_android.gen.go"
         GENERATED_MAIN="build/android/gen/main_android.gen.go"
         perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${BASE_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/android/overlay.json
@@ -264,14 +264,14 @@ tasks:
     summary: Generates bindings for Android
     sources:
       - "**/*.go"
-      - ../../go.mod
-      - ../../go.sum
+      - "{{.REPO_ROOT}}/go.mod"
+      - "{{.REPO_ROOT}}/go.sum"
     generates:
-      - ../../bases/wails_app/frontend/bindings/**/*
+      - "{{.FRONTEND_DIR}}/bindings/**/*"
     cmds:
       # Bindings are generated from the Go AST; CGO is disabled so the NDK
       # is not required for this step
-      - cd ../../bases/wails_app && wails3 generate bindings -f '-tags android' -clean=true
+      - cd "{{.BASE_DIR}}" && wails3 generate bindings -f '-tags android' -clean=true
     env:
       GOOS: android
       CGO_ENABLED: 0

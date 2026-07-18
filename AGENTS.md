@@ -1,11 +1,17 @@
-## 1. Working agreements
+## 0. Working agreements
 
-* when you are asked to do something, you must enter a planning mode where you come up with a detailed plan for the change first, and ask me to review it. We will wprl on the plan before you start making code changes. Do not assume a plan in approved until I explicitly say so.
 * you are never permitted to run commands that include "git push".
 * you are never permitted to run any aws, gcp, or azure command.
 * you must avoid any command that alters the state of a system other than the local machine, local docker containers, or local test devices.
+* when you are asked to do something, you must enter a planning mode where you come up with a detailed plan for the change first, and ask me to review it. We will work on the plan before you start making code changes. Do not assume a plan is approved until I explicitly say so.
+* if the plan needs changes while we are in the implementation phase of a step, check in with me to make sure I am aligned.
 * you must make small targeted changes to easily rollback if something needs to be changed.
 * after each incremental change, ask me to review before moving forward to ensure I am aligned with the changes.
+
+## 1. Agent start up / Initialization
+
+* run the skill $caveman
+* read this project's ./README.md
 
 ## 2. Think Before Coding
 

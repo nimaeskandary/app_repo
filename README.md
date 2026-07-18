@@ -1,23 +1,30 @@
 # wails3-react-polylith
 
-This repo contains a Wails v3 sample app reorganized into a Polylith-style layout.
+This repo contains a Wails v3 sample app reorganized into a [Polylith](https://polylith.gitbook.io/polylith)-style layout.
 
 ## Project structure
 
 ```text
-bases/
+# A base is an encapsulated block of code that can be assembled together with a set of components and 
+# libraries into services, libraries or tools. Bases achieve encapsulation and composability by
+# separating their private implementation from their public API.
+bases/                      
   wails_app/
     main.go                 # Wails app entrypoint
     frontend/               # React/Vite frontend for this Wails base
 
+# A component is an encapsulated block of code that can be assembled together with a base.
+# Components achieve encapsulation and composability by separating their private implementation from their public interface.
 components/
   greet/
-    greetservice.go         # Go service component bound into Wails
+    go/                     # Go component, e.g. domain types, public interfaces
+      internal/             # Concrete interface implementations
 
+# A project is an edge for artifact generation assembling bases and components. 
 projects/
   wails_app/
-    Taskfile.yml            # Wails task entrypoint for this project
-    build/                  # Wails build config and platform assets
+    Taskfile.yml            # Thin artifact declaration
+    build/                  # App identity, config, and native platform assets
 
 go.mod                      # single Go module for all Go code
 package.json                # npm workspace root
@@ -43,7 +50,6 @@ Because the Wails project config lives under `projects/wails_app/build/config.ym
 * run dev mode on ios: `wails3 task -dir projects/wails_app ios:run`
 * build: `wails3 task -dir projects/wails_app build`
 * generate typescript bindings: `wails3 task -dir projects/wails_app common:generate:bindings`
-
 
 ## Frontend-only commands
 

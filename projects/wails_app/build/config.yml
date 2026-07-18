@@ -32,25 +32,30 @@ info:
 
 # Dev mode configuration
 dev_mode:
-  # Non-template: watch from the repo root so bases/ and components/ trigger reloads.
+  # watch all files in the repo
   root_path: ../..
   log_level: warn
   debounce: 1000
   ignore:
+    # ignore changes when a path component contains this dir part
     dir:
       - .git
       - node_modules
-      - bases/wails_app/frontend
+      # ignore frontend dirs, vite has its own watcher for those
+      - dist
+      - frontend
+      # ignore build related dirs
       - .wails_bin
+      - tools
+      - projects
+      - .task
     file:
       - .DS_Store
-      - .gitignore
-      - .gitkeep
       - "*_test.go"
     watched_extension:
       - "*.go"
-      - "*.js" # Watch for changes to JS/TS files included using the //wails:include directive.
-      - "*.ts" # The frontend directory will be excluded entirely by the setting above.
+      - "*.js"
+      - "*.ts"
     git_ignore: true
   executes:
     # Non-template: run Wails tasks from the project directory after moving sources.
