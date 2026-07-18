@@ -7,4 +7,4 @@ This module is so that go tools installed via go get -tool, e.g. `go get -tool g
 
 ## running a tool
 
-You can run one of these tools from the root directory with the -modfile flag, e.g. `go tool -modfile=./tools/go.mod golangci-lint run`
+You can run one of these tools from the root directory with the -modfile flag, e.g. `go tool -modfile=./go_tools/go.mod golangci-lint run`
