@@ -6,13 +6,5 @@
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -c . -p 6006",
     "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build -c ."
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@storybook/react-vite": "^10.4.0",
-    "storybook": "^10.4.0"
   }
 }
