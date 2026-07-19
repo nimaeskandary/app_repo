@@ -2,7 +2,7 @@
   "name": "wails3-react-polylith",
   "private": true,
   "workspaces": [
-    "app/wails_app/frontend",
+    "cmd/wordle/frontend",
     "storybook"
   ],
   "scripts": {

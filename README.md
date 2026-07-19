@@ -1,11 +1,11 @@
-# wails3-react-polylith
+# wails3-react
 
 This repo contains a Wails v3 sample app in a monorepo organized around deployable apps and shared packages.
 
 ## Project structure
 
 ```text
-app/                       # entrypoints
+cmd/                       # entrypoints
 
 pkg/                       # reusable packages
   greet/
@@ -16,26 +16,18 @@ go.mod                      # single Go module for all Go code
 package.json                # npm workspace root
 ```
 
-Go code uses the root `go.mod`. 
-
-Frontend code uses npm workspaces so future JavaScript/TypeScript packages can share the root `node_modules` and lockfile.
-
 ## Install dependencies
 
-From the repo root:
 
-```sh
-npm install
-```
 
 ## Wails commands
 
-Because the Wails config lives under `app/wails_app/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
+Because the Wails config lives under `cmd/wordle/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
 
-* run dev mode on host: `wails3 task -dir app/wails_app dev`
-* run dev mode on iOS: `wails3 task -dir app/wails_app ios:run`
-* build: `wails3 task -dir app/wails_app build`
-* generate TypeScript bindings: `wails3 task -dir app/wails_app common:generate:bindings`
+* run dev mode on host: `wails3 task -dir cmd/wordle dev`
+* run dev mode on iOS: `wails3 task -dir cmd/wordle ios:run`
+* build: `wails3 task -dir cmd/wordle build`
+* generate TypeScript bindings: `wails3 task -dir cmd/wordle common:generate:bindings`
 
 ## Frontend-only commands
 
@@ -56,17 +48,18 @@ To launch the local storybook server: `npm run storybook`
 
 ## TypeScript imports
 
-The frontend and Storybook use a TypeScript 7-compatible repository-root alias without `baseUrl`.
+Prefix repository paths with `@/` when using them as imports, and import things relative to the root directory, e.g. 
 
-Prefix repository paths with `@/`:
+* @/cmd/wordle/frontend/src/*
+* @/pkg/*  
 
 ```text
-@/app/wails_app/frontend/src/* -> app/wails_app/frontend/src/*
-@/pkg/*                        -> pkg/*
+@/cmd/wordle/frontend/src/* -> cmd/wordle/frontend/src/*
+@/pkg/*                     -> pkg/*
 ```
 
 Wails generates TypeScript bindings under:
 
 ```text
-app/wails_app/frontend/bindings/
+cmd/wordle/frontend/bindings/
 ```

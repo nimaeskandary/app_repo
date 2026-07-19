@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Events, WML } from '@wailsio/runtime'
-import { GreetService } from '@/app/wails_app/frontend/bindings/github.com/nimaeskandary/wails3-react-polylith/app/wails_app/app/bridge'
-import GreetView from '@/app/wails_app/frontend/src/GreetView'
+import { GreetService } from '@/cmd/wordle/frontend/bindings/github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app/bridge'
+import GreetView from '@/cmd/wordle/frontend/src/GreetView'
 
 function App() {
   const [name, setName] = useState<string>('')

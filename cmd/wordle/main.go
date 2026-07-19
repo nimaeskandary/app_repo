@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/nimaeskandary/wails3-react-polylith/app/wails_app/app"
-	"github.com/nimaeskandary/wails3-react-polylith/app/wails_app/app/bridge"
+	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app"
+	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app/bridge"
 	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
 	util "github.com/nimaeskandary/wails3-react-polylith/pkg/util/go"
 	"github.com/wailsapp/wails/v3/pkg/application"
