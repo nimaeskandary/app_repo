@@ -7,9 +7,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app"
-	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app/bridge"
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
+	"github.com/nimaeskandary/wails3-react-polylith/cmd/gordle/app"
+	"github.com/nimaeskandary/wails3-react-polylith/cmd/gordle/app/bridge"
+	di "github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
 	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -50,8 +50,8 @@ func main() {
 	}()
 
 	wailsApp := application.New(application.Options{
-		Name:        "test-react",
-		Description: "A demo of using raw HTML & CSS",
+		Name:        "Gordle",
+		Description: "Wails3 react example app",
 		Services: []application.Service{
 			application.NewService(&bridge.GreetService{GreetService: greetService}),
 		},

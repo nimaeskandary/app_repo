@@ -14,7 +14,7 @@
     }
   },
   "workspaces": [
-    "cmd/wordle/frontend",
+    "cmd/gordle/frontend",
     "storybook"
   ],
   "scripts": {

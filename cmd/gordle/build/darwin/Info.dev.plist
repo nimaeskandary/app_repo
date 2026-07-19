@@ -6,7 +6,7 @@
         <key>CFBundleName</key>
             <string>My Product</string>
         <key>CFBundleExecutable</key>
-            <string>test-react</string>
+            <string>Gordle</string>
         <key>CFBundleIdentifier</key>
             <string>com.nimaeskandary.testreact</string>
         <key>CFBundleVersion</key>

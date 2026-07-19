@@ -1,9 +1,9 @@
 version: '3'
 
 vars:
-  APP_NAME: "test-react"
+  APP_NAME: "Gordle"
   REPO_ROOT: "../.."
-  APP_PATH: "cmd/wordle"
+  APP_PATH: "cmd/gordle"
   APP_DIR: "{{.REPO_ROOT}}/{{.APP_PATH}}"
   FRONTEND_PATH: "{{.APP_PATH}}/frontend"
   FRONTEND_DIR: "{{.REPO_ROOT}}/{{.FRONTEND_PATH}}"

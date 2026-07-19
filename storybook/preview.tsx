@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
-import '../cmd/wordle/frontend/public/style.css'
+import '../cmd/gordle/frontend/public/style.css'
 import './preview.css'
 
 type ViewportMode = 'web' | 'mobile'

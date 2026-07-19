@@ -58,11 +58,11 @@ dev_mode:
     git_ignore: true
   executes:
     # Non-template: run Wails tasks from the project directory after moving sources.
-    - cmd: wails3 task -dir cmd/wordle build DEV=true
+    - cmd: wails3 task -dir cmd/gordle build DEV=true
       type: blocking
-    - cmd: wails3 task -dir cmd/wordle common:dev:frontend
+    - cmd: wails3 task -dir cmd/gordle common:dev:frontend
       type: background
-    - cmd: wails3 task -dir cmd/wordle run
+    - cmd: wails3 task -dir cmd/gordle run
       type: primary
 
 # File Associations
