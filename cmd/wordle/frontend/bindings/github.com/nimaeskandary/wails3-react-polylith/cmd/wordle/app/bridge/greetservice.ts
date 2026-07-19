@@ -8,3 +8,10 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 export function Greet(name: string): $CancellablePromise<string> {
     return $Call.ByID(1962187537, name);
 }
+
+/**
+ * Stop is called when the fx system is shutdown, used for graceful shutdown of components
+ */
+export function Stop(): $CancellablePromise<void> {
+    return $Call.ByID(917243336);
+}

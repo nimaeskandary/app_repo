@@ -1,10 +1,10 @@
 package greet_types
 
 import (
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/util/go/fx_util"
+	"github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
 )
 
 type GreetService interface {
-	fx_util.FxLifecycle
+	di.Lifecycle
 	Greet(name string) string
 }
