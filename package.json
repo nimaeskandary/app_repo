@@ -1,6 +1,18 @@
 {
   "name": "wails3-react-polylith",
   "private": true,
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26.5.0 <27",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.17.0 <12",
+      "onFail": "error"
+    }
+  },
   "workspaces": [
     "cmd/wordle/frontend",
     "storybook"

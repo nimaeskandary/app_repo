@@ -10,7 +10,7 @@ import (
 	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app"
 	"github.com/nimaeskandary/wails3-react-polylith/cmd/wordle/app/bridge"
 	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
-	util "github.com/nimaeskandary/wails3-react-polylith/pkg/util/go"
+	fx_util "github.com/nimaeskandary/wails3-react-polylith/pkg/util/go/fx_util"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -36,7 +36,7 @@ func main() {
 	ctx := context.Background()
 
 	var greetService greet_types.GreetService
-	fxApp := util.CreateFxAppAndExtract(app.ModuleList(), &greetService)
+	fxApp := fx_util.CreateFxAppAndExtract(app.ModuleList(), &greetService)
 
 	log.Println("starting dependency injection system...")
 	if err := fxApp.Start(ctx); err != nil {
