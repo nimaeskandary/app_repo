@@ -2,14 +2,14 @@
   "name": "wails3-react-polylith",
   "private": true,
   "workspaces": [
-    "bases/wails_app/frontend",
+    "apps/wails_app/frontend",
     "storybook"
   ],
   "scripts": {
-    "wails-app:dev": "npm --workspace @wails3-react-polylith/bases-wails-app-frontend run dev",
-    "wails-app:build": "npm --workspace @wails3-react-polylith/bases-wails-app-frontend run build",
-    "wails-app:build:dev": "npm --workspace @wails3-react-polylith/bases-wails-app-frontend run build:dev",
-    "wails-app:preview": "npm --workspace @wails3-react-polylith/bases-wails-app-frontend run preview",
+    "wails-app:dev": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run dev",
+    "wails-app:build": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run build",
+    "wails-app:build:dev": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run build:dev",
+    "wails-app:preview": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run preview",
     "storybook": "npm --workspace @wails3-react-polylith/storybook run storybook",
     "build-storybook": "npm --workspace @wails3-react-polylith/storybook run build"
   },

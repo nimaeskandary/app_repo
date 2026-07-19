@@ -10,7 +10,7 @@
 
 ## 1. Agent start up / Initialization
 
-* read this project's ./README.md completely
+* you must read this project's ./README.md completely before starting a new task
 
 ## 2. Think Before Coding
 

@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const config: StorybookConfig = {
   stories: ['./**/*.stories.@(ts|tsx)'],
-  staticDirs: ['../bases/wails_app/frontend/public'],
+  staticDirs: ['../apps/wails_app/frontend/public'],
   framework: {
     name: '@storybook/react-vite',
     options: {},

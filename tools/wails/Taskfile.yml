@@ -7,7 +7,7 @@ tasks:
     # Universal/multi-arch builds invoke this concurrently from parallel deps;
     # two `go mod tidy` processes racing on go.mod can corrupt it (#4637).
     run: once
-    # Polylith repositories keep Go module files at the repo root.
+    # This repository keeps Go module files at the repo root.
     dir: "{{.REPO_ROOT}}"
     cmds:
       - go mod tidy
@@ -82,11 +82,11 @@ tasks:
     # other's bundler is reading it, failing intermittently with
     # 'Could not resolve "./bindings/<pkg>"' (#4637).
     run: once
-    # Non-template: frontend lives inside the Polylith base.
+    # Non-template: frontend lives inside the app.
     dir: "{{.FRONTEND_DIR}}"
     sources:
       - "**/*"
-      - "../../../components/**/*"
+      - "../../../pkgs/**/*"
       - exclude: node_modules/**/*
       - exclude: dist/**/*
     generates:
@@ -154,15 +154,15 @@ tasks:
       - exclude: "{{.FRONTEND_DIR}}/**/*"
       - "{{.FRONTEND_DIR}}/bindings/**/*"  # Rerun when switching between dev/production mode causes changes in output
       - "**/*.go"
-      - "{{.REPO_ROOT}}/bases/**/*.go"
-      - "{{.REPO_ROOT}}/components/**/*.go"
+      - "{{.REPO_ROOT}}/apps/**/*.go"
+      - "{{.REPO_ROOT}}/pkgs/**/*.go"
       - "{{.REPO_ROOT}}/go.mod"
       - "{{.REPO_ROOT}}/go.sum"
     generates:
       - "{{.FRONTEND_DIR}}/bindings/**/*"
     cmds:
-      # Non-template: bindings are generated from the app base package.
-      - cd "{{.BASE_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
+      # Non-template: bindings are generated from the app package.
+      - cd "{{.APP_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
 
   generate:icons:
     summary: Generates Windows `.ico` and Mac `.icns` from an image; on macOS, `-iconcomposerinput appicon.icon -macassetdir darwin` also produces `Assets.car` from a `.icon` file (skipped on other platforms).
@@ -235,8 +235,8 @@ tasks:
       - sh: '{{if eq .OBFUSCATED "true"}}command -v garble >/dev/null 2>&1{{else}}true{{end}}'
         msg: "garble is required for obfuscated builds. Install it with: go install mvdan.cc/garble@v0.16.0 (requires Go 1.24+). See https://github.com/burrowers/garble/releases for version/toolchain compatibility."
     cmds:
-      # Non-template: build the server from the app base package.
-      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}" "{{.BASE_DIR}}"'
+      # Non-template: build the server from the app package.
+      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}" "{{.APP_DIR}}"'
     vars:
       BUILD_FLAGS: '-tags server{{if eq .DEV "true"}}{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -buildvcs=false -gcflags=all="-l"{{else}},production{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -trimpath -buildvcs=false -ldflags="-w -s"{{end}}'
 

@@ -1,30 +1,16 @@
 # wails3-react-polylith
 
-This repo contains a Wails v3 sample app reorganized into a [Polylith](https://polylith.gitbook.io/polylith)-style layout.
+This repo contains a Wails v3 sample app in a monorepo organized around deployable apps and shared packages.
 
 ## Project structure
 
 ```text
-# A base is an encapsulated block of code that can be assembled together with a set of components and 
-# libraries into services, libraries or tools. Bases achieve encapsulation and composability by
-# separating their private implementation from their public API.
-bases/                      
-  wails_app/
-    main.go                 # Wails app entrypoint
-    frontend/               # React/Vite frontend for this Wails base
+apps/                       # entrypoints
 
-# A component is an encapsulated block of code that can be assembled together with a base.
-# Components achieve encapsulation and composability by separating their private implementation from their public interface.
-components/
+pkgs/                       # reusable packages
   greet/
-    go/                     # Go component, e.g. domain types, public interfaces
-      internal/             # Concrete interface implementations
-
-# A project is an edge for artifact generation assembling bases and components. 
-projects/
-  wails_app/
-    Taskfile.yml            # Thin artifact declaration
-    build/                  # App identity, config, and native platform assets
+    go/                     # Shared go greet package
+      internal/             # Private to package, e.g. concrete interface implementations
 
 go.mod                      # single Go module for all Go code
 package.json                # npm workspace root
@@ -32,7 +18,7 @@ package.json                # npm workspace root
 
 Go code uses the root `go.mod`. 
 
-Frontend code uses npm workspaces so future JavaScript/TypeScript bases can share the root `node_modules` and lockfile.
+Frontend code uses npm workspaces so future JavaScript/TypeScript packages can share the root `node_modules` and lockfile.
 
 ## Install dependencies
 
@@ -44,12 +30,12 @@ npm install
 
 ## Wails commands
 
-Because the Wails project config lives under `projects/wails_app/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
+Because the Wails config lives under `apps/wails_app/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
 
-* run dev mode on host: `wails3 task -dir projects/wails_app dev`
-* run dev mode on ios: `wails3 task -dir projects/wails_app ios:run`
-* build: `wails3 task -dir projects/wails_app build`
-* generate typescript bindings: `wails3 task -dir projects/wails_app common:generate:bindings`
+* run dev mode on host: `wails3 task -dir apps/wails_app dev`
+* run dev mode on iOS: `wails3 task -dir apps/wails_app ios:run`
+* build: `wails3 task -dir apps/wails_app build`
+* generate TypeScript bindings: `wails3 task -dir apps/wails_app common:generate:bindings`
 
 ## Frontend-only commands
 
@@ -75,12 +61,12 @@ The frontend and Storybook use a TypeScript 7-compatible repository-root alias w
 Prefix repository paths with `@/`:
 
 ```text
-@/bases/wails_app/frontend/src/* -> bases/wails_app/frontend/src/*
-@/components/*                   -> components/*
+@/apps/wails_app/frontend/src/* -> apps/wails_app/frontend/src/*
+@/pkgs/*                        -> pkgs/*
 ```
 
-Generated Wails services are re-exported from:
+Wails generates TypeScript bindings under:
 
 ```text
-bases/wails_app/frontend/src/wails-services.ts
+apps/wails_app/frontend/bindings/
 ```

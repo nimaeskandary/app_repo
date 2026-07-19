@@ -107,9 +107,9 @@ tasks:
         mkdir -p {{.BIN_DIR}}
         mkdir -p build/android/app/src/main/jniLibs/$JNI_DIR
 
-        # Non-template: build the app package from the Polylith base.
+        # Non-template: build the app package.
         go build -buildmode=c-shared -overlay build/android/overlay.json {{.BUILD_FLAGS}} \
-          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so "{{.BASE_DIR}}"
+          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so "{{.APP_DIR}}"
     vars:
       BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production,android -trimpath -buildvcs=false -ldflags="-w -s"{{else}}-tags android,debug -buildvcs=false -gcflags=all="-l"{{end}}'
 
@@ -251,13 +251,13 @@ tasks:
       - build/android/gen/main_android.gen.go
     cmds:
       - wails3 android overlay:gen -out build/android/overlay.json -config build/config.yml
-      # Non-template: generated overlay shim must be injected into the app base package.
+      # Non-template: generated overlay shim must be injected into the app package.
       - |
         PROJECT_MAIN="$(pwd)/main_android.gen.go"
-        BASE_MAIN="{{.BASE_DIR}}/main_android.gen.go"
+        APP_MAIN="{{.APP_DIR}}/main_android.gen.go"
         GENERATED_MAIN_ABS="$(pwd)/build/android/gen/main_android.gen.go"
         GENERATED_MAIN="build/android/gen/main_android.gen.go"
-        perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${BASE_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/android/overlay.json
+        perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${APP_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/android/overlay.json
 
   generate:android:bindings:
     internal: true
@@ -271,7 +271,7 @@ tasks:
     cmds:
       # Bindings are generated from the Go AST; CGO is disabled so the NDK
       # is not required for this step
-      - cd "{{.BASE_DIR}}" && wails3 generate bindings -f '-tags android' -clean=true
+      - cd "{{.APP_DIR}}" && wails3 generate bindings -f '-tags android' -clean=true
     env:
       GOOS: android
       CGO_ENABLED: 0

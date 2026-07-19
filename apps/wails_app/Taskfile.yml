@@ -1,0 +1,22 @@
+version: '3'
+
+vars:
+  APP_NAME: "test-react"
+  REPO_ROOT: "../.."
+  APP_PATH: "apps/wails_app"
+  APP_DIR: "{{.REPO_ROOT}}/{{.APP_PATH}}"
+  FRONTEND_PATH: "{{.APP_PATH}}/frontend"
+  FRONTEND_DIR: "{{.REPO_ROOT}}/{{.FRONTEND_PATH}}"
+  FRONTEND_WORKSPACE: "@wails3-react-polylith/apps-wails-app-frontend"
+  # Non-template: keep Wails build artifacts out of the build scripts folder.
+  BIN_DIR: ".wails_bin"
+  PACKAGE_MANAGER: '{{.PACKAGE_MANAGER | default "npm"}}'
+  VITE_PORT: '{{.WAILS_VITE_PORT | default 9245}}'
+  # Target OS for build/package/run. Defaults to the host OS, and is overridden
+  # by `wails3 build GOOS=...` (or the GOOS env var) for cross-compilation.
+  GOOS: '{{.GOOS | default OS}}'
+
+includes:
+  wails:
+    taskfile: ../../tools/wails/app/Taskfile.yml
+    flatten: true
