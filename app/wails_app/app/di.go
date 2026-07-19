@@ -1,8 +1,7 @@
 package app
 
 import (
-	"github.com/nimaeskandary/wails3-react-polylith/pkgs/greet/go"
-
+	greet "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go"
 	"go.uber.org/fx"
 )
 

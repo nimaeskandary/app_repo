@@ -3,7 +3,7 @@ version: '3'
 vars:
   APP_NAME: "test-react"
   REPO_ROOT: "../.."
-  APP_PATH: "apps/wails_app"
+  APP_PATH: "app/wails_app"
   APP_DIR: "{{.REPO_ROOT}}/{{.APP_PATH}}"
   FRONTEND_PATH: "{{.APP_PATH}}/frontend"
   FRONTEND_DIR: "{{.REPO_ROOT}}/{{.FRONTEND_PATH}}"

@@ -5,9 +5,9 @@ This repo contains a Wails v3 sample app in a monorepo organized around deployab
 ## Project structure
 
 ```text
-apps/                       # entrypoints
+app/                       # entrypoints
 
-pkgs/                       # reusable packages
+pkg/                       # reusable packages
   greet/
     go/                     # Shared go greet package
       internal/             # Private to package, e.g. concrete interface implementations
@@ -30,12 +30,12 @@ npm install
 
 ## Wails commands
 
-Because the Wails config lives under `apps/wails_app/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
+Because the Wails config lives under `app/wails_app/build/config.yml`, plain `wails3 dev` from the repo root does not use the correct config.
 
-* run dev mode on host: `wails3 task -dir apps/wails_app dev`
-* run dev mode on iOS: `wails3 task -dir apps/wails_app ios:run`
-* build: `wails3 task -dir apps/wails_app build`
-* generate TypeScript bindings: `wails3 task -dir apps/wails_app common:generate:bindings`
+* run dev mode on host: `wails3 task -dir app/wails_app dev`
+* run dev mode on iOS: `wails3 task -dir app/wails_app ios:run`
+* build: `wails3 task -dir app/wails_app build`
+* generate TypeScript bindings: `wails3 task -dir app/wails_app common:generate:bindings`
 
 ## Frontend-only commands
 
@@ -61,12 +61,12 @@ The frontend and Storybook use a TypeScript 7-compatible repository-root alias w
 Prefix repository paths with `@/`:
 
 ```text
-@/apps/wails_app/frontend/src/* -> apps/wails_app/frontend/src/*
-@/pkgs/*                        -> pkgs/*
+@/app/wails_app/frontend/src/* -> app/wails_app/frontend/src/*
+@/pkg/*                        -> pkg/*
 ```
 
 Wails generates TypeScript bindings under:
 
 ```text
-apps/wails_app/frontend/bindings/
+app/wails_app/frontend/bindings/
 ```

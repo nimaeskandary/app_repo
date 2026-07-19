@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
-import '../apps/wails_app/frontend/public/style.css'
+import '../app/wails_app/frontend/public/style.css'
 import './preview.css'
 
 type ViewportMode = 'web' | 'mobile'

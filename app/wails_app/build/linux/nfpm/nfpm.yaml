@@ -20,7 +20,7 @@ contents:
   - src: "./bin/test-react"
     dst: "/usr/local/bin/test-react"
   - src: "./build/appicon.png"
-    dst: "/usr/share/icons/hicolor/128x128/apps/test-react.png"
+    dst: "/usr/share/icons/hicolor/128x128/app/test-react.png"
   - src: "./build/linux/test-react.desktop"
     dst: "/usr/share/applications/test-react.desktop"
 

@@ -86,7 +86,7 @@ tasks:
     dir: "{{.FRONTEND_DIR}}"
     sources:
       - "**/*"
-      - "../../../pkgs/**/*"
+      - "../../../pkg/**/*"
       - exclude: node_modules/**/*
       - exclude: dist/**/*
     generates:
@@ -154,8 +154,8 @@ tasks:
       - exclude: "{{.FRONTEND_DIR}}/**/*"
       - "{{.FRONTEND_DIR}}/bindings/**/*"  # Rerun when switching between dev/production mode causes changes in output
       - "**/*.go"
-      - "{{.REPO_ROOT}}/apps/**/*.go"
-      - "{{.REPO_ROOT}}/pkgs/**/*.go"
+      - "{{.REPO_ROOT}}/app/**/*.go"
+      - "{{.REPO_ROOT}}/pkg/**/*.go"
       - "{{.REPO_ROOT}}/go.mod"
       - "{{.REPO_ROOT}}/go.sum"
     generates:

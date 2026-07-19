@@ -1,6 +1,6 @@
 package internal
 
-import greet_types "github.com/nimaeskandary/wails3-react-polylith/pkgs/greet/go/types"
+import greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
 
 type greetServiceImpl struct{}
 
