@@ -1,11 +1,28 @@
-**/.task/
-**/.wails_bin/
-**/dist/
+
+# storybook
+storybook/storybook-static
+
+# node
 **/node_modules/
+**/dist/
+
+# Task
+**/.task/
+
+# Wails
+**/.wails_bin/
 **/build/linux/appimage/build
 **/build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
 **/build/ios/xcode/overlay.json
 **/build/ios/xcode/gen/
 **/build/android/overlay.json
 **/build/android/gen/
-storybook/storybook-static
+**/build/android/.gradle/
+**/build/android/app/build/
+**/build/android/app/src/main/jniLibs/*/libwails.so
+**/build/ios/DerivedData/
+**/build/linux/*.desktop
+cmd/gordle/build/linux/appimage/Gordle
+cmd/gordle/build/linux/appimage/Gordle.png
+**/wails_windows_*.syso
+**/wails_obfuscated.gen.go

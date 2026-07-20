@@ -6,9 +6,9 @@ version: '3'
 # This information is used to generate the build assets.
 info:
   companyName: "NimaEskandary" # The name of the company
-  productName: "NimaEskandary" # The name of the application
-  productIdentifier: "com.nimaeskandary.nimaeskandary" # The unique product identifier
-  description: "" # The application description
+  productName: "Gordle" # The name of the application
+  productIdentifier: "com.nimaeskandary.gordle" # The unique product identifier
+  description: "Gordle" # The application description
   copyright: "(c) 2026, Nima Eskandary" # Copyright text
   comments: "" # Comments
   version: "0.0.1" # The application version

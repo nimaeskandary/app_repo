@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name=My Product
-Comment=A test-react application
+Name=Gordle
+Comment=Gordle
 # The Exec line includes %u to pass the URL to the application
-Exec=/usr/local/bin/test-react %u
+Exec=/usr/local/bin/Gordle %u
 Terminal=false
 Type=Application
-Icon=test-react
+Icon=Gordle
 Categories=Utility;
-StartupWMClass=test-react
+StartupWMClass=Gordle
 
  

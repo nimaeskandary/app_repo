@@ -24,5 +24,5 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "bindings", "../../../pkgs"],
+  "include": ["src", "bindings", "../../../pkg"],
 }

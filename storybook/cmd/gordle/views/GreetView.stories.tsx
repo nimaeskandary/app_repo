@@ -1,10 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useArgs } from 'storybook/preview-api'
-import GreetView from '../../cmd/gordle/frontend/src/GreetView'
+import GreetView from '../../../../cmd/gordle/frontend/src/GreetView'
+import GordlePreview from '../GordlePreview'
 
 const meta = {
-  title: 'Greet/GreetView',
+  title: 'Apps/Gordle/Views/GreetView',
   component: GreetView,
+  decorators: [
+    (Story) => (
+      <GordlePreview>
+        <Story />
+      </GordlePreview>
+    ),
+  ],
+  parameters: {
+    layout: 'fullscreen',
+  },
   argTypes: {
     name: { control: 'text' },
     titleName: { control: 'text' },
@@ -24,7 +35,7 @@ export const Default: Story = {
   args: {
     name: '',
     titleName: 'React',
-    time: new Date().toUTCString(),
+    time: '02:35:06',
     toastMessage: '',
     isToastVisible: false,
     onNameChange: () => {},

@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "./gordle.css";
+
+html {
+    background: #06070f;
+}
+html, body {
+    margin: 0;
+}
+body {
+    overflow-x: hidden;
+    /* Nothing in the chrome is selectable (it's an app, not a document); the
+       text input opts back in below. */
+    -webkit-user-select: none;
+    user-select: none;
+    /* Drag the window by its background. Interactive controls opt out with
+       --wails-draggable: no-drag (the property inherits). */
+    --wails-draggable: drag;
+}
+
+/* Framework mount nodes (#app / #root) shouldn't affect the app-shell layout. */
+#app, #root { display: contents; }
+
+/* Interactive elements: clickable (not draggable) and, for the input, selectable. */
+.brand-mark, .brand-badge, .input-box, .btn, .footer-docs, .toast {
+    --wails-draggable: no-drag;
+}
+.input, input[type="text"] {
+    -webkit-user-select: text;
+    user-select: text;
+}
