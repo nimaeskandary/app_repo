@@ -6,12 +6,12 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
 export function Greet(name: string): $CancellablePromise<string> {
-    return $Call.ByID(542664801, name);
+    return $Call.ByID(408870530, name);
 }
 
 /**
  * Stop is called when the fx system is shutdown, used for graceful shutdown of components
  */
 export function Stop(): $CancellablePromise<void> {
-    return $Call.ByID(2325132056);
+    return $Call.ByID(2507534237);
 }

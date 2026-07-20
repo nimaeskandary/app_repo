@@ -1,7 +1,7 @@
 package bridge
 
 import (
-	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
+	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
 )
 
 // structs in this package embed the interface we want to expose to the frontend. Wails will generate bindings

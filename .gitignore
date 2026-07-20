@@ -22,7 +22,7 @@ storybook/storybook-static
 **/build/android/app/src/main/jniLibs/*/libwails.so
 **/build/ios/DerivedData/
 **/build/linux/*.desktop
-cmd/gordle/build/linux/appimage/Gordle
-cmd/gordle/build/linux/appimage/Gordle.png
+cmd/gordle_app/build/linux/appimage/Gordle
+cmd/gordle_app/build/linux/appimage/Gordle.png
 **/wails_windows_*.syso
 **/wails_obfuscated.gen.go

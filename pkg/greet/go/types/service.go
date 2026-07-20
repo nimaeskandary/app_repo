@@ -1,7 +1,7 @@
 package greet_types
 
 import (
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 )
 
 type GreetService interface {

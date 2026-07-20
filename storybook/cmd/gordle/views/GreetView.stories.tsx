@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useArgs } from 'storybook/preview-api'
-import GreetView from '../../../../cmd/gordle/frontend/src/GreetView'
+import GreetView from '../../../../cmd/gordle_app/frontend/src/GreetView'
 import GordlePreview from '../GordlePreview'
 
 const meta = {

@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react'
-import '../../../cmd/gordle/frontend/src/gordle.css'
+import '../../../cmd/gordle_app/frontend/src/gordle.css'
 
 function GordlePreview({ children }: PropsWithChildren) {
   return (

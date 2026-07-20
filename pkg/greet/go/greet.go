@@ -1,9 +1,9 @@
 package greet
 
 import (
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/internal"
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
+	"github.com/nimaeskandary/app_repo/pkg/greet/go/internal"
+	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
 
 	"go.uber.org/fx"
 )

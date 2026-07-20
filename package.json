@@ -1,5 +1,5 @@
 {
-  "name": "wails3-react-polylith",
+  "name": "app_repo",
   "private": true,
   "devEngines": {
     "runtime": {
@@ -14,16 +14,16 @@
     }
   },
   "workspaces": [
-    "cmd/gordle/frontend",
+    "cmd/gordle_app/frontend",
     "storybook"
   ],
   "scripts": {
-    "wails-app:dev": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run dev",
-    "wails-app:build": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run build",
-    "wails-app:build:dev": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run build:dev",
-    "wails-app:preview": "npm --workspace @wails3-react-polylith/apps-wails-app-frontend run preview",
-    "storybook": "npm --workspace @wails3-react-polylith/storybook run storybook",
-    "build-storybook": "npm --workspace @wails3-react-polylith/storybook run build"
+    "wails-app:dev": "npm --workspace @app_repo/gordle_app_frontend run dev",
+    "wails-app:build": "npm --workspace @app_repo/gordle_app_frontend run build",
+    "wails-app:build:dev": "npm --workspace @app_repo/gordle_app_frontend run build:dev",
+    "wails-app:preview": "npm --workspace @app_repo/gordle_app_frontend run preview",
+    "storybook": "npm --workspace @app_repo/storybook run storybook",
+    "build-storybook": "npm --workspace @app_repo/storybook run build"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

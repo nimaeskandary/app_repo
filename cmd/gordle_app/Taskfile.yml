@@ -3,11 +3,11 @@ version: '3'
 vars:
   APP_NAME: "Gordle"
   REPO_ROOT: "../.."
-  APP_PATH: "cmd/gordle"
+  APP_PATH: "cmd/gordle_app"
   APP_DIR: "{{.REPO_ROOT}}/{{.APP_PATH}}"
   FRONTEND_PATH: "{{.APP_PATH}}/frontend"
   FRONTEND_DIR: "{{.REPO_ROOT}}/{{.FRONTEND_PATH}}"
-  FRONTEND_WORKSPACE: "@wails3-react-polylith/apps-wails-app-frontend"
+  FRONTEND_WORKSPACE: "@app_repo/gordle_app_frontend"
   # Non-template: keep Wails build artifacts out of the build scripts folder.
   BIN_DIR: ".wails_bin"
   PACKAGE_MANAGER: '{{.PACKAGE_MANAGER | default "npm"}}'

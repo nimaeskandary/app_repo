@@ -3,7 +3,7 @@ package internal
 import (
 	"context"
 
-	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
+	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
 )
 
 type greetServiceImpl struct{}

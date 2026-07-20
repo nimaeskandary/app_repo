@@ -48,8 +48,8 @@ const preview: Preview = {
           },
           type: 'mobile',
         },
-        gordleDesktop: {
-          name: 'Gordle Desktop',
+        desktop: {
+          name: 'Desktop',
           styles: {
             width: '1000px',
             height: '618px',

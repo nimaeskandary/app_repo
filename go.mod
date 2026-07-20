@@ -1,4 +1,4 @@
-module github.com/nimaeskandary/wails3-react-polylith
+module github.com/nimaeskandary/app_repo
 
 go 1.26.5
 

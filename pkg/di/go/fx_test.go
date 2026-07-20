@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/fx"

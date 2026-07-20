@@ -7,10 +7,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/nimaeskandary/wails3-react-polylith/cmd/gordle/app"
-	"github.com/nimaeskandary/wails3-react-polylith/cmd/gordle/app/bridge"
-	di "github.com/nimaeskandary/wails3-react-polylith/pkg/di/go"
-	greet_types "github.com/nimaeskandary/wails3-react-polylith/pkg/greet/go/types"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/app"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/app/bridge"
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
+	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
