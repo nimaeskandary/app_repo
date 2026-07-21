@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./gordle.css";
 
 html {
     background: #06070f;
@@ -19,9 +18,10 @@ body {
 }
 
 /* Interactive elements: clickable (not draggable) and, for the input, selectable. */
-.brand-mark, .brand-badge, .input-box, .btn, .footer-docs, .toast {
+.not-draggable {
     --wails-draggable: no-drag;
 }
+
 .input, input[type="text"] {
     -webkit-user-select: text;
     user-select: text;

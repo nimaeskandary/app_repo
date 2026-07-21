@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import GordleView, { GordleCellState } from '../../../../cmd/gordle_app/frontend/src/pages/gordle/GordleView'
-import GordlePreview from '../GordlePreview'
+import GordleView, { GordleCellState } from '@/cmd/gordle_app/frontend/src/pages/gordle/GordleView'
+import GordlePreview from '@/storybook/cmd/gordle/GordlePreview'
+
 
 const meta = {
-  title: 'Cmd/Gordle/Views/GordleView',
+  title: 'Cmd/Gordle/Views/Gordle',
   component: GordleView,
   decorators: [
     (Story) => (
@@ -12,9 +13,6 @@ const meta = {
       </GordlePreview>
     ),
   ],
-  parameters: {
-    layout: 'centered',
-  },
   argTypes: {
     cells: { control: 'object' },
   },
