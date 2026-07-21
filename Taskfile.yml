@@ -1,0 +1,5 @@
+version: '3'
+
+includes:
+  gordle_app:
+    taskfile: cmd/gordle_app/Taskfile.yml
