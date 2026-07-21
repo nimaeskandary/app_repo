@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/nimaeskandary/app_repo/cmd/gordle_app/app"
-	"github.com/nimaeskandary/app_repo/cmd/gordle_app/app/bridge"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -36,7 +36,7 @@ func main() {
 	ctx := context.Background()
 
 	var greetService greet_types.GreetService
-	fxApp := di.CreateFxAppAndExtract(app.ModuleList(), &greetService)
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(), &greetService)
 
 	log.Println("starting dependency injection system...")
 	if err := fxApp.Start(ctx); err != nil {

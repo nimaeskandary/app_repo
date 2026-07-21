@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Container } from '@/pkg/ui/ts/container'
-import { H1 } from '@/pkg/ui/ts/typography'
-import { PrimaryButton } from '@/pkg/ui/ts/button'
+import { Container } from '@/pkg/ui/ts/design/container'
+import { H1 } from '@/pkg/ui/ts/design/typography'
+import { PrimaryButton } from '@/pkg/ui/ts/design/button'
 
 const meta = {
-  title: 'UI/Container',
+  title: 'UI/Design/Container',
   parameters: {
     layout: 'centered',
   },

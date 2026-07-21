@@ -1,4 +1,4 @@
-package app
+package internal
 
 import (
 	greet "github.com/nimaeskandary/app_repo/pkg/greet/go"

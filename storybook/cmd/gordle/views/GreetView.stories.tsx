@@ -4,7 +4,7 @@ import GreetView from '../../../../cmd/gordle_app/frontend/src/GreetView'
 import GordlePreview from '../GordlePreview'
 
 const meta = {
-  title: 'Apps/Gordle/Views/GreetView',
+  title: 'Cmd/Gordle/Views/GreetView',
   component: GreetView,
   decorators: [
     (Story) => (

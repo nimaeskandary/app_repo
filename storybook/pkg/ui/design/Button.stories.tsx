@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { InfoButton, PrimaryButton, ErrorButton, SecondaryButton, SuccessButton } from '@/pkg/ui/ts/button'
+import { InfoButton, PrimaryButton, ErrorButton, SecondaryButton, SuccessButton } from '@/pkg/ui/ts/design/button'
 
 const meta = {
-  title: 'UI/Button',
+  title: 'UI/Design/Button',
   parameters: {
     layout: 'centered',
   },
