@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Box } from '@/pkg/ui/ts/design/box'
-import { Body1 } from '@/pkg/ui/ts/design/typography'
-import { PrimaryButton } from '@/pkg/ui/ts/design/button'
+import { Box } from '@/pkg/ui/ts/mui/box'
+import { Body1 } from '@/pkg/ui/ts/mui/typography'
+import { PrimaryButton } from '@/pkg/ui/ts/mui/button'
 
 const meta = {
-  title: 'UI/Design/Box',
+  title: 'UI/MUI/Box',
   parameters: {
     layout: 'centered',
   },
@@ -18,7 +18,7 @@ export const Default: Story = {
   render: () => (
     <Box>
       <Body1>This is a box</Body1>
-      <PrimaryButton title='woot' onClick={() => {}} />
+      <PrimaryButton onClick={() => {}}>woot</PrimaryButton>
     </Box>
   ),
 }

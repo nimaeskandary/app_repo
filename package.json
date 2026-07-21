@@ -18,10 +18,7 @@
     "storybook"
   ],
   "scripts": {
-    "wails-app:dev": "npm --workspace @app_repo/gordle_app_frontend run dev",
-    "wails-app:build": "npm --workspace @app_repo/gordle_app_frontend run build",
-    "wails-app:build:dev": "npm --workspace @app_repo/gordle_app_frontend run build:dev",
-    "wails-app:preview": "npm --workspace @app_repo/gordle_app_frontend run preview",
+    "gordle_app:dev": "npm --workspace @app_repo/gordle_app_frontend run dev",
     "storybook": "npm --workspace @app_repo/storybook run storybook",
     "build-storybook": "npm --workspace @app_repo/storybook run build"
   },
@@ -32,7 +29,8 @@
     "@mui/material": "9.2.0",
     "@wailsio/runtime": "latest",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "react-router-dom": "7.18.1"
   },
   "devDependencies": {
     "@storybook/react-vite": "^10.4.0",

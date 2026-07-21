@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Stack } from '@/pkg/ui/ts/design/stack'
-import { Body1 } from '@/pkg/ui/ts/design/typography'
+import { Stack } from '@/pkg/ui/ts/mui/stack'
+import { Body1 } from '@/pkg/ui/ts/mui/typography'
 
 const meta = {
-  title: 'UI/Design/Stack',
+  title: 'UI/MUI/Stack',
   parameters: {
     layout: 'centered',
   },

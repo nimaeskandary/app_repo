@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { PrimaryButton } from '@/pkg/ui/ts/mui/button'
 
 export type GreetViewProps = {
   name: string
@@ -23,6 +25,7 @@ function GreetView({
   onGreet,
 }: GreetViewProps) {
   const titleNameRef = useRef<HTMLSpanElement | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const titleNameElement = titleNameRef.current
@@ -73,6 +76,9 @@ function GreetView({
               <svg className="size-4 sm:size-4.25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
             </button>
           </div>
+          <PrimaryButton className="mt-3" onClick={() => navigate('/gordle')}>
+            Play Gordle
+          </PrimaryButton>
         </div>
       </main>
 

@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import { Events, WML } from '@wailsio/runtime'
-import { GreetService } from '@/cmd/gordle_app/frontend/bindings/github.com/nimaeskandary/app_repo/cmd/gordle_app/app/bridge'
+import { GreetService } from '@/cmd/gordle_app/frontend/bindings/github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge'
 import GreetView from '@/cmd/gordle_app/frontend/src/GreetView'
+import GordleView, { GordleCell, GordleCellState } from '@/cmd/gordle_app/frontend/src/pages/gordle/GordleView'
+
+const initialGordleCells: GordleCell[][] = Array.from({ length: 6 }, () =>
+  Array.from({ length: 5 }, () => ({ letter: '', state: GordleCellState.Unguessed })),
+)
 
 function App() {
   const [name, setName] = useState<string>('')
@@ -40,15 +46,23 @@ function App() {
   }, [])
 
   return (
-    <GreetView
-      name={name}
-      titleName={titleName}
-      time={time}
-      toastMessage={toastMessage}
-      isToastVisible={isToastVisible}
-      onNameChange={setName}
-      onGreet={doGreet}
-    />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <GreetView
+            name={name}
+            titleName={titleName}
+            time={time}
+            toastMessage={toastMessage}
+            isToastVisible={isToastVisible}
+            onNameChange={setName}
+            onGreet={doGreet}
+          />
+        }
+      />
+      <Route path="/gordle" element={<GordleView cells={initialGordleCells} />} />
+    </Routes>
   )
 }
 

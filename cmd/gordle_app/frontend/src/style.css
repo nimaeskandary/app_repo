@@ -18,9 +18,6 @@ body {
     --wails-draggable: drag;
 }
 
-/* Framework mount nodes (#app / #root) shouldn't affect the app-shell layout. */
-#app, #root { display: contents; }
-
 /* Interactive elements: clickable (not draggable) and, for the input, selectable. */
 .brand-mark, .brand-badge, .input-box, .btn, .footer-docs, .toast {
     --wails-draggable: no-drag;

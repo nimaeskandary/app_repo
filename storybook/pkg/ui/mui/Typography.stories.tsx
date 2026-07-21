@@ -13,10 +13,10 @@ import {
   Overline,
   Subtitle1,
   Subtitle2,
-} from '@/pkg/ui/ts/design/typography'
+} from '@/pkg/ui/ts/mui/typography'
 
 const meta = {
-  title: 'UI/Design/Typography',
+  title: 'UI/MUI/Typography',
   parameters: {
     layout: 'padded',
   },

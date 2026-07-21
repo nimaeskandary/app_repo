@@ -38,11 +38,6 @@
         url("/bg-desktop.jpg") center / cover no-repeat;
 }
 
-.gordle .app-shell {
-    padding: max(var(--s-4), env(safe-area-inset-top)) max(var(--s-4), env(safe-area-inset-right))
-             0 max(var(--s-5), env(safe-area-inset-left));
-}
-
 .gordle .badge {
     display: inline-block;
     padding: 4px 12px;
