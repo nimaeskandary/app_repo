@@ -18,7 +18,6 @@
     "storybook"
   ],
   "scripts": {
-    "gordle_app:dev": "npm --workspace @app_repo/gordle_app_frontend run dev",
     "storybook": "npm --workspace @app_repo/storybook run storybook",
     "build-storybook": "npm --workspace @app_repo/storybook run build"
   },

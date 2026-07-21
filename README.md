@@ -38,7 +38,7 @@ storybook/                  # frontend component previews
 
 ### Common commands
 
-The wails3 example template ships with build scripts for all platforms wired up via the tool [task](https://taskfile.dev/). I reccomend getting an IDE plugin to easily view available tasks.
+The wails3 example template ships with build scripts for all platforms wired up via the tool [task](https://taskfile.dev/). I recommend getting an IDE plugin to easily view available tasks.
 
 * run dev mode on host, this will hot reload: `task gordle_app:dev`
 * launch app on ios simulator: `task gordle_app:ios:run`
