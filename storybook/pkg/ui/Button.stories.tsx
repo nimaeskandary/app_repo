@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { InfoButton, PrimaryButton, ErrorButton, SecondaryButton, SuccessButton } from '@/pkg/ui/ts/button'
-import { fn } from 'storybook/test'
 
 const meta = {
   title: 'UI/Button',
@@ -16,11 +15,11 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
-      <PrimaryButton title='primary' onClick={fn()} />
-      <SecondaryButton title='secondary' onClick={fn()} />
-      <ErrorButton title='error' onClick={fn()} />
-      <InfoButton title='info' onClick={fn()} />
-      <SuccessButton title='success' onClick={fn()} />
+      <PrimaryButton title='primary' onClick={() => {}} />
+      <SecondaryButton title='secondary' onClick={() => {}} />
+      <ErrorButton title='error' onClick={() => {}} />
+      <InfoButton title='info' onClick={() => {}} />
+      <SuccessButton title='success' onClick={() => {}} />
     </div>
   )
 }

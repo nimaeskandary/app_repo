@@ -45,10 +45,6 @@ The wails3 example template ships with build scripts for all platforms wired up 
 * build: `task gordle_app:build`
 * re generate TypeScript bindings: `task gordle_app:common:generate:bindings`, autogenerates bindings in `cmd/gordle_app/frontend/bindings`
 
-## Dependency injection
-
-This project uses 
-
 ## Storybook
 
 Storybook is used to preview frontend components. See `./storybook`
