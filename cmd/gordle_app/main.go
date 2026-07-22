@@ -4,13 +4,14 @@ import (
 	"context"
 	"embed"
 
-	"log"
 	"time"
 
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
+	observability "github.com/nimaeskandary/app_repo/pkg/observability/go"
+	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -37,22 +38,25 @@ func main() {
 	ctx := context.Background()
 
 	var greetService greet_types.GreetService
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(), &greetService)
+	var logger obs_types.Logger
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(), &greetService, &logger)
 
-	log.Println("starting dependency injection system...")
+	logger.Info(ctx, "starting dependency injection system")
 	if err := fxApp.Start(ctx); err != nil {
-		log.Fatalf("dependency injection system failed to start: %v", err)
+		logger.Error(ctx, "dependency injection system failed to start", "error", err)
+		return
 	}
 	defer func() {
-		log.Println("stopping dependency injection system...")
+		logger.Info(ctx, "stopping dependency injection system")
 		if err := fxApp.Stop(ctx); err != nil {
-			log.Printf("dependency injection system failed to stop gracefully: %v", err)
+			logger.Error(ctx, "dependency injection system failed to stop gracefully", "error", err)
 		}
 	}()
 
 	wailsApp := application.New(application.Options{
 		Name:        "Gordle",
 		Description: "Wails3 react example app",
+		Logger:      observability.AsSlog(logger),
 		Services: []application.Service{
 			application.NewService(&bridge.GreetService{GreetService: greetService}),
 		},
@@ -98,6 +102,6 @@ func main() {
 
 	// If an error occurred while running the application, log it and exit.
 	if err != nil {
-		log.Print(err)
+		logger.Error(ctx, "wails application failed to run", "error", err)
 	}
 }
