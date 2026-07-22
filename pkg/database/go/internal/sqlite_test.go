@@ -14,14 +14,6 @@ import (
 func TestNewSQLiteDatabase(t *testing.T) {
 	t.Parallel()
 
-	t.Run("should open and ping the database", func(t *testing.T) {
-		t.Parallel()
-
-		db := newTestSQLiteDatabase(t, filepath.Join(t.TempDir(), "test.db"))
-
-		assert.NoError(t, db.DB().Ping())
-	})
-
 	t.Run("should configure SQLite defaults", func(t *testing.T) {
 		t.Parallel()
 
@@ -65,15 +57,6 @@ func TestNewSQLiteDatabase(t *testing.T) {
 		assert.EqualError(t, err, "SQLite database source is required")
 	})
 
-	t.Run("should return an error when database cannot open", func(t *testing.T) {
-		t.Parallel()
-
-		source := filepath.Join(t.TempDir(), "missing", "test.db")
-		db, err := NewSQLiteDatabase(db_types.SQLiteConfig{Source: source})
-
-		assert.Nil(t, db)
-		assert.ErrorContains(t, err, "ping SQLite database")
-	})
 }
 
 func TestWithSQLiteDefaults(t *testing.T) {

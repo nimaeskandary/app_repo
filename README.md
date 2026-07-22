@@ -62,3 +62,10 @@ To launch the local storybook server: `npm run storybook`
 ### Go
 
 run `./bin/go test ./...`
+
+#### Mocks
+
+* this project uses https://vektra.github.io/mockery
+* to mark an interface for mock generation, use the comment `//mockery:generate: true`
+* to generate mocks, run `bin/generate-mocks.sh`
+* mocks will be generated in a `mocks/` subfolder in the package of the interface, e.g. `pkg/user/go/types/mocks`

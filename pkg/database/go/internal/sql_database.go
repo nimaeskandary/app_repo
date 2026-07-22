@@ -3,11 +3,14 @@ package internal
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 	"sync"
 
 	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
 )
 
+// sqlDatabase wraps a validated database connection pool.
 type sqlDatabase struct {
 	db        *sql.DB
 	dialect   db_types.Dialect
@@ -15,11 +18,19 @@ type sqlDatabase struct {
 	stopError error
 }
 
-func newSQLDatabase(db *sql.DB, dialect db_types.Dialect) db_types.SQLDatabase {
+// newSQLDatabase verifies a connection before making it available to callers.
+func newSQLDatabase(db *sql.DB, dialect db_types.Dialect) (db_types.SQLDatabase, error) {
+	if err := db.Ping(); err != nil {
+		return nil, errors.Join(
+			fmt.Errorf("ping %s database: %w", dialect, err),
+			db.Close(),
+		)
+	}
+
 	return &sqlDatabase{
 		db:      db,
 		dialect: dialect,
-	}
+	}, nil
 }
 
 func (d *sqlDatabase) DB() *sql.DB {

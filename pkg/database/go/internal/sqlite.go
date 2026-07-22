@@ -12,8 +12,10 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+// sqliteMaxOpenConnections avoids concurrent SQLite writers in this application.
 const sqliteMaxOpenConnections = 1
 
+// NewSQLiteDatabase opens a validated SQLite database connection.
 func NewSQLiteDatabase(cfg db_types.SQLiteConfig) (db_types.SQLDatabase, error) {
 	if cfg.Source == "" {
 		return nil, errors.New("SQLite database source is required")
@@ -25,16 +27,10 @@ func NewSQLiteDatabase(cfg db_types.SQLiteConfig) (db_types.SQLDatabase, error) 
 	}
 	db.SetMaxOpenConns(sqliteMaxOpenConnections)
 
-	if err := db.Ping(); err != nil {
-		return nil, errors.Join(
-			fmt.Errorf("ping SQLite database: %w", err),
-			db.Close(),
-		)
-	}
-
-	return newSQLDatabase(db, db_types.DialectSQLite), nil
+	return newSQLDatabase(db, db_types.DialectSQLite)
 }
 
+// withSQLiteDefaults adds connection-level pragmas to every pooled connection.
 func withSQLiteDefaults(source string) string {
 	separator := "?"
 	if strings.Contains(source, "?") {
