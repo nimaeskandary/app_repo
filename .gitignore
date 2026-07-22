@@ -1,3 +1,5 @@
+# misc
+**/.DS_Store
 
 # storybook
 storybook/storybook-static
@@ -22,7 +24,10 @@ storybook/storybook-static
 **/build/android/app/src/main/jniLibs/*/libwails.so
 **/build/ios/DerivedData/
 **/build/linux/*.desktop
-cmd/gordle_app/build/linux/appimage/Gordle
-cmd/gordle_app/build/linux/appimage/Gordle.png
+**/build/darwin/icons.icns
+**/build/darwin/Assets.car
+**/build/linux/appimage/Gordle
+**/build/linux/appimage/Gordle.png
 **/wails_windows_*.syso
 **/wails_obfuscated.gen.go
+
