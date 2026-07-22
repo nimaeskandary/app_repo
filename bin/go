@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+# wrap system go
+# set GOEXPERIMENT=jsonv2 because this project uses the encoding/json/v2 package
+exec env GOEXPERIMENT=jsonv2 go "$@"

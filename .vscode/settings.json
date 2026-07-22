@@ -1,11 +1,16 @@
 {
     "go.toolsEnvVars": {
-        // for ios library intellisense , e.g. application.IOS
-        "CGO_ENABLED": "1"
+        // for wails ios library application.IOS
+        "CGO_ENABLED": "1",
+        "GOEXPERIMENT": "jsonv2",
+    },
+    "go.testEnvVars": {
+        "GOEXPERIMENT": "jsonv2",
     },
     "gopls": {
         "env": {
-        "CGO_ENABLED": "1"
+        "CGO_ENABLED": "1",
+        "GOEXPERIMENT": "jsonv2",
         }
     }
 }

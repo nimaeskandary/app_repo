@@ -16,6 +16,9 @@ vars:
   # by `wails3 build GOOS=...` (or the GOOS env var) for cross-compilation.
   GOOS: '{{.GOOS | default OS}}'
 
+env:
+  GOEXPERIMENT: jsonv2
+
 includes:
   wails:
     taskfile: ../../tools/wails/app/Taskfile.yml

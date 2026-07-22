@@ -4,6 +4,7 @@ go 1.26.5
 
 require (
 	github.com/stretchr/testify v1.11.1
+	github.com/tailscale/hujson v0.0.0-20260718110524-10d7940d4c87
 	github.com/wailsapp/wails/v3 v3.0.0-alpha2.117
 	go.uber.org/fx v1.24.0
 )

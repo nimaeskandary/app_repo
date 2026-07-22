@@ -4,8 +4,7 @@ import (
 	"context"
 	"embed"
 
-	"time"
-
+	app_config "github.com/nimaeskandary/app_repo/cmd/gordle_app/config"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
@@ -24,10 +23,6 @@ import (
 var assets embed.FS
 
 func init() {
-	// Register a custom event whose associated data type is string.
-	// This is not required, but the binding generator will pick up registered events
-	// and provide a strongly typed JS/TS API for them.
-	application.RegisterEvent[string]("time")
 	application.RegisterEvent[string]("gordle_app:navigate:path")
 }
 
@@ -39,7 +34,7 @@ func main() {
 
 	var greetService greet_types.GreetService
 	var logger obs_types.Logger
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(), &greetService, &logger)
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(app_config.Bytes), &greetService, &logger)
 
 	logger.Info(ctx, "starting dependency injection system")
 	if err := fxApp.Start(ctx); err != nil {
@@ -86,16 +81,6 @@ func main() {
 		BackgroundColour: application.NewRGB(6, 7, 15),
 		URL:              "/",
 	})
-
-	// Create a goroutine that emits an event containing the current time every second.
-	// The frontend can listen to this event and update the UI accordingly.
-	go func() {
-		for {
-			now := time.Now().Format(time.RFC1123)
-			wailsApp.Event.Emit("time", now)
-			time.Sleep(time.Second)
-		}
-	}()
 
 	// Run the application. This blocks until the application has been exited.
 	err := wailsApp.Run()

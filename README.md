@@ -16,7 +16,11 @@ pkg/                        # reusable packages
 storybook/                  # frontend component previews
 ```
 
-## Dependencies
+
+
+## Setup
+
+### Dependencies
 
 * go 1.26+
 * node 26
@@ -24,11 +28,13 @@ storybook/                  # frontend component previews
 * docker
 * task (https://taskfile.dev/)
 
-## Setup
-
 * run `npm install`
-* Install [wails3](https://v3.wails.io/quick-start/installation/) as a global go tool via go install. Run through the setup wizard that will check if you have things like xcode, virtual devices, etc setup
+* install [wails3](https://v3.wails.io/quick-start/installation/) as a global go tool via go install. Run through the setup wizard that will check if you have things like xcode, virtual devices, etc setup
 * run `wails3 doctor` - this should say your system is ready
+
+## Go commands
+
+Use `bin/go` for Go commands, for example `bin/go test ./...`
 
 ## Wails
 
@@ -51,9 +57,8 @@ Storybook is used to preview frontend components. See `./storybook`
 
 To launch the local storybook server: `npm run storybook`
 
-## TypeScript imports
+## Tests
 
-Prefix repository paths with `@/` when using them as imports, and import things relative to the root directory, e.g. 
+### Go
 
-* @/cmd/gordle_app/frontend/src/*
-* @/pkg/*  
+run `./bin/go test ./...`
