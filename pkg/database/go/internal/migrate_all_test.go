@@ -23,6 +23,7 @@ func TestNewMigrateAll(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.NotNil(t, migrateAll)
+		assert.NoError(t, migrateAll.Start(t.Context()))
 	})
 
 	t.Run("should return migration errors", func(t *testing.T) {
@@ -34,8 +35,8 @@ func TestNewMigrateAll(t *testing.T) {
 
 		migrateAll, err := NewMigrateAll(migrator)
 
-		assert.Nil(t, migrateAll)
-		assert.ErrorIs(t, err, migrationError)
+		require.NoError(t, err)
+		assert.ErrorIs(t, migrateAll.Start(t.Context()), migrationError)
 	})
 }
 

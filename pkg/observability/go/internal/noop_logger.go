@@ -24,6 +24,10 @@ func (l *noopLogger) CtxWithLogAttributes(ctx context.Context, _ ...any) context
 	return ctx
 }
 
+func (l *noopLogger) Start(context.Context) error {
+	return nil
+}
+
 func (l *noopLogger) Stop(context.Context) error {
 	return nil
 }

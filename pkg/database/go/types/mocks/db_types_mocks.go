@@ -94,6 +94,57 @@ func (_c *MockMigrator_Down_Call) RunAndReturn(run func(ctx context.Context, ver
 	return _c
 }
 
+// Start provides a mock function for the type MockMigrator
+func (_mock *MockMigrator) Start(ctx context.Context) error {
+	ret := _mock.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Start")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = returnFunc(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockMigrator_Start_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Start'
+type MockMigrator_Start_Call struct {
+	*mock.Call
+}
+
+// Start is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockMigrator_Expecter) Start(ctx any) *MockMigrator_Start_Call {
+	return &MockMigrator_Start_Call{Call: _e.mock.On("Start", ctx)}
+}
+
+func (_c *MockMigrator_Start_Call) Run(run func(ctx context.Context)) *MockMigrator_Start_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		run(
+			arg0,
+		)
+	})
+	return _c
+}
+
+func (_c *MockMigrator_Start_Call) Return(err error) *MockMigrator_Start_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockMigrator_Start_Call) RunAndReturn(run func(ctx context.Context) error) *MockMigrator_Start_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Stop provides a mock function for the type MockMigrator
 func (_mock *MockMigrator) Stop(ctx context.Context) error {
 	ret := _mock.Called(ctx)

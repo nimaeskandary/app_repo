@@ -21,6 +21,8 @@ type SQLDatabase interface {
 	DB() *sql.DB
 	// Dialect returns the database SQL dialect.
 	Dialect() Dialect
+	// Start opens and validates the database connection pool.
+	Start(ctx context.Context) error
 	// Stop closes the database connection pool.
 	Stop(ctx context.Context) error
 }

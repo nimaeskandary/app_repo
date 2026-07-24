@@ -7,15 +7,22 @@ import (
 	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
 )
 
-// migrateAll represents completed startup migration work.
-type migrateAll struct{}
+// migrateAll runs all pending migrations during startup.
+type migrateAll struct {
+	migrator db_types.Migrator
+}
 
-// NewMigrateAll runs every pending migration during dependency construction.
+// NewMigrateAll creates startup migration work.
 func NewMigrateAll(migrator db_types.Migrator) (db_types.MigrateAll, error) {
-	if err := migrator.Up(context.Background(), nil); err != nil {
-		return nil, fmt.Errorf("run all migrations: %w", err)
+	return &migrateAll{migrator: migrator}, nil
+}
+
+// Start runs every pending migration.
+func (m *migrateAll) Start(ctx context.Context) error {
+	if err := m.migrator.Up(ctx, nil); err != nil {
+		return fmt.Errorf("run all migrations: %w", err)
 	}
-	return &migrateAll{}, nil
+	return nil
 }
 
 // Stop does nothing because the migrator owns migration resources.

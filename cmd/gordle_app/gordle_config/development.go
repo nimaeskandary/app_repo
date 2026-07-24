@@ -1,6 +1,6 @@
 //go:build !production && !staging
 
-package config
+package gordle_config
 
 import _ "embed"
 

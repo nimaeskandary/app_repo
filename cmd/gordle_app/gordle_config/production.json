@@ -1,0 +1,9 @@
+{
+  "AppDatabase": {
+    "AppDir": "Gordle",
+    "DbFile": "app.db"
+  },
+  "Logger": {
+    "Level": "INFO"
+  }
+}

@@ -64,6 +64,10 @@ func (l *recordingLogger) CtxWithLogAttributes(ctx context.Context, _ ...any) co
 	return ctx
 }
 
+func (l *recordingLogger) Start(context.Context) error {
+	return nil
+}
+
 func (l *recordingLogger) Stop(context.Context) error {
 	return nil
 }

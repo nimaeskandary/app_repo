@@ -8,7 +8,9 @@ type ConfigLoader[T any] interface {
 // SecretString is resolved by a SecretParser while configuration is loaded.
 type SecretString string
 
-// SecretParser resolves a raw secret value from configuration.
+// SecretParser resolves value of type SecretString from the configuration. It's expected that this injected
+// by the edge di system dependending on how the application normally wants to parse secret types.
+// If additional custom type parsers are needed, see RegisterJSONUnmarshaler
 type SecretParser interface {
 	Parse(raw string) (string, error)
 }

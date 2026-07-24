@@ -14,6 +14,21 @@ import (
 func TestNewSQLiteDatabase(t *testing.T) {
 	t.Parallel()
 
+	t.Run("should defer opening until Start", func(t *testing.T) {
+		t.Parallel()
+
+		source := filepath.Join(t.TempDir(), "test.db")
+		db, err := NewSQLiteDatabase(db_types.SQLiteConfig{Source: source})
+
+		require.NoError(t, err)
+		assert.Nil(t, db.DB())
+		assert.NoFileExists(t, source)
+
+		require.NoError(t, db.Start(t.Context()))
+		assert.FileExists(t, source)
+		require.NoError(t, db.Stop(t.Context()))
+	})
+
 	t.Run("should configure SQLite defaults", func(t *testing.T) {
 		t.Parallel()
 
@@ -56,7 +71,6 @@ func TestNewSQLiteDatabase(t *testing.T) {
 		assert.Nil(t, db)
 		assert.EqualError(t, err, "SQLite database source is required")
 	})
-
 }
 
 func TestWithSQLiteDefaults(t *testing.T) {
@@ -87,6 +101,7 @@ func newTestSQLiteDatabase(t *testing.T, source string) db_types.SQLDatabase {
 
 	db, err := NewSQLiteDatabase(db_types.SQLiteConfig{Source: source})
 	require.NoError(t, err)
+	require.NoError(t, db.Start(t.Context()))
 	t.Cleanup(func() { _ = db.Stop(context.Background()) })
 
 	return db

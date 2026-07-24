@@ -10,6 +10,13 @@ export function Greet(name: string): $CancellablePromise<string> {
 }
 
 /**
+ * Start is called when the Fx system starts.
+ */
+export function Start(): $CancellablePromise<void> {
+    return $Call.ByID(2356088565);
+}
+
+/**
  * Stop is called when the fx system is shutdown, used for graceful shutdown of components
  */
 export function Stop(): $CancellablePromise<void> {

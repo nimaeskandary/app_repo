@@ -12,8 +12,8 @@ func NewSQLiteDatabaseModule[
 	Database db_types.SQLDatabase,
 	Config db_types.SQLiteConfigProvider,
 ]() fx.Option {
-	constructor := func(cfg Config) (db_types.SQLDatabase, error) {
-		return internal.NewSQLiteDatabase(cfg.SQLiteConfig())
+	constructor := func(config Config) (db_types.SQLDatabase, error) {
+		return internal.NewSQLiteDatabase(config.SQLiteConfig())
 	}
 	return di.NewFxModule[Database]("sqlite_database", constructor)
 }
@@ -29,7 +29,7 @@ func NewMigratorModule[
 	return di.NewFxModule[Migrator]("migrator", constructor)
 }
 
-// NewMigrateAllModule runs all pending migrations during dependency construction.
+// NewMigrateAllModule runs all pending migrations during Fx startup.
 func NewMigrateAllModule[
 	Migrator db_types.Migrator,
 	MigrateAll db_types.MigrateAll,

@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"embed"
+	"log/slog"
+	"sync"
 
-	app_config "github.com/nimaeskandary/app_repo/cmd/gordle_app/config"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/gordle_config"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
@@ -34,19 +36,32 @@ func main() {
 
 	var greetService greet_types.GreetService
 	var logger obs_types.Logger
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(app_config.Bytes), &greetService, &logger)
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(gordle_config.Bytes), &greetService, &logger)
+	if fxApp == nil {
+		slog.Error("dependency injection system failed to initialize")
+		return
+	}
+	if err := fxApp.Err(); err != nil {
+		slog.Error("dependency injection system failed to initialize", "error", err)
+		return
+	}
 
 	logger.Info(ctx, "starting dependency injection system")
 	if err := fxApp.Start(ctx); err != nil {
 		logger.Error(ctx, "dependency injection system failed to start", "error", err)
 		return
 	}
-	defer func() {
-		logger.Info(ctx, "stopping dependency injection system")
-		if err := fxApp.Stop(ctx); err != nil {
-			logger.Error(ctx, "dependency injection system failed to stop gracefully", "error", err)
-		}
-	}()
+	var stopFxOnce sync.Once
+	var stop = func() {
+		stopFxOnce.Do(func() {
+			logger.Info(ctx, "stopping dependency injection system")
+			if err := fxApp.Stop(ctx); err != nil {
+				logger.Error(ctx, "dependency injection system failed to stop gracefully", "error", err)
+			}
+		})
+	}
+
+	defer stop()
 
 	wailsApp := application.New(application.Options{
 		Name:        "Gordle",
@@ -61,6 +76,7 @@ func main() {
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
+		OnShutdown: stop,
 	})
 
 	// Create a new window with the necessary options.

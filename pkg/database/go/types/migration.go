@@ -33,6 +33,8 @@ type MigrationSource struct {
 //
 //mockery:generate: true
 type Migrator interface {
+	// Start initializes the migrator.
+	Start(ctx context.Context) error
 	// Up runs all pending migrations when version is nil, or the exact supplied version.
 	Up(ctx context.Context, version *int64) error
 	// Down reverts the exact supplied version.
@@ -41,8 +43,10 @@ type Migrator interface {
 	Stop(ctx context.Context) error
 }
 
-// MigrateAll represents migration work performed during dependency construction.
+// MigrateAll represents migration work performed during startup.
 type MigrateAll interface {
+	// Start runs all pending migrations.
+	Start(ctx context.Context) error
 	// Stop releases startup migration resources.
 	Stop(ctx context.Context) error
 }

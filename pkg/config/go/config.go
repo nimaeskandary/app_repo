@@ -1,12 +1,18 @@
 package config
 
 import (
+	"encoding/json/v2"
 	"fmt"
 
 	"github.com/nimaeskandary/app_repo/pkg/config/go/internal"
 	config_types "github.com/nimaeskandary/app_repo/pkg/config/go/types"
 	"go.uber.org/fx"
 )
+
+// RegisterJSONUnmarshaler adds a custom type unmarshaler to JSON config loading.
+func RegisterJSONUnmarshaler(unmarshaler *json.Unmarshalers) {
+	internal.RegisterJSONUnmarshaler(unmarshaler)
+}
 
 func NewJsonConfigLoaderModule[T any](from []byte) fx.Option {
 	return fx.Module(

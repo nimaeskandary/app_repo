@@ -17,17 +17,28 @@ type TestInterface interface {
 }
 
 type testImpl struct {
-	stopCalled bool
-	failStop   bool
+	startCalled bool
+	failStart   bool
+	stopCalled  bool
+	failStop    bool
 }
 
-func NewTestImpl(failStop bool) *testImpl {
+func NewTestImpl(failStart bool, failStop bool) *testImpl {
 	return &testImpl{
-		failStop: failStop,
+		failStart: failStart,
+		failStop:  failStop,
 	}
 }
 
 func (t *testImpl) DoSomething() string { return "done" }
+
+func (l *testImpl) Start(ctx context.Context) error {
+	l.startCalled = true
+	if l.failStart {
+		return errors.New("start failed")
+	}
+	return nil
+}
 
 func (l *testImpl) Stop(ctx context.Context) error {
 	l.stopCalled = true
@@ -49,7 +60,7 @@ func Test_DI(t *testing.T) {
 			var extracted TestInterface
 			app := di.CreateFxAppAndExtract(
 				[]fx.Option{di.NewFxModule[TestInterface]("test-module", func() *testImpl {
-					return NewTestImpl(false)
+					return NewTestImpl(false, false)
 				})},
 				&extracted,
 			)
@@ -74,7 +85,7 @@ func Test_DI(t *testing.T) {
 						"opt-test",
 						// this would fail if dep wasn't properly injected
 						func(input dep) *testImpl {
-							return NewTestImpl(false)
+							return NewTestImpl(false, false)
 						},
 						fx.Provide(func() dep { return "foo" }),
 					),
@@ -97,15 +108,32 @@ func Test_DI(t *testing.T) {
 			app := di.CreateFxAppAndExtract(
 				[]fx.Option{
 					di.NewFxModule[TestInterface]("lifecycle-module", func() *testImpl {
-						return NewTestImpl(false)
+						return NewTestImpl(false, false)
 					}),
 				},
 				&extracted,
 			)
 
 			assert.NoError(t, app.Start(t.Context()))
+			assert.True(t, extracted.(*testImpl).startCalled)
 			assert.NoError(t, app.Stop(t.Context()))
 			assert.True(t, extracted.(*testImpl).stopCalled)
+		})
+
+		t.Run("should propagate start errors", func(t *testing.T) {
+			t.Parallel()
+
+			app := di.CreateFxAppAndExtract(
+				[]fx.Option{
+					di.NewFxModule[TestInterface]("fail-module", func() *testImpl {
+						return NewTestImpl(true, false)
+					}),
+				},
+			)
+
+			err := app.Start(t.Context())
+			assert.Error(t, err)
+			assert.Contains(t, err.Error(), "start failed")
 		})
 
 		t.Run("should propagate stop errors", func(t *testing.T) {
@@ -114,7 +142,7 @@ func Test_DI(t *testing.T) {
 			app := di.CreateFxAppAndExtract(
 				[]fx.Option{
 					di.NewFxModule[TestInterface]("fail-module", func() *testImpl {
-						return NewTestImpl(true)
+						return NewTestImpl(false, true)
 					}),
 				},
 			)

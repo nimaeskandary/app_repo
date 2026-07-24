@@ -1,6 +1,6 @@
 //go:build staging
 
-package config
+package gordle_config
 
 import _ "embed"
 

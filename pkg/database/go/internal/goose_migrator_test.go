@@ -24,6 +24,7 @@ func TestNewGooseMigrator(t *testing.T) {
 		migrator, err := NewGooseMigrator(database, testMigrationSource())
 
 		require.NoError(t, err)
+		require.NoError(t, migrator.Start(t.Context()))
 		assert.NotNil(t, migrator)
 	})
 }
@@ -160,6 +161,7 @@ func newTestMigrator(t *testing.T) (db_types.Migrator, db_types.SQLDatabase) {
 	database := newTestSQLiteDatabase(t, filepath.Join(t.TempDir(), "test.db"))
 	migrator, err := NewGooseMigrator(database, testMigrationSource())
 	require.NoError(t, err)
+	require.NoError(t, migrator.Start(t.Context()))
 
 	return migrator, database
 }

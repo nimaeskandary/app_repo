@@ -6,9 +6,10 @@ import (
 	"go.uber.org/fx"
 )
 
-// Lifecycle functions for Fx. Fx also provides a start hook, but don't see the need for that, planning to always use
-// a constructor function, and we will never be restarting an fx dep tree after its created.
+// Lifecycle defines startup and shutdown behavior for an Fx component.
 type Lifecycle interface {
+	// Start is called when the Fx system starts.
+	Start(ctx context.Context) error
 	// Stop is called when the fx system is shutdown, used for graceful shutdown of components
 	Stop(ctx context.Context) error
 }
@@ -38,7 +39,7 @@ func NewFxModule[T Lifecycle](
 
 // CreateFxAppAndExtract creates an Fx application and extracts specified dependencies
 // to be used out of the Fx application context. This is when instances of your dependencies
-// need to be used by things that don't cleany fit into fx, e.g. pulling out an http server to start 
+// need to be used by things that don't cleany fit into fx, e.g. pulling out an http server to start
 // it on the main thread, or for use with the wails framework via frontend bindings to go code, in which case
 // wails needs the instances.
 func CreateFxAppAndExtract(modules []fx.Option, extract ...any) *fx.App {
@@ -55,6 +56,9 @@ func CreateFxAppAndExtract(modules []fx.Option, extract ...any) *fx.App {
 // registerLifecycle - wires hooks for component start and stop
 func registerLifecycle[T Lifecycle](lc fx.Lifecycle, this T) {
 	lc.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			return this.Start(ctx)
+		},
 		OnStop: func(ctx context.Context) error {
 			return this.Stop(ctx)
 		},

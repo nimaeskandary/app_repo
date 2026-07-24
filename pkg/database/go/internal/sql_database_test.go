@@ -13,17 +13,20 @@ import (
 func TestNewSQLDatabase(t *testing.T) {
 	t.Parallel()
 
-	t.Run("should ping the database", func(t *testing.T) {
+	t.Run("should open and ping the database during Start", func(t *testing.T) {
 		t.Parallel()
 
 		sqlDB, err := sql.Open("sqlite", ":memory:")
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = sqlDB.Close() })
 
-		db, err := newSQLDatabase(sqlDB, db_types.DialectSQLite)
+		db := newSQLDatabase(func() (*sql.DB, error) {
+			return sqlDB, nil
+		}, db_types.DialectSQLite)
 
-		require.NoError(t, err)
-		assert.NotNil(t, db)
+		assert.Nil(t, db.DB())
+		require.NoError(t, db.Start(t.Context()))
+		assert.Same(t, sqlDB, db.DB())
 	})
 
 	t.Run("should close the database when ping fails", func(t *testing.T) {
@@ -33,10 +36,14 @@ func TestNewSQLDatabase(t *testing.T) {
 		sqlDB, err := sql.Open("sqlite", source)
 		require.NoError(t, err)
 
-		db, err := newSQLDatabase(sqlDB, db_types.DialectSQLite)
+		db := newSQLDatabase(func() (*sql.DB, error) {
+			return sqlDB, nil
+		}, db_types.DialectSQLite)
 
-		assert.Nil(t, db)
+		err = db.Start(t.Context())
+
 		assert.ErrorContains(t, err, "ping sqlite database")
+		assert.Nil(t, db.DB())
 		assert.Error(t, sqlDB.Ping())
 	})
 }
@@ -44,15 +51,7 @@ func TestNewSQLDatabase(t *testing.T) {
 func TestSQLDatabase(t *testing.T) {
 	t.Parallel()
 
-	t.Run("DB", func(t *testing.T) {
-		t.Parallel()
-
-		db, sqlDB := newTestSQLDatabase(t)
-
-		assert.Same(t, sqlDB, db.DB())
-	})
-
-	t.Run("Dialect", func(t *testing.T) {
+	t.Run("should expose the configured dialect", func(t *testing.T) {
 		t.Parallel()
 
 		db, _ := newTestSQLDatabase(t)
@@ -60,26 +59,22 @@ func TestSQLDatabase(t *testing.T) {
 		assert.Equal(t, db_types.DialectSQLite, db.Dialect())
 	})
 
-	t.Run("Stop", func(t *testing.T) {
+	t.Run("should close the database", func(t *testing.T) {
 		t.Parallel()
 
-		t.Run("should close the database", func(t *testing.T) {
-			t.Parallel()
+		db, sqlDB := newTestSQLDatabase(t)
 
-			db, sqlDB := newTestSQLDatabase(t)
+		require.NoError(t, db.Stop(t.Context()))
+		assert.Error(t, sqlDB.Ping())
+	})
 
-			require.NoError(t, db.Stop(t.Context()))
-			assert.Error(t, sqlDB.Ping())
-		})
+	t.Run("should allow repeated Stop calls", func(t *testing.T) {
+		t.Parallel()
 
-		t.Run("should allow repeated calls", func(t *testing.T) {
-			t.Parallel()
+		db, _ := newTestSQLDatabase(t)
 
-			db, _ := newTestSQLDatabase(t)
-
-			require.NoError(t, db.Stop(t.Context()))
-			assert.NoError(t, db.Stop(t.Context()))
-		})
+		require.NoError(t, db.Stop(t.Context()))
+		assert.NoError(t, db.Stop(t.Context()))
 	})
 }
 
@@ -90,8 +85,10 @@ func newTestSQLDatabase(t *testing.T) (db_types.SQLDatabase, *sql.DB) {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = sqlDB.Close() })
 
-	db, err := newSQLDatabase(sqlDB, db_types.DialectSQLite)
-	require.NoError(t, err)
+	db := newSQLDatabase(func() (*sql.DB, error) {
+		return sqlDB, nil
+	}, db_types.DialectSQLite)
+	require.NoError(t, db.Start(t.Context()))
 
 	return db, sqlDB
 }

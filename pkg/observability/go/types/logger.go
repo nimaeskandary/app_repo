@@ -8,5 +8,6 @@ type Logger interface {
 	Warn(ctx context.Context, msg string, attributes ...any)
 	Error(ctx context.Context, msg string, attributes ...any)
 	CtxWithLogAttributes(ctx context.Context, attributes ...any) context.Context
+	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
 }

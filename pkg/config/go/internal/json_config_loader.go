@@ -4,6 +4,7 @@ import (
 	"encoding/json/v2"
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	config_types "github.com/nimaeskandary/app_repo/pkg/config/go/types"
 	"github.com/tailscale/hujson"
 )
@@ -19,10 +20,8 @@ func NewJsonConfigLoader[T any](secretParser config_types.SecretParser, from []b
 	}
 
 	var parsed T
-	err = json.Unmarshal(
-		standardized,
-		&parsed,
-		json.WithUnmarshalers(json.UnmarshalFunc(func(data []byte, secret *config_types.SecretString) error {
+	unmarshalers := json.JoinUnmarshalers(
+		json.UnmarshalFunc(func(data []byte, secret *config_types.SecretString) error {
 			var raw string
 			if err := json.Unmarshal(data, &raw); err != nil {
 				return err
@@ -35,10 +34,21 @@ func NewJsonConfigLoader[T any](secretParser config_types.SecretParser, from []b
 
 			*secret = config_types.SecretString(resolved)
 			return nil
-		})),
+		}),
+		registeredJSONUnmarshalers(),
+	)
+	err = json.Unmarshal(
+		standardized,
+		&parsed,
+		json.WithUnmarshalers(unmarshalers),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON config: %w", err)
+	}
+
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	if err := validate.Struct(parsed); err != nil {
+		return nil, fmt.Errorf("failed to validate JSON config: %w", err)
 	}
 
 	return &JsonConfigLoader[T]{parsed: parsed}, nil

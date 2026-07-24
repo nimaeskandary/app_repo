@@ -16,6 +16,10 @@ func (g *greetServiceImpl) Greet(name string) string {
 	return "Hello " + name + "!"
 }
 
+func (g *greetServiceImpl) Start(context.Context) error {
+	return nil
+}
+
 func (g *greetServiceImpl) Stop(ctx context.Context) error {
 	return nil
 }

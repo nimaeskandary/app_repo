@@ -59,6 +59,10 @@ func (l *slogger) CtxWithLogAttributes(ctx context.Context, attributes ...any) c
 	return context.WithValue(ctx, attributesContextKey{}, newAttrs)
 }
 
+func (l *slogger) Start(context.Context) error {
+	return nil
+}
+
 func (l *slogger) Stop(context.Context) error {
 	return nil
 }

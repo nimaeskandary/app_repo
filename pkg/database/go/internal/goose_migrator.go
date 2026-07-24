@@ -11,19 +11,29 @@ import (
 
 // gooseMigrator adapts Goose to the tool-neutral Migrator interface.
 type gooseMigrator struct {
+	database db_types.SQLDatabase
+	source   db_types.MigrationSource
 	provider *goose.Provider
 }
 
 // NewGooseMigrator creates a migrator from SQL files and Go functions.
 func NewGooseMigrator(database db_types.SQLDatabase, source db_types.MigrationSource) (db_types.Migrator, error) {
-	migrations, err := loadMigrations(source)
+	return &gooseMigrator{
+		database: database,
+		source:   source,
+	}, nil
+}
+
+// Start initializes the Goose provider after the database has started.
+func (m *gooseMigrator) Start(context.Context) error {
+	migrations, err := loadMigrations(m.source)
 	if err != nil {
-		return nil, fmt.Errorf("load migrations: %w", err)
+		return fmt.Errorf("load migrations: %w", err)
 	}
 
-	dialect, err := gooseDialect(database.Dialect())
+	dialect, err := gooseDialect(m.database.Dialect())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	gooseMigrations := make([]*goose.Migration, 0, len(migrations))
@@ -35,23 +45,30 @@ func NewGooseMigrator(database db_types.SQLDatabase, source db_types.MigrationSo
 		))
 	}
 
+	if m.database.DB() == nil {
+		return fmt.Errorf("database is not started")
+	}
 	provider, err := goose.NewProvider(
 		dialect,
-		database.DB(),
+		m.database.DB(),
 		nil,
 		goose.WithDisableGlobalRegistry(true),
 		goose.WithAllowOutofOrder(true),
 		goose.WithGoMigrations(gooseMigrations...),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("create Goose migration provider: %w", err)
+		return fmt.Errorf("create Goose migration provider: %w", err)
 	}
 
-	return &gooseMigrator{provider: provider}, nil
+	m.provider = provider
+	return nil
 }
 
 // Up runs all pending migrations or one exact version.
 func (m *gooseMigrator) Up(ctx context.Context, version *int64) error {
+	if m.provider == nil {
+		return fmt.Errorf("migrator is not started")
+	}
 	if version == nil {
 		results, err := m.provider.Up(ctx)
 		return migrationResultsError("run up migrations", results, err)
@@ -66,6 +83,9 @@ func (m *gooseMigrator) Up(ctx context.Context, version *int64) error {
 
 // Down reverts one exact migration version.
 func (m *gooseMigrator) Down(ctx context.Context, version int64) error {
+	if m.provider == nil {
+		return fmt.Errorf("migrator is not started")
+	}
 	result, err := m.provider.ApplyVersion(ctx, version, false)
 	return migrationResultError(fmt.Sprintf("run migration %d down", version), result, err)
 }
