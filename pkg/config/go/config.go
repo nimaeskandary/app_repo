@@ -9,21 +9,17 @@ import (
 	"go.uber.org/fx"
 )
 
-// RegisterJSONUnmarshaler adds a custom type unmarshaler to JSON config loading.
-func RegisterJSONUnmarshaler(unmarshaler *json.Unmarshalers) {
-	internal.RegisterJSONUnmarshaler(unmarshaler)
-}
-
-func NewJsonConfigLoaderModule[T any](from []byte) fx.Option {
+func NewJsonConfigLoaderModule[T any](from []byte, unmarshalers []*json.Unmarshalers) fx.Option {
 	return fx.Module(
 		"json_config_loader",
 		fx.Supply(fx.Annotate(from, fx.ResultTags(`name:"from"`))),
+		fx.Supply(fx.Annotate(unmarshalers, fx.ResultTags(`name:"unmarshalers"`))),
 		fx.Provide(func(params struct {
 			fx.In
-			SecretParser config_types.SecretParser
-			From         []byte `name:"from"`
+			From         []byte               `name:"from"`
+			Unmarshalers []*json.Unmarshalers `name:"unmarshalers"`
 		}) (config_types.ConfigLoader[T], error) {
-			loader, err := internal.NewJsonConfigLoader[T](params.SecretParser, params.From)
+			loader, err := internal.NewJsonConfigLoader[T](params.From, params.Unmarshalers)
 			if err != nil {
 				return nil, fmt.Errorf("create JSON config loader: %w", err)
 			}
@@ -31,8 +27,4 @@ func NewJsonConfigLoaderModule[T any](from []byte) fx.Option {
 			return loader, nil
 		}),
 	)
-}
-
-func NewIdentitySecretParserModule() fx.Option {
-	return fx.Module("identity_secret_parser", fx.Provide(internal.NewIdentitySecretParser))
 }

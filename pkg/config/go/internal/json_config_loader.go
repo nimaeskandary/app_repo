@@ -13,34 +13,17 @@ type JsonConfigLoader[T any] struct {
 	parsed T
 }
 
-func NewJsonConfigLoader[T any](secretParser config_types.SecretParser, from []byte) (config_types.ConfigLoader[T], error) {
+func NewJsonConfigLoader[T any](from []byte, unmarshalers []*json.Unmarshalers) (config_types.ConfigLoader[T], error) {
 	standardized, err := hujson.Standardize(from)
 	if err != nil {
 		return nil, fmt.Errorf("failed to standardize JSON config: %w", err)
 	}
 
 	var parsed T
-	unmarshalers := json.JoinUnmarshalers(
-		json.UnmarshalFunc(func(data []byte, secret *config_types.SecretString) error {
-			var raw string
-			if err := json.Unmarshal(data, &raw); err != nil {
-				return err
-			}
-
-			resolved, err := secretParser.Parse(raw)
-			if err != nil {
-				return fmt.Errorf("failed to parse secret: %w", err)
-			}
-
-			*secret = config_types.SecretString(resolved)
-			return nil
-		}),
-		registeredJSONUnmarshalers(),
-	)
 	err = json.Unmarshal(
 		standardized,
 		&parsed,
-		json.WithUnmarshalers(unmarshalers),
+		json.WithUnmarshalers(json.JoinUnmarshalers(unmarshalers...)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON config: %w", err)

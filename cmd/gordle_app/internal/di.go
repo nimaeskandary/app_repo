@@ -19,8 +19,7 @@ type Config struct {
 
 func ModuleList(configBytes []byte) []fx.Option {
 	return []fx.Option{
-		config.NewIdentitySecretParserModule(),
-		config.NewJsonConfigLoaderModule[Config](configBytes),
+		config.NewJsonConfigLoaderModule[Config](configBytes, nil),
 		fx.Provide(
 			func(loader config_types.ConfigLoader[Config]) app_database.AppConfig {
 				return loader.GetConfig().AppDatabase
