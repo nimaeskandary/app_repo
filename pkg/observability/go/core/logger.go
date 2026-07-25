@@ -2,6 +2,7 @@ package obs_core
 
 import "context"
 
+//mockery:generate: true
 type Logger interface {
 	Debug(ctx context.Context, msg string, attributes ...any)
 	Info(ctx context.Context, msg string, attributes ...any)

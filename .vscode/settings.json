@@ -12,5 +12,8 @@
         "CGO_ENABLED": "1",
         "GOEXPERIMENT": "jsonv2",
         }
-    }
+    },
+    "workbench.editor.limit.value": 5,
+    "workbench.editor.limit.perEditorGroup": true,
+    "files.autoSave": "onFocusChange"
 }

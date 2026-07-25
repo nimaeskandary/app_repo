@@ -11,7 +11,6 @@ import (
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
-	observability "github.com/nimaeskandary/app_repo/pkg/observability/go"
 	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -66,7 +65,7 @@ func main() {
 	wailsApp := application.New(application.Options{
 		Name:        "Gordle",
 		Description: "Wails3 react example app",
-		Logger:      observability.AsSlog(logger),
+		Logger:      obs_core.AsSlog(logger),
 		Services: []application.Service{
 			application.NewService(&bridge.GreetService{GreetService: greetService}),
 		},
