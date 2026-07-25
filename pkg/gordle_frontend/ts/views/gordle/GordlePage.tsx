@@ -5,7 +5,7 @@ import { useGordleViewModel } from '@app_repo/pkg_gordle_frontend/views/gordle/u
 function GordlePage() {
   const viewModel = useGordleViewModel()
 
-  return <GordleView cells={viewModel.cells} />
+  return <GordleView cells={viewModel.cells} onLetterCommit={viewModel.commitLetter} />
 }
 
 export default GordlePage

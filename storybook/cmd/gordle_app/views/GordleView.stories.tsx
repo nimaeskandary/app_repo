@@ -16,6 +16,7 @@ const meta = {
   ],
   argTypes: {
     cells: { control: 'object' },
+    onLetterCommit: { action: 'letter committed' },
   },
 } satisfies Meta<typeof GordleView>
 
@@ -44,5 +45,6 @@ export const Default: Story = {
       unguessedRow,
       unguessedRow,
     ],
+    onLetterCommit: () => {},
   },
 }
