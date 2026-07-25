@@ -115,12 +115,31 @@ func TestGooseMigrator(t *testing.T) {
 		})
 	})
 
-	t.Run("Stop should do nothing", func(t *testing.T) {
+	t.Run("Stop should reset the provider", func(t *testing.T) {
 		t.Parallel()
 
 		migrator, _ := newTestMigrator(t)
 
-		assert.NoError(t, migrator.Stop(t.Context()))
+		require.NoError(t, migrator.Stop(t.Context()))
+
+		assert.EqualError(t, migrator.Up(t.Context(), nil), "migrator is not started")
+		assert.EqualError(t, migrator.Down(t.Context(), 1), "migrator is not started")
+	})
+
+	t.Run("should allow Start after Stop", func(t *testing.T) {
+		t.Parallel()
+
+		migrator, database := newTestMigrator(t)
+		require.NoError(t, migrator.Stop(t.Context()))
+		require.NoError(t, database.Stop(t.Context()))
+		require.NoError(t, database.Start(t.Context()))
+
+		require.NoError(t, migrator.Start(t.Context()))
+		require.NoError(t, migrator.Up(t.Context(), nil))
+
+		assert.True(t, tableExists(t, database.DB(), "first_records"))
+		assert.True(t, tableExists(t, database.DB(), "code_records"))
+		assert.True(t, tableExists(t, database.DB(), "third_records"))
 	})
 }
 

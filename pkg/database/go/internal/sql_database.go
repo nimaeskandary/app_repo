@@ -5,20 +5,15 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"sync"
 
 	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 )
 
 // sqlDatabase wraps a database connection pool managed by the Fx lifecycle.
 type sqlDatabase struct {
-	open      func() (*sql.DB, error)
-	db        *sql.DB
-	dialect   db_core.Dialect
-	startOnce sync.Once
-	startErr  error
-	stopOnce  sync.Once
-	stopError error
+	open    func() (*sql.DB, error)
+	db      *sql.DB
+	dialect db_core.Dialect
 }
 
 // newSQLDatabase creates a database whose connection is opened during Start.
@@ -38,31 +33,31 @@ func (d *sqlDatabase) Dialect() db_core.Dialect {
 }
 
 func (d *sqlDatabase) Start(ctx context.Context) error {
-	d.startOnce.Do(func() {
-		db, err := d.open()
-		if err != nil {
-			d.startErr = err
-			return
-		}
-		if err := db.PingContext(ctx); err != nil {
-			d.startErr = errors.Join(
-				fmt.Errorf("ping %s database: %w", d.dialect, err),
-				db.Close(),
-			)
-			return
-		}
-		d.db = db
-	})
+	if d.db != nil {
+		return nil
+	}
 
-	return d.startErr
+	db, err := d.open()
+	if err != nil {
+		return err
+	}
+	if err := db.PingContext(ctx); err != nil {
+		return errors.Join(
+			fmt.Errorf("ping %s database: %w", d.dialect, err),
+			db.Close(),
+		)
+	}
+
+	d.db = db
+	return nil
 }
 
 func (d *sqlDatabase) Stop(context.Context) error {
-	d.stopOnce.Do(func() {
-		if d.db != nil {
-			d.stopError = d.db.Close()
-		}
-	})
+	if d.db == nil {
+		return nil
+	}
 
-	return d.stopError
+	db := d.db
+	d.db = nil
+	return db.Close()
 }

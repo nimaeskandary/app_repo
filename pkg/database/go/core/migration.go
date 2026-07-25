@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"io/fs"
+
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 )
 
 // MigrationFunc applies or reverts a migration in a transaction.
@@ -33,20 +35,14 @@ type MigrationSource struct {
 //
 //mockery:generate: true
 type Migrator interface {
-	// Start initializes the migrator.
-	Start(ctx context.Context) error
+	di.Lifecycle
 	// Up runs all pending migrations when version is nil, or the exact supplied version.
 	Up(ctx context.Context, version *int64) error
 	// Down reverts the exact supplied version.
 	Down(ctx context.Context, version int64) error
-	// Stop releases migrator-owned resources.
-	Stop(ctx context.Context) error
 }
 
-// MigrateAll represents migration work performed during startup.
-type MigrateAll interface {
-	// Start runs all pending migrations.
-	Start(ctx context.Context) error
-	// Stop releases startup migration resources.
-	Stop(ctx context.Context) error
+// MigrateAllOnStart runs migration work performed during startup.
+type MigrateAllOnStart interface {
+	di.Lifecycle
 }

@@ -22,7 +22,7 @@ func TestModuleListLoadsConfig(t *testing.T) {
 
 	var appDatabase app_database.AppDatabase
 	var appDatabaseMigrator app_database.AppDatabaseMigrator
-	var appDatabaseMigrateAll app_database.AppDatabaseMigrateAll
+	var appDatabaseMigrateAllOnStart app_database.AppDatabaseMigrateAllOnStart
 	var loggerConfig obs_core.SlogLoggerConfig
 	app := fx.New(
 		append(
@@ -30,7 +30,7 @@ func TestModuleListLoadsConfig(t *testing.T) {
 			fx.Populate(
 				&appDatabase,
 				&appDatabaseMigrator,
-				&appDatabaseMigrateAll,
+				&appDatabaseMigrateAllOnStart,
 				&loggerConfig,
 			),
 			fx.NopLogger,
@@ -41,7 +41,7 @@ func TestModuleListLoadsConfig(t *testing.T) {
 	assert.Equal(t, db_core.DialectSQLite, appDatabase.Dialect())
 	assert.FileExists(t, source)
 	assert.NotNil(t, appDatabaseMigrator)
-	assert.NotNil(t, appDatabaseMigrateAll)
+	assert.NotNil(t, appDatabaseMigrateAllOnStart)
 
 	var migrationTable string
 	require.NoError(t, appDatabase.DB().QueryRow(
@@ -50,6 +50,8 @@ func TestModuleListLoadsConfig(t *testing.T) {
 	assert.Equal(t, "goose_db_version", migrationTable)
 
 	assert.Equal(t, "DEBUG", loggerConfig.Level)
+	sqlDB := appDatabase.DB()
 	require.NoError(t, app.Stop(t.Context()))
-	assert.Error(t, appDatabase.DB().Ping())
+	assert.Nil(t, appDatabase.DB())
+	assert.Error(t, sqlDB.Ping())
 }

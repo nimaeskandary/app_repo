@@ -90,8 +90,9 @@ func (m *gooseMigrator) Down(ctx context.Context, version int64) error {
 	return migrationResultError(fmt.Sprintf("run migration %d down", version), result, err)
 }
 
-// Stop does nothing because the database owns the connection pool.
+// Stop resets the provider while leaving the connection pool with the database.
 func (m *gooseMigrator) Stop(context.Context) error {
+	m.provider = nil
 	return nil
 }
 

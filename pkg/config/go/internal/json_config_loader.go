@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"context"
 	"encoding/json/v2"
 	"fmt"
 
@@ -39,4 +40,14 @@ func NewJsonConfigLoader[T any](from []byte, unmarshalers []*json.Unmarshalers) 
 
 func (c *JsonConfigLoader[T]) GetConfig() T {
 	return c.parsed
+}
+
+// Start does nothing because configuration is loaded during construction.
+func (c *JsonConfigLoader[T]) Start(context.Context) error {
+	return nil
+}
+
+// Stop does nothing because the loader holds no runtime resources or mutable state.
+func (c *JsonConfigLoader[T]) Stop(context.Context) error {
+	return nil
 }

@@ -7,18 +7,18 @@ import (
 	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 )
 
-// migrateAll runs all pending migrations during startup.
-type migrateAll struct {
+// MigrateAllOnStart runs all pending migrations during startup.
+type MigrateAllOnStart struct {
 	migrator db_core.Migrator
 }
 
-// NewMigrateAll creates startup migration work.
-func NewMigrateAll(migrator db_core.Migrator) (db_core.MigrateAll, error) {
-	return &migrateAll{migrator: migrator}, nil
+// NewMigrateAllOnStart creates startup migration work.
+func NewMigrateAllOnStart(migrator db_core.Migrator) (db_core.MigrateAllOnStart, error) {
+	return &MigrateAllOnStart{migrator: migrator}, nil
 }
 
 // Start runs every pending migration.
-func (m *migrateAll) Start(ctx context.Context) error {
+func (m *MigrateAllOnStart) Start(ctx context.Context) error {
 	if err := m.migrator.Up(ctx, nil); err != nil {
 		return fmt.Errorf("run all migrations: %w", err)
 	}
@@ -26,6 +26,6 @@ func (m *migrateAll) Start(ctx context.Context) error {
 }
 
 // Stop does nothing because the migrator owns migration resources.
-func (m *migrateAll) Stop(context.Context) error {
+func (m *MigrateAllOnStart) Stop(context.Context) error {
 	return nil
 }

@@ -15,8 +15,8 @@ type AppDatabase db_core.SQLDatabase
 // AppDatabaseMigrator identifies the App Database migrator in the dependency graph.
 type AppDatabaseMigrator db_core.Migrator
 
-// AppDatabaseMigrateAll identifies the App Database startup migration work in the dependency graph.
-type AppDatabaseMigrateAll db_core.MigrateAll
+// AppDatabaseMigrateAllOnStart identifies the App Database startup migration work in the dependency graph.
+type AppDatabaseMigrateAllOnStart db_core.MigrateAllOnStart
 
 // AppConfig configures the App Database file under the Wails application data directory.
 type AppConfig struct {

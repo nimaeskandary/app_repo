@@ -6,11 +6,13 @@ import (
 	"go.uber.org/fx"
 )
 
-// Lifecycle defines startup and shutdown behavior for an Fx component.
+// Lifecycle defines startup and shutdown behavior for an Fx component. These should be written in a way that
+// on Stop, the component is reset and can be Started again.
 type Lifecycle interface {
-	// Start is called when the Fx system starts.
+	// Start is called when the Fx system starts. Things like connecting to databases or external apis should happen here.
 	Start(ctx context.Context) error
-	// Stop is called when the fx system is shutdown, used for graceful shutdown of components
+	// Stop is called when the fx system is shutdown, used for graceful shutdown of components. This should reset the struct
+	// so that it can be started again.
 	Stop(ctx context.Context) error
 }
 

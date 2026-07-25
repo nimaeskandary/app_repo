@@ -28,8 +28,8 @@ func TestDatabaseModules(t *testing.T) {
 				NewSQLiteDatabaseModule[secondDatabase, secondSQLiteConfig](),
 				NewMigratorModule[firstDatabase, firstMigrator](testSQLMigrationSource("first_records")),
 				NewMigratorModule[secondDatabase, secondMigrator](testSQLMigrationSource("second_records")),
-				NewMigrateAllModule[firstMigrator, firstMigrateAll](),
-				NewMigrateAllModule[secondMigrator, secondMigrateAll](),
+				NewMigrateAllOnStartModule[firstMigrator, firstMigrateAllOnStart](),
+				NewMigrateAllOnStartModule[secondMigrator, secondMigrateAllOnStart](),
 			},
 			&firstDB,
 			&secondDB,
@@ -40,10 +40,14 @@ func TestDatabaseModules(t *testing.T) {
 		assert.False(t, databaseTableExists(t, firstDB, "second_records"))
 		assert.True(t, databaseTableExists(t, secondDB, "second_records"))
 		assert.False(t, databaseTableExists(t, secondDB, "first_records"))
+		firstSQLDB := firstDB.DB()
+		secondSQLDB := secondDB.DB()
 
 		require.NoError(t, app.Stop(t.Context()))
-		assert.Error(t, firstDB.DB().Ping())
-		assert.Error(t, secondDB.DB().Ping())
+		assert.Nil(t, firstDB.DB())
+		assert.Nil(t, secondDB.DB())
+		assert.Error(t, firstSQLDB.Ping())
+		assert.Error(t, secondSQLDB.Ping())
 	})
 }
 
@@ -51,8 +55,8 @@ type firstDatabase db_core.SQLDatabase
 type secondDatabase db_core.SQLDatabase
 type firstMigrator db_core.Migrator
 type secondMigrator db_core.Migrator
-type firstMigrateAll db_core.MigrateAll
-type secondMigrateAll db_core.MigrateAll
+type firstMigrateAllOnStart db_core.MigrateAllOnStart
+type secondMigrateAllOnStart db_core.MigrateAllOnStart
 
 type firstSQLiteConfig db_core.SQLiteConfig
 

@@ -29,13 +29,13 @@ func NewMigratorModule[
 	return di.NewFxModule[Migrator]("migrator", constructor)
 }
 
-// NewMigrateAllModule runs all pending migrations during Fx startup.
-func NewMigrateAllModule[
+// NewMigrateAllOnStartModule runs all pending migrations during Fx startup.
+func NewMigrateAllOnStartModule[
 	Migrator db_core.Migrator,
-	MigrateAll db_core.MigrateAll,
+	MigrateAllOnStart db_core.MigrateAllOnStart,
 ]() fx.Option {
-	constructor := func(migrator Migrator) (db_core.MigrateAll, error) {
-		return internal.NewMigrateAll(migrator)
+	constructor := func(migrator Migrator) (db_core.MigrateAllOnStart, error) {
+		return internal.NewMigrateAllOnStart(migrator)
 	}
-	return di.NewFxModule[MigrateAll]("migrate_all", constructor)
+	return di.NewFxModule[MigrateAllOnStart]("migrate_all", constructor)
 }

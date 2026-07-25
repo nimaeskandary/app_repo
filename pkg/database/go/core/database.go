@@ -1,8 +1,9 @@
 package db_core
 
 import (
-	"context"
 	"database/sql"
+
+	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 )
 
 // Dialect identifies the SQL dialect used by a database.
@@ -17,12 +18,9 @@ const (
 
 // SQLDatabase exposes a validated SQL connection and its lifecycle.
 type SQLDatabase interface {
+	di.Lifecycle
 	// DB returns the underlying database connection pool.
 	DB() *sql.DB
 	// Dialect returns the database SQL dialect.
 	Dialect() Dialect
-	// Start opens and validates the database connection pool.
-	Start(ctx context.Context) error
-	// Stop closes the database connection pool.
-	Stop(ctx context.Context) error
 }

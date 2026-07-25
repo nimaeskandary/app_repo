@@ -38,9 +38,9 @@ func ModuleList(configBytes []byte) []fx.Option {
 			app_database.AppDatabase,
 			app_database.AppDatabaseMigrator,
 		](app_migrations.MigrationSource()),
-		database.NewMigrateAllModule[
+		database.NewMigrateAllOnStartModule[
 			app_database.AppDatabaseMigrator,
-			app_database.AppDatabaseMigrateAll,
+			app_database.AppDatabaseMigrateAllOnStart,
 		](),
 		observability.NewSlogLoggerModule(),
 		greet.NewGreetModule(),

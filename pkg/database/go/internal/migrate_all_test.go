@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewMigrateAll(t *testing.T) {
+func TestNewMigrateAllOnStart(t *testing.T) {
 	t.Parallel()
 
 	t.Run("should run all pending migrations", func(t *testing.T) {
@@ -19,11 +19,11 @@ func TestNewMigrateAll(t *testing.T) {
 		migrator := db_core_mocks.NewMockMigrator(t)
 		migrator.EXPECT().Up(mock.Anything, (*int64)(nil)).Return(nil).Once()
 
-		migrateAll, err := NewMigrateAll(migrator)
+		MigrateAllOnStart, err := NewMigrateAllOnStart(migrator)
 
 		require.NoError(t, err)
-		assert.NotNil(t, migrateAll)
-		assert.NoError(t, migrateAll.Start(t.Context()))
+		assert.NotNil(t, MigrateAllOnStart)
+		assert.NoError(t, MigrateAllOnStart.Start(t.Context()))
 	})
 
 	t.Run("should return migration errors", func(t *testing.T) {
@@ -33,21 +33,21 @@ func TestNewMigrateAll(t *testing.T) {
 		migrator := db_core_mocks.NewMockMigrator(t)
 		migrator.EXPECT().Up(mock.Anything, (*int64)(nil)).Return(migrationError).Once()
 
-		migrateAll, err := NewMigrateAll(migrator)
+		MigrateAllOnStart, err := NewMigrateAllOnStart(migrator)
 
 		require.NoError(t, err)
-		assert.ErrorIs(t, migrateAll.Start(t.Context()), migrationError)
+		assert.ErrorIs(t, MigrateAllOnStart.Start(t.Context()), migrationError)
 	})
 }
 
-func TestMigrateAll(t *testing.T) {
+func TestMigrateAllOnStart(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Stop should do nothing", func(t *testing.T) {
 		t.Parallel()
 
-		migrateAll := &migrateAll{}
+		MigrateAllOnStart := &MigrateAllOnStart{}
 
-		assert.NoError(t, migrateAll.Stop(t.Context()))
+		assert.NoError(t, MigrateAllOnStart.Stop(t.Context()))
 	})
 }
