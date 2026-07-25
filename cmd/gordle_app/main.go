@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/nimaeskandary/app_repo/cmd/gordle_app/gordle_config"
+	"github.com/nimaeskandary/app_repo/cmd/gordle_app/config"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
@@ -35,7 +35,7 @@ func main() {
 
 	var greetService greet_core.GreetService
 	var logger obs_core.Logger
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(gordle_config.Bytes), &greetService, &logger)
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &greetService, &logger)
 	if fxApp == nil {
 		slog.Error("dependency injection system failed to initialize")
 		return
