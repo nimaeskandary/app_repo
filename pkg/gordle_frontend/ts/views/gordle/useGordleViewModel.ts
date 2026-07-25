@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   GordleCellState,
-  GordleCell,
+  type GordleCell,
 } from '@app_repo/pkg_gordle_frontend/model/GordleCell'
 
 export type GordleViewModel = {
