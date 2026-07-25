@@ -1,6 +1,6 @@
 # this project uses https://vektra.github.io/mockery for go mocks
 # to mark an interface for mock generation, add the comment `//mockery:generate: true` above it
-# to generate mocks, run `bin/generate-mocks.sh`
+# to generate mocks, run `bin/generate-mocks`
 # mocks will be generated in a `mocks/` subfolder in the package of the interface, e.g. `pkg/database/go/core/mocks`
 
 template: testify

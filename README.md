@@ -22,7 +22,7 @@ storybook/                  # frontend component previews
 
 ### Dependencies
 
-* go 1.26+
+* go 1.27rc2
 * node 26
 * npm 11
 * docker
@@ -46,14 +46,10 @@ future versions of the upstream template.
 
 ### Common commands
 
-The wails3 example template ships with build scripts for all platforms wired up via the tool [task](https://taskfile.dev/). I recommend getting an IDE plugin to easily view available tasks.
-
-Run Wails commands from `cmd/gordle_app`.
-
-* run dev mode on host, this will hot reload: `wails3 dev`
-* launch app on ios simulator: `wails3 task ios:run`
-* build: `wails3 build`
-* re generate TypeScript bindings: `wails3 task common:generate:bindings`, autogenerates bindings in `frontend/bindings`
+* run dev mode on host, this will hot reload: `bin/wails-gordle dev`
+* launch app on ios simulator: `bin/wails-gordle task ios:run`
+* build: `bin/wails-gordle build`
+* re generate TypeScript bindings: `bin/wails-gordle task common:generate:bindings`, autogenerates bindings in `cmd/gordle_app/frontend/bindings`
 
 ## Storybook
 
@@ -71,5 +67,5 @@ run `./bin/go test ./...`
 
 * this project uses https://vektra.github.io/mockery
 * to mark an interface for mock generation, use the comment `//mockery:generate: true`
-* to generate mocks, run `bin/generate-mocks.sh`
+* to generate mocks, run `bin/generate-mocks`
 * mocks will be generated in a `mocks/` subfolder in the package of the interface, e.g. `pkg/user/go/core/mocks`

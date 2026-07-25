@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# thin wails cli wrapper that cds to the gordle cmd directory before running wails + your args
+
+set -euo pipefail
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
+GORDLE_DIR="${PROJECT_ROOT_DIR}/cmd/gordle_app"
+
+cd "$GORDLE_DIR"
+wails3 "$@"
