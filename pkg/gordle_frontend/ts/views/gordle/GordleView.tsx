@@ -1,7 +1,7 @@
 import { Box } from '@app_repo/pkg_ui/mui/box'
 import { Container } from '@app_repo/pkg_ui/mui/container'
 import { Grid } from '@app_repo/pkg_ui/mui/grid'
-import { H4 } from '@app_repo/pkg_ui/mui/typography'
+import { H3 } from '@app_repo/pkg_ui/mui/typography'
 import {
   GordleCellState,
   type GordleCell,
@@ -34,8 +34,13 @@ function GordleView({ cells }: GordleViewProps) {
                     color: '#ffffff',
                     display: 'grid',
                     placeItems: 'center',
+                    // for the H4 cqi
+                    containerType: 'inline-size',
                   }}>
-                  <H4>{cell.letter}</H4>
+                  <H3 sx={{
+                    // this constrains the font to 70% of the parent, so the H4 doesn't cause the box to grow.
+                    // the H3 is just here really for weight
+                    fontSize: '70cqi'}}>{cell.letter}</H3>
                 </Box>
               </Grid>
             )),
