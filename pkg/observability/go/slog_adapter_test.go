@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"testing"
 
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/stretchr/testify/require"
 )
 
@@ -42,7 +42,7 @@ type recordingLogger struct {
 	entries []logEntry
 }
 
-var _ obs_types.Logger = (*recordingLogger)(nil)
+var _ obs_core.Logger = (*recordingLogger)(nil)
 
 func (l *recordingLogger) Debug(_ context.Context, msg string, attributes ...any) {
 	l.entries = append(l.entries, logEntry{level: "debug", message: msg, attributes: attributes})

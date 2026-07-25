@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -18,7 +18,7 @@ func TestNewSQLiteDatabase(t *testing.T) {
 		t.Parallel()
 
 		source := filepath.Join(t.TempDir(), "test.db")
-		db, err := NewSQLiteDatabase(db_types.SQLiteConfig{Source: source})
+		db, err := NewSQLiteDatabase(db_core.SQLiteConfig{Source: source})
 
 		require.NoError(t, err)
 		assert.Nil(t, db.DB())
@@ -66,7 +66,7 @@ func TestNewSQLiteDatabase(t *testing.T) {
 	t.Run("should return an error when source is empty", func(t *testing.T) {
 		t.Parallel()
 
-		db, err := NewSQLiteDatabase(db_types.SQLiteConfig{})
+		db, err := NewSQLiteDatabase(db_core.SQLiteConfig{})
 
 		assert.Nil(t, db)
 		assert.EqualError(t, err, "SQLite database source is required")
@@ -96,10 +96,10 @@ func TestWithSQLiteDefaults(t *testing.T) {
 	})
 }
 
-func newTestSQLiteDatabase(t *testing.T, source string) db_types.SQLDatabase {
+func newTestSQLiteDatabase(t *testing.T, source string) db_core.SQLDatabase {
 	t.Helper()
 
-	db, err := NewSQLiteDatabase(db_types.SQLiteConfig{Source: source})
+	db, err := NewSQLiteDatabase(db_core.SQLiteConfig{Source: source})
 	require.NoError(t, err)
 	require.NoError(t, db.Start(t.Context()))
 	t.Cleanup(func() { _ = db.Stop(context.Background()) })

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -17,20 +17,20 @@ func TestLoadMigrations(t *testing.T) {
 	t.Run("should load SQL and code migrations in version order", func(t *testing.T) {
 		t.Parallel()
 
-		codeMigration := db_types.Migration{
+		codeMigration := db_core.Migration{
 			Version: 2,
 			Name:    "rewrite_records",
 			Up:      func(context.Context, *sql.Tx) error { return nil },
 			Down:    func(context.Context, *sql.Tx) error { return nil },
 		}
-		source := db_types.MigrationSource{
+		source := db_core.MigrationSource{
 			SQLFiles: fstest.MapFS{
 				"0001_create_records.up.sql":   {Data: []byte("CREATE TABLE records (value TEXT);")},
 				"0001_create_records.down.sql": {Data: []byte("DROP TABLE records;")},
 				"0003_add_index.up.sql":        {Data: []byte("CREATE INDEX records_value ON records(value);")},
 				"0003_add_index.down.sql":      {Data: []byte("DROP INDEX records_value;")},
 			},
-			CodeMigrations: []db_types.Migration{codeMigration},
+			CodeMigrations: []db_core.Migration{codeMigration},
 		}
 
 		migrations, err := loadMigrations(source)
@@ -51,7 +51,7 @@ func TestLoadMigrations(t *testing.T) {
 	t.Run("should execute SQL migration functions", func(t *testing.T) {
 		t.Parallel()
 
-		migrations, err := loadMigrations(db_types.MigrationSource{SQLFiles: fstest.MapFS{
+		migrations, err := loadMigrations(db_core.MigrationSource{SQLFiles: fstest.MapFS{
 			"0001_create_records.up.sql":   {Data: []byte("CREATE TABLE records (value TEXT);")},
 			"0001_create_records.down.sql": {Data: []byte("DROP TABLE records;")},
 		}})
@@ -76,12 +76,12 @@ func TestLoadMigrations(t *testing.T) {
 		t.Parallel()
 
 		migrationFunc := func(context.Context, *sql.Tx) error { return nil }
-		source := db_types.MigrationSource{
+		source := db_core.MigrationSource{
 			SQLFiles: fstest.MapFS{
 				"0001_create_records.up.sql":   {Data: []byte("SELECT 1;")},
 				"0001_create_records.down.sql": {Data: []byte("SELECT 1;")},
 			},
-			CodeMigrations: []db_types.Migration{{Version: 1, Name: "code", Up: migrationFunc, Down: migrationFunc}},
+			CodeMigrations: []db_core.Migration{{Version: 1, Name: "code", Up: migrationFunc, Down: migrationFunc}},
 		}
 
 		_, err := loadMigrations(source)
@@ -95,7 +95,7 @@ func TestLoadMigrations(t *testing.T) {
 		t.Run("without a positive version", func(t *testing.T) {
 			t.Parallel()
 
-			_, err := loadMigrations(db_types.MigrationSource{CodeMigrations: []db_types.Migration{{Version: 0}}})
+			_, err := loadMigrations(db_core.MigrationSource{CodeMigrations: []db_core.Migration{{Version: 0}}})
 
 			assert.EqualError(t, err, "migration version must be positive: 0")
 		})
@@ -104,7 +104,7 @@ func TestLoadMigrations(t *testing.T) {
 			t.Parallel()
 
 			migrationFunc := func(context.Context, *sql.Tx) error { return nil }
-			_, err := loadMigrations(db_types.MigrationSource{CodeMigrations: []db_types.Migration{{Version: 1, Up: migrationFunc, Down: migrationFunc}}})
+			_, err := loadMigrations(db_core.MigrationSource{CodeMigrations: []db_core.Migration{{Version: 1, Up: migrationFunc, Down: migrationFunc}}})
 
 			assert.EqualError(t, err, "migration 1 name is required")
 		})
@@ -113,7 +113,7 @@ func TestLoadMigrations(t *testing.T) {
 			t.Parallel()
 
 			migrationFunc := func(context.Context, *sql.Tx) error { return nil }
-			_, err := loadMigrations(db_types.MigrationSource{CodeMigrations: []db_types.Migration{{Version: 1, Name: "test", Down: migrationFunc}}})
+			_, err := loadMigrations(db_core.MigrationSource{CodeMigrations: []db_core.Migration{{Version: 1, Name: "test", Down: migrationFunc}}})
 
 			assert.EqualError(t, err, "migration 1 up function is required")
 		})
@@ -122,7 +122,7 @@ func TestLoadMigrations(t *testing.T) {
 			t.Parallel()
 
 			migrationFunc := func(context.Context, *sql.Tx) error { return nil }
-			_, err := loadMigrations(db_types.MigrationSource{CodeMigrations: []db_types.Migration{{Version: 1, Name: "test", Up: migrationFunc}}})
+			_, err := loadMigrations(db_core.MigrationSource{CodeMigrations: []db_core.Migration{{Version: 1, Name: "test", Up: migrationFunc}}})
 
 			assert.EqualError(t, err, "migration 1 down function is required")
 		})

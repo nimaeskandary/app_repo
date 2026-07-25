@@ -1,7 +1,7 @@
 package bridge
 
 import (
-	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
+	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
 )
 
 // structs in this package embed the interface we want to expose to the frontend. Wails will generate bindings
@@ -14,5 +14,5 @@ import (
 // definition can't be used by wails, so this is glue.
 
 type GreetService struct {
-	greet_types.GreetService
+	greet_core.GreetService
 }

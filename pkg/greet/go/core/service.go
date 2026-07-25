@@ -1,4 +1,4 @@
-package greet_types
+package greet_core
 
 import (
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"

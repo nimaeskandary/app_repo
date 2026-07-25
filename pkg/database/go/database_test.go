@@ -5,7 +5,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,33 +47,33 @@ func TestDatabaseModules(t *testing.T) {
 	})
 }
 
-type firstDatabase db_types.SQLDatabase
-type secondDatabase db_types.SQLDatabase
-type firstMigrator db_types.Migrator
-type secondMigrator db_types.Migrator
-type firstMigrateAll db_types.MigrateAll
-type secondMigrateAll db_types.MigrateAll
+type firstDatabase db_core.SQLDatabase
+type secondDatabase db_core.SQLDatabase
+type firstMigrator db_core.Migrator
+type secondMigrator db_core.Migrator
+type firstMigrateAll db_core.MigrateAll
+type secondMigrateAll db_core.MigrateAll
 
-type firstSQLiteConfig db_types.SQLiteConfig
+type firstSQLiteConfig db_core.SQLiteConfig
 
-func (c firstSQLiteConfig) SQLiteConfig() db_types.SQLiteConfig {
-	return db_types.SQLiteConfig(c)
+func (c firstSQLiteConfig) SQLiteConfig() db_core.SQLiteConfig {
+	return db_core.SQLiteConfig(c)
 }
 
-type secondSQLiteConfig db_types.SQLiteConfig
+type secondSQLiteConfig db_core.SQLiteConfig
 
-func (c secondSQLiteConfig) SQLiteConfig() db_types.SQLiteConfig {
-	return db_types.SQLiteConfig(c)
+func (c secondSQLiteConfig) SQLiteConfig() db_core.SQLiteConfig {
+	return db_core.SQLiteConfig(c)
 }
 
-func testSQLMigrationSource(tableName string) db_types.MigrationSource {
-	return db_types.MigrationSource{SQLFiles: fstest.MapFS{
+func testSQLMigrationSource(tableName string) db_core.MigrationSource {
+	return db_core.MigrationSource{SQLFiles: fstest.MapFS{
 		"0001_create_records.up.sql":   {Data: []byte("CREATE TABLE " + tableName + " (value TEXT);")},
 		"0001_create_records.down.sql": {Data: []byte("DROP TABLE " + tableName + ";")},
 	}}
 }
 
-func databaseTableExists(t *testing.T, database db_types.SQLDatabase, tableName string) bool {
+func databaseTableExists(t *testing.T, database db_core.SQLDatabase, tableName string) bool {
 	t.Helper()
 
 	var exists int

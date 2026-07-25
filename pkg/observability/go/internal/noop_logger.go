@@ -3,12 +3,12 @@ package internal
 import (
 	"context"
 
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 )
 
 type noopLogger struct{}
 
-func NewNoopLogger() obs_types.Logger {
+func NewNoopLogger() obs_core.Logger {
 	return &noopLogger{}
 }
 

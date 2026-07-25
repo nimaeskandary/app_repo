@@ -10,9 +10,9 @@ import (
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
-	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
+	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
 	observability "github.com/nimaeskandary/app_repo/pkg/observability/go"
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -34,8 +34,8 @@ func init() {
 func main() {
 	ctx := context.Background()
 
-	var greetService greet_types.GreetService
-	var logger obs_types.Logger
+	var greetService greet_core.GreetService
+	var logger obs_core.Logger
 	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(gordle_config.Bytes), &greetService, &logger)
 	if fxApp == nil {
 		slog.Error("dependency injection system failed to initialize")

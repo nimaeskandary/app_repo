@@ -1,4 +1,4 @@
-package db_types
+package db_core
 
 // SQLiteConfig configures a SQLite database connection.
 type SQLiteConfig struct {

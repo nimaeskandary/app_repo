@@ -1,4 +1,4 @@
-package db_types
+package db_core
 
 import (
 	"context"

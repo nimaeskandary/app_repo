@@ -1,18 +1,18 @@
 package database
 
 import (
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/nimaeskandary/app_repo/pkg/database/go/internal"
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	"go.uber.org/fx"
 )
 
 // NewSQLiteDatabaseModule provides a SQLite database managed by the Fx lifecycle.
 func NewSQLiteDatabaseModule[
-	Database db_types.SQLDatabase,
-	Config db_types.SQLiteConfigProvider,
+	Database db_core.SQLDatabase,
+	Config db_core.SQLiteConfigProvider,
 ]() fx.Option {
-	constructor := func(config Config) (db_types.SQLDatabase, error) {
+	constructor := func(config Config) (db_core.SQLDatabase, error) {
 		return internal.NewSQLiteDatabase(config.SQLiteConfig())
 	}
 	return di.NewFxModule[Database]("sqlite_database", constructor)
@@ -20,10 +20,10 @@ func NewSQLiteDatabaseModule[
 
 // NewMigratorModule provides a tool-neutral migrator backed by Goose.
 func NewMigratorModule[
-	Database db_types.SQLDatabase,
-	Migrator db_types.Migrator,
-](source db_types.MigrationSource) fx.Option {
-	constructor := func(database Database) (db_types.Migrator, error) {
+	Database db_core.SQLDatabase,
+	Migrator db_core.Migrator,
+](source db_core.MigrationSource) fx.Option {
+	constructor := func(database Database) (db_core.Migrator, error) {
 		return internal.NewGooseMigrator(database, source)
 	}
 	return di.NewFxModule[Migrator]("migrator", constructor)
@@ -31,10 +31,10 @@ func NewMigratorModule[
 
 // NewMigrateAllModule runs all pending migrations during Fx startup.
 func NewMigrateAllModule[
-	Migrator db_types.Migrator,
-	MigrateAll db_types.MigrateAll,
+	Migrator db_core.Migrator,
+	MigrateAll db_core.MigrateAll,
 ]() fx.Option {
-	constructor := func(migrator Migrator) (db_types.MigrateAll, error) {
+	constructor := func(migrator Migrator) (db_core.MigrateAll, error) {
 		return internal.NewMigrateAll(migrator)
 	}
 	return di.NewFxModule[MigrateAll]("migrate_all", constructor)

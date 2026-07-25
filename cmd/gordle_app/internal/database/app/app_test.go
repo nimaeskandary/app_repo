@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +23,7 @@ func TestNewAppSQLiteConfig(t *testing.T) {
 		)
 
 		require.NoError(t, err)
-		assert.Equal(t, db_types.SQLiteConfig{
+		assert.Equal(t, db_core.SQLiteConfig{
 			Source: filepath.Join(dataDir, "Gordle", "app.db"),
 		}, config.SQLiteConfig())
 		assert.DirExists(t, filepath.Join(dataDir, "Gordle"))
@@ -40,7 +40,7 @@ func TestNewAppSQLiteConfig(t *testing.T) {
 		)
 
 		require.NoError(t, err)
-		assert.Equal(t, db_types.SQLiteConfig{Source: source}, config.SQLiteConfig())
+		assert.Equal(t, db_core.SQLiteConfig{Source: source}, config.SQLiteConfig())
 	})
 
 	t.Run("should return data directory errors", func(t *testing.T) {

@@ -1,4 +1,4 @@
-package obs_types
+package obs_core
 
 import "context"
 

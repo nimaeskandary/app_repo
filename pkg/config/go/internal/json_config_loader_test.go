@@ -5,14 +5,14 @@ import (
 	"errors"
 	"testing"
 
-	config_types "github.com/nimaeskandary/app_repo/pkg/config/go/types"
+	config_core "github.com/nimaeskandary/app_repo/pkg/config/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 type testConfig struct {
 	Name   string
-	Secret config_types.SecretString
+	Secret config_core.SecretString
 }
 
 type testCustomValue string
@@ -47,7 +47,7 @@ func TestNewJsonConfigLoader(t *testing.T) {
 		_, err := NewJsonConfigLoader[testConfig](
 			[]byte(`{"Secret":"token"}`),
 			[]*json.Unmarshalers{
-				json.UnmarshalFunc(func([]byte, *config_types.SecretString) error {
+				json.UnmarshalFunc(func([]byte, *config_core.SecretString) error {
 					return unmarshalErr
 				}),
 			},

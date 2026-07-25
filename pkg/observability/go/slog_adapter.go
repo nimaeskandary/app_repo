@@ -4,16 +4,16 @@ import (
 	"context"
 	"log/slog"
 
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 )
 
 // AsSlog adapts Logger for APIs, such as Wails, that require a slog.Logger.
-func AsSlog(logger obs_types.Logger) *slog.Logger {
+func AsSlog(logger obs_core.Logger) *slog.Logger {
 	return slog.New(&slogHandler{logger: logger})
 }
 
 type slogHandler struct {
-	logger obs_types.Logger
+	logger obs_core.Logger
 	attrs  []slog.Attr
 	groups []string
 }

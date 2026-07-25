@@ -7,18 +7,18 @@ import (
 	"log/slog"
 	"testing"
 
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNewSlogLogger(t *testing.T) {
 	t.Parallel()
 
-	logger, err := NewSlogLogger(obs_types.SlogLoggerConfig{Level: "DEBUG"})
+	logger, err := NewSlogLogger(obs_core.SlogLoggerConfig{Level: "DEBUG"})
 	require.NoError(t, err)
 	require.NoError(t, logger.Stop(t.Context()))
 
-	_, err = NewSlogLogger(obs_types.SlogLoggerConfig{Level: "TRACE"})
+	_, err = NewSlogLogger(obs_core.SlogLoggerConfig{Level: "TRACE"})
 	require.EqualError(t, err, "unknown log level TRACE")
 }
 

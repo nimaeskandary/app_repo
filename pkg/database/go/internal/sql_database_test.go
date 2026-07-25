@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -22,7 +22,7 @@ func TestNewSQLDatabase(t *testing.T) {
 
 		db := newSQLDatabase(func() (*sql.DB, error) {
 			return sqlDB, nil
-		}, db_types.DialectSQLite)
+		}, db_core.DialectSQLite)
 
 		assert.Nil(t, db.DB())
 		require.NoError(t, db.Start(t.Context()))
@@ -38,7 +38,7 @@ func TestNewSQLDatabase(t *testing.T) {
 
 		db := newSQLDatabase(func() (*sql.DB, error) {
 			return sqlDB, nil
-		}, db_types.DialectSQLite)
+		}, db_core.DialectSQLite)
 
 		err = db.Start(t.Context())
 
@@ -56,7 +56,7 @@ func TestSQLDatabase(t *testing.T) {
 
 		db, _ := newTestSQLDatabase(t)
 
-		assert.Equal(t, db_types.DialectSQLite, db.Dialect())
+		assert.Equal(t, db_core.DialectSQLite, db.Dialect())
 	})
 
 	t.Run("should close the database", func(t *testing.T) {
@@ -78,7 +78,7 @@ func TestSQLDatabase(t *testing.T) {
 	})
 }
 
-func newTestSQLDatabase(t *testing.T) (db_types.SQLDatabase, *sql.DB) {
+func newTestSQLDatabase(t *testing.T) (db_core.SQLDatabase, *sql.DB) {
 	t.Helper()
 
 	sqlDB, err := sql.Open("sqlite", ":memory:")
@@ -87,7 +87,7 @@ func newTestSQLDatabase(t *testing.T) (db_types.SQLDatabase, *sql.DB) {
 
 	db := newSQLDatabase(func() (*sql.DB, error) {
 		return sqlDB, nil
-	}, db_types.DialectSQLite)
+	}, db_core.DialectSQLite)
 	require.NoError(t, db.Start(t.Context()))
 
 	return db, sqlDB

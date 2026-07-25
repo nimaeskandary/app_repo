@@ -14,7 +14,7 @@ app := fx.New(
 		[]byte(`{"Name":"gordle"}`),
 		nil,
 	),
-	fx.Invoke(func(loader config_types.ConfigLoader[AppConfig]) {
+	fx.Invoke(func(loader config_core.ConfigLoader[AppConfig]) {
 		appConfig := loader.GetConfig()
 		// Use appConfig.
 	}),
@@ -28,7 +28,7 @@ unmarshaler can treat its JSON value as the name of an environment variable:
 
 ```go
 secretStringUnmarshaler := json.UnmarshalFunc(
-	func(data []byte, value *config_types.SecretString) error {
+	func(data []byte, value *config_core.SecretString) error {
 		var environmentVariable string
 		if err := json.Unmarshal(data, &environmentVariable); err != nil {
 			return err
@@ -39,7 +39,7 @@ secretStringUnmarshaler := json.UnmarshalFunc(
 			return fmt.Errorf("environment variable %q is not set", environmentVariable)
 		}
 
-		*value = config_types.SecretString(secret)
+		*value = config_core.SecretString(secret)
 		return nil
 	},
 )

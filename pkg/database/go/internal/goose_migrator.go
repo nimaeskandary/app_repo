@@ -5,19 +5,19 @@ import (
 	"errors"
 	"fmt"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/pressly/goose/v3"
 )
 
 // gooseMigrator adapts Goose to the tool-neutral Migrator interface.
 type gooseMigrator struct {
-	database db_types.SQLDatabase
-	source   db_types.MigrationSource
+	database db_core.SQLDatabase
+	source   db_core.MigrationSource
 	provider *goose.Provider
 }
 
 // NewGooseMigrator creates a migrator from SQL files and Go functions.
-func NewGooseMigrator(database db_types.SQLDatabase, source db_types.MigrationSource) (db_types.Migrator, error) {
+func NewGooseMigrator(database db_core.SQLDatabase, source db_core.MigrationSource) (db_core.Migrator, error) {
 	return &gooseMigrator{
 		database: database,
 		source:   source,
@@ -96,11 +96,11 @@ func (m *gooseMigrator) Stop(context.Context) error {
 }
 
 // gooseDialect maps package dialects to Goose dialects.
-func gooseDialect(dialect db_types.Dialect) (goose.Dialect, error) {
+func gooseDialect(dialect db_core.Dialect) (goose.Dialect, error) {
 	switch dialect {
-	case db_types.DialectSQLite:
+	case db_core.DialectSQLite:
 		return goose.DialectSQLite3, nil
-	case db_types.DialectPostgres:
+	case db_core.DialectPostgres:
 		return goose.DialectPostgres, nil
 	default:
 		return "", fmt.Errorf("unsupported SQL dialect: %s", dialect)

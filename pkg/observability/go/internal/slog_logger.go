@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 )
 
 type attributesContextKey struct{}
@@ -15,7 +15,7 @@ type slogger struct {
 	logger *slog.Logger
 }
 
-func NewSlogLogger(cfg obs_types.SlogLoggerConfig) (obs_types.Logger, error) {
+func NewSlogLogger(cfg obs_core.SlogLoggerConfig) (obs_core.Logger, error) {
 	var level slog.Level
 	switch cfg.Level {
 	case "DEBUG":

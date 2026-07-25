@@ -2,7 +2,7 @@
 // github.com/vektra/mockery
 // template: testify
 
-package db_types_mocks
+package db_core_mocks
 
 import (
 	"context"

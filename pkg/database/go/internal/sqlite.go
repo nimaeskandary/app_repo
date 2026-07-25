@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 
 	_ "modernc.org/sqlite"
 )
@@ -15,7 +15,7 @@ import (
 const sqliteMaxOpenConnections = 1
 
 // NewSQLiteDatabase creates a SQLite database that opens during Start.
-func NewSQLiteDatabase(config db_types.SQLiteConfig) (db_types.SQLDatabase, error) {
+func NewSQLiteDatabase(config db_core.SQLiteConfig) (db_core.SQLDatabase, error) {
 	if config.Source == "" {
 		return nil, errors.New("SQLite database source is required")
 	}
@@ -29,7 +29,7 @@ func NewSQLiteDatabase(config db_types.SQLiteConfig) (db_types.SQLDatabase, erro
 		return db, nil
 	}
 
-	return newSQLDatabase(open, db_types.DialectSQLite), nil
+	return newSQLDatabase(open, db_core.DialectSQLite), nil
 }
 
 func withSQLiteDefaults(source string) string {

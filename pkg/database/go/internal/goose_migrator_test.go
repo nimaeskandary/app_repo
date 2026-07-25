@@ -7,7 +7,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/pressly/goose/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -130,7 +130,7 @@ func TestGooseDialect(t *testing.T) {
 	t.Run("should map SQLite", func(t *testing.T) {
 		t.Parallel()
 
-		dialect, err := gooseDialect(db_types.DialectSQLite)
+		dialect, err := gooseDialect(db_core.DialectSQLite)
 
 		require.NoError(t, err)
 		assert.Equal(t, goose.DialectSQLite3, dialect)
@@ -139,7 +139,7 @@ func TestGooseDialect(t *testing.T) {
 	t.Run("should map PostgreSQL", func(t *testing.T) {
 		t.Parallel()
 
-		dialect, err := gooseDialect(db_types.DialectPostgres)
+		dialect, err := gooseDialect(db_core.DialectPostgres)
 
 		require.NoError(t, err)
 		assert.Equal(t, goose.DialectPostgres, dialect)
@@ -155,7 +155,7 @@ func TestGooseDialect(t *testing.T) {
 	})
 }
 
-func newTestMigrator(t *testing.T) (db_types.Migrator, db_types.SQLDatabase) {
+func newTestMigrator(t *testing.T) (db_core.Migrator, db_core.SQLDatabase) {
 	t.Helper()
 
 	database := newTestSQLiteDatabase(t, filepath.Join(t.TempDir(), "test.db"))
@@ -166,15 +166,15 @@ func newTestMigrator(t *testing.T) (db_types.Migrator, db_types.SQLDatabase) {
 	return migrator, database
 }
 
-func testMigrationSource() db_types.MigrationSource {
-	return db_types.MigrationSource{
+func testMigrationSource() db_core.MigrationSource {
+	return db_core.MigrationSource{
 		SQLFiles: fstest.MapFS{
 			"0001_create_first_records.up.sql":   {Data: []byte("CREATE TABLE first_records (value TEXT);")},
 			"0001_create_first_records.down.sql": {Data: []byte("DROP TABLE first_records;")},
 			"0003_create_third_records.up.sql":   {Data: []byte("CREATE TABLE third_records (value TEXT);")},
 			"0003_create_third_records.down.sql": {Data: []byte("DROP TABLE third_records;")},
 		},
-		CodeMigrations: []db_types.Migration{{
+		CodeMigrations: []db_core.Migration{{
 			Version: 2,
 			Name:    "create_code_records",
 			Up: func(ctx context.Context, tx *sql.Tx) error {

@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"sync"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 )
 
 // sqlDatabase wraps a database connection pool managed by the Fx lifecycle.
 type sqlDatabase struct {
 	open      func() (*sql.DB, error)
 	db        *sql.DB
-	dialect   db_types.Dialect
+	dialect   db_core.Dialect
 	startOnce sync.Once
 	startErr  error
 	stopOnce  sync.Once
@@ -22,7 +22,7 @@ type sqlDatabase struct {
 }
 
 // newSQLDatabase creates a database whose connection is opened during Start.
-func newSQLDatabase(open func() (*sql.DB, error), dialect db_types.Dialect) db_types.SQLDatabase {
+func newSQLDatabase(open func() (*sql.DB, error), dialect db_core.Dialect) db_core.SQLDatabase {
 	return &sqlDatabase{
 		open:    open,
 		dialect: dialect,
@@ -33,7 +33,7 @@ func (d *sqlDatabase) DB() *sql.DB {
 	return d.db
 }
 
-func (d *sqlDatabase) Dialect() db_types.Dialect {
+func (d *sqlDatabase) Dialect() db_core.Dialect {
 	return d.dialect
 }
 

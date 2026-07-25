@@ -4,16 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 )
 
 // migrateAll runs all pending migrations during startup.
 type migrateAll struct {
-	migrator db_types.Migrator
+	migrator db_core.Migrator
 }
 
 // NewMigrateAll creates startup migration work.
-func NewMigrateAll(migrator db_types.Migrator) (db_types.MigrateAll, error) {
+func NewMigrateAll(migrator db_core.Migrator) (db_core.MigrateAll, error) {
 	return &migrateAll{migrator: migrator}, nil
 }
 

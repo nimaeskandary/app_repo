@@ -3,12 +3,12 @@ package internal
 import (
 	"context"
 
-	greet_types "github.com/nimaeskandary/app_repo/pkg/greet/go/types"
+	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
 )
 
 type greetServiceImpl struct{}
 
-func NewGreetServiceImpl() greet_types.GreetService {
+func NewGreetServiceImpl() greet_core.GreetService {
 	return &greetServiceImpl{}
 }
 

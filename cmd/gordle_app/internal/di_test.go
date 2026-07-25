@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	app_database "github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/database/app"
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
-	obs_types "github.com/nimaeskandary/app_repo/pkg/observability/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/fx"
@@ -23,7 +23,7 @@ func TestModuleListLoadsConfig(t *testing.T) {
 	var appDatabase app_database.AppDatabase
 	var appDatabaseMigrator app_database.AppDatabaseMigrator
 	var appDatabaseMigrateAll app_database.AppDatabaseMigrateAll
-	var loggerConfig obs_types.SlogLoggerConfig
+	var loggerConfig obs_core.SlogLoggerConfig
 	app := fx.New(
 		append(
 			ModuleList(configBytes),
@@ -38,7 +38,7 @@ func TestModuleListLoadsConfig(t *testing.T) {
 	)
 
 	require.NoError(t, app.Start(t.Context()))
-	assert.Equal(t, db_types.DialectSQLite, appDatabase.Dialect())
+	assert.Equal(t, db_core.DialectSQLite, appDatabase.Dialect())
 	assert.FileExists(t, source)
 	assert.NotNil(t, appDatabaseMigrator)
 	assert.NotNil(t, appDatabaseMigrateAll)

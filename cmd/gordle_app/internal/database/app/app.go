@@ -5,18 +5,18 @@ import (
 	"os"
 	"path/filepath"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 	"github.com/nimaeskandary/app_repo/pkg/wails/go/storage_path"
 )
 
 // AppDatabase identifies the App Database in the dependency graph.
-type AppDatabase db_types.SQLDatabase
+type AppDatabase db_core.SQLDatabase
 
 // AppDatabaseMigrator identifies the App Database migrator in the dependency graph.
-type AppDatabaseMigrator db_types.Migrator
+type AppDatabaseMigrator db_core.Migrator
 
 // AppDatabaseMigrateAll identifies the App Database startup migration work in the dependency graph.
-type AppDatabaseMigrateAll db_types.MigrateAll
+type AppDatabaseMigrateAll db_core.MigrateAll
 
 // AppConfig configures the App Database file under the Wails application data directory.
 type AppConfig struct {
@@ -25,9 +25,9 @@ type AppConfig struct {
 }
 
 // AppSQLiteConfig identifies the resolved App Database SQLite configuration.
-type AppSQLiteConfig db_types.SQLiteConfig
+type AppSQLiteConfig db_core.SQLiteConfig
 
-// NewAppSQLiteConfig does some work on the original AppConfig, we need to dynamically get the app data path 
+// NewAppSQLiteConfig does some work on the original AppConfig, we need to dynamically get the app data path
 // to nest the sqlite db file under which depends on host OS
 func NewAppSQLiteConfig(config AppConfig) (AppSQLiteConfig, error) {
 	return newAppSQLiteConfig(config, storage_path.DataDir)
@@ -65,6 +65,6 @@ func newAppSQLiteConfig(
 }
 
 // SQLiteConfig returns the generic SQLite configuration.
-func (c AppSQLiteConfig) SQLiteConfig() db_types.SQLiteConfig {
-	return db_types.SQLiteConfig(c)
+func (c AppSQLiteConfig) SQLiteConfig() db_core.SQLiteConfig {
+	return db_core.SQLiteConfig(c)
 }

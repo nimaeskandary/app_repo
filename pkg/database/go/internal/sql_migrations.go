@@ -11,7 +11,7 @@ import (
 	"sort"
 	"strconv"
 
-	db_types "github.com/nimaeskandary/app_repo/pkg/database/go/types"
+	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
 )
 
 // sqlMigrationFilename matches paired, versioned SQL migration filenames.
@@ -26,7 +26,7 @@ type sqlMigrationPair struct {
 }
 
 // loadMigrations normalizes SQL files and Go functions into one ordered list.
-func loadMigrations(source db_types.MigrationSource) ([]db_types.Migration, error) {
+func loadMigrations(source db_core.MigrationSource) ([]db_core.Migration, error) {
 	migrations := slices.Clone(source.CodeMigrations)
 	if source.SQLFiles != nil {
 		sqlMigrations, err := loadSQLMigrations(source.SQLFiles)
@@ -64,7 +64,7 @@ func loadMigrations(source db_types.MigrationSource) ([]db_types.Migration, erro
 }
 
 // loadSQLMigrations loads each .up.sql and .down.sql pair as one migration.
-func loadSQLMigrations(source fs.FS) ([]db_types.Migration, error) {
+func loadSQLMigrations(source fs.FS) ([]db_core.Migration, error) {
 	entries, err := fs.ReadDir(source, ".")
 	if err != nil {
 		return nil, fmt.Errorf("read SQL migrations: %w", err)
@@ -107,7 +107,7 @@ func loadSQLMigrations(source fs.FS) ([]db_types.Migration, error) {
 		}
 	}
 
-	migrations := make([]db_types.Migration, 0, len(pairs))
+	migrations := make([]db_core.Migration, 0, len(pairs))
 	for _, pair := range pairs {
 		if pair.up == "" {
 			return nil, fmt.Errorf("migration %d is missing up SQL", pair.version)
@@ -116,7 +116,7 @@ func loadSQLMigrations(source fs.FS) ([]db_types.Migration, error) {
 			return nil, fmt.Errorf("migration %d is missing down SQL", pair.version)
 		}
 
-		migrations = append(migrations, db_types.Migration{
+		migrations = append(migrations, db_core.Migration{
 			Version: pair.version,
 			Name:    pair.name,
 			Up:      sqlMigrationFunc(pair.version, "up", pair.up),
@@ -128,7 +128,7 @@ func loadSQLMigrations(source fs.FS) ([]db_types.Migration, error) {
 }
 
 // sqlMigrationFunc turns SQL text into a transactional migration function.
-func sqlMigrationFunc(version int64, direction string, query string) db_types.MigrationFunc {
+func sqlMigrationFunc(version int64, direction string, query string) db_core.MigrationFunc {
 	return func(ctx context.Context, tx *sql.Tx) error {
 		if _, err := tx.ExecContext(ctx, query); err != nil {
 			return fmt.Errorf("run migration %d %s SQL: %w", version, direction, err)

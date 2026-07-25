@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	db_types_mocks "github.com/nimaeskandary/app_repo/pkg/database/go/types/mocks"
+	db_core_mocks "github.com/nimaeskandary/app_repo/pkg/database/go/core/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -16,7 +16,7 @@ func TestNewMigrateAll(t *testing.T) {
 	t.Run("should run all pending migrations", func(t *testing.T) {
 		t.Parallel()
 
-		migrator := db_types_mocks.NewMockMigrator(t)
+		migrator := db_core_mocks.NewMockMigrator(t)
 		migrator.EXPECT().Up(mock.Anything, (*int64)(nil)).Return(nil).Once()
 
 		migrateAll, err := NewMigrateAll(migrator)
@@ -30,7 +30,7 @@ func TestNewMigrateAll(t *testing.T) {
 		t.Parallel()
 
 		migrationError := errors.New("migration failed")
-		migrator := db_types_mocks.NewMockMigrator(t)
+		migrator := db_core_mocks.NewMockMigrator(t)
 		migrator.EXPECT().Up(mock.Anything, (*int64)(nil)).Return(migrationError).Once()
 
 		migrateAll, err := NewMigrateAll(migrator)

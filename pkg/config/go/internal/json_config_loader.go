@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
-	config_types "github.com/nimaeskandary/app_repo/pkg/config/go/types"
+	config_core "github.com/nimaeskandary/app_repo/pkg/config/go/core"
 	"github.com/tailscale/hujson"
 )
 
@@ -13,7 +13,7 @@ type JsonConfigLoader[T any] struct {
 	parsed T
 }
 
-func NewJsonConfigLoader[T any](from []byte, unmarshalers []*json.Unmarshalers) (config_types.ConfigLoader[T], error) {
+func NewJsonConfigLoader[T any](from []byte, unmarshalers []*json.Unmarshalers) (config_core.ConfigLoader[T], error) {
 	standardized, err := hujson.Standardize(from)
 	if err != nil {
 		return nil, fmt.Errorf("failed to standardize JSON config: %w", err)
