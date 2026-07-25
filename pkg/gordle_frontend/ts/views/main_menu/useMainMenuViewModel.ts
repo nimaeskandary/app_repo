@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useGordleDependencies } from '../di/GordleDependencies'
+import { useGordleDependencies } from '@app_repo/pkg_gordle_frontend/di/GordleDependencies'
 
 export type MainMenuViewModel = {
   play: () => void

@@ -2,7 +2,10 @@ import { Box } from '@app_repo/pkg_ui/mui/box'
 import { Container } from '@app_repo/pkg_ui/mui/container'
 import { Grid } from '@app_repo/pkg_ui/mui/grid'
 import { H4 } from '@app_repo/pkg_ui/mui/typography'
-import { GordleCellState, type GordleCell } from '../model/GordleCell'
+import {
+  GordleCellState,
+  type GordleCell,
+} from '@app_repo/pkg_gordle_frontend/model/GordleCell'
 
 export type GordleViewProps = {
   cells: GordleCell[][]

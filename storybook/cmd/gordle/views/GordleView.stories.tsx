@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import GordleView from '@app_repo/pkg_gordle_frontend/gordle/GordleView'
+import GordleView from '@app_repo/pkg_gordle_frontend/views/gordle/GordleView'
 import { GordleCellState } from '@app_repo/pkg_gordle_frontend/model/GordleCell'
 import GordlePreview from '@/storybook/cmd/gordle/GordlePreview'
 

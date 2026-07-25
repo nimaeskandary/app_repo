@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
-import type { GordleNavigator } from '../navigation/GordleNavigator'
+import type { GordleNavigator } from '@app_repo/pkg_gordle_frontend/navigation/GordleNavigator'
 
 export type GordleDependencies = {
   navigator: GordleNavigator

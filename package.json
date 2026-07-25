@@ -15,7 +15,7 @@
   },
   "workspaces": [
     "cmd/gordle_app/frontend",
-    "pkg/gordle-frontend/ts",
+    "pkg/gordle_frontend/ts",
     "pkg/ui/ts",
     "storybook"
   ],
