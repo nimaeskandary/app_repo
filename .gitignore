@@ -12,7 +12,7 @@ storybook/storybook-static
 **/.task/
 
 # Wails
-**/.wails_bin/
+/cmd/gordle_app/bin/
 **/build/linux/appimage/build
 **/build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
 **/build/ios/xcode/overlay.json
@@ -30,4 +30,3 @@ storybook/storybook-static
 **/build/linux/appimage/Gordle.png
 **/wails_windows_*.syso
 **/wails_obfuscated.gen.go
-

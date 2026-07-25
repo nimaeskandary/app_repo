@@ -40,16 +40,20 @@ Use `bin/go` for Go commands, for example `bin/go test ./...`
 
 [Wails3](https://v3.wails.io/quick-start/why-wails/) is used in this repo to build cross platform apps using go and react. This repo is generic and not every cmd executable needs to use wails, but wails is used to build targets such as `cmd/gordle_app`. 
 
-`cmd/gordle_app` was bootstrapped with `wails3 init -n test-react -t react`. Some of the wails build files it came with was moved to `tools/wails` in an attempt to make things dry and reusable if another wails app is added to this project. 
+`cmd/gordle_app` was bootstrapped with `wails3 init -n test-react -t react`.
+Its Wails build files stay app-local so they can be compared directly with
+future versions of the upstream template.
 
 ### Common commands
 
 The wails3 example template ships with build scripts for all platforms wired up via the tool [task](https://taskfile.dev/). I recommend getting an IDE plugin to easily view available tasks.
 
-* run dev mode on host, this will hot reload: `task gordle_app:dev`
-* launch app on ios simulator: `task gordle_app:ios:run`
-* build: `task gordle_app:build`
-* re generate TypeScript bindings: `task gordle_app:common:generate:bindings`, autogenerates bindings in `cmd/gordle_app/frontend/bindings`
+Run Wails commands from `cmd/gordle_app`.
+
+* run dev mode on host, this will hot reload: `wails3 dev`
+* launch app on ios simulator: `wails3 task ios:run`
+* build: `wails3 build`
+* re generate TypeScript bindings: `wails3 task common:generate:bindings`, autogenerates bindings in `frontend/bindings`
 
 ## Storybook
 

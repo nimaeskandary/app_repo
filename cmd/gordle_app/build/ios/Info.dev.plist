@@ -5,7 +5,7 @@
 		<key>CFBundleDisplayName</key>
 		<string>Gordle (Dev)</string>
 		<key>CFBundleExecutable</key>
-		<string>Gordle</string>
+		<string>gordle</string>
 		<key>CFBundleGetInfoString</key>
 		<string>This is a comment</string>
 		<key>CFBundleIdentifier</key>

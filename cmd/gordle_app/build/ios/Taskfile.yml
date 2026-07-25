@@ -52,8 +52,7 @@ tasks:
             ref: .PRODUCTION
     cmds:
       - echo "Building iOS app {{.APP_NAME}} ({{.IOS_PLATFORM}})..."
-      # Non-template: build the app package.
-      - go build -buildmode=c-archive -overlay build/ios/xcode/overlay.json {{.BUILD_FLAGS}} -o {{.OUTPUT}}.a "{{.APP_DIR}}"
+      - go build -buildmode=c-archive -overlay build/ios/xcode/overlay.json {{.BUILD_FLAGS}} -o {{.OUTPUT}}.a
     vars:
       BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production,ios -trimpath -buildvcs=false -ldflags="-w -s"{{else}}-tags ios,debug -buildvcs=false -gcflags=all="-l"{{end}}'
       DEFAULT_OUTPUT: '{{.BIN_DIR}}/{{.APP_NAME}}'
@@ -114,7 +113,7 @@ tasks:
           -framework AVFoundation \
           -framework CoreLocation -framework CoreMotion -framework SystemConfiguration \
           -lresolv \
-          -o "{{.BIN_DIR}}/{{.APP_NAME}}" \
+          -o "{{.BIN_DIR}}/{{.APP_NAME | lower}}" \
           "$MAIN_M" -Wl,-force_load,"{{.BIN_DIR}}/{{.APP_NAME}}.a"
 
   create:app:bundle:
@@ -122,7 +121,7 @@ tasks:
     cmds:
       - rm -rf "{{.BIN_DIR}}/{{.APP_NAME}}.app"
       - mkdir -p "{{.BIN_DIR}}/{{.APP_NAME}}.app"
-      - cp "{{.BIN_DIR}}/{{.APP_NAME}}" "{{.BIN_DIR}}/{{.APP_NAME}}.app/"
+      - cp "{{.BIN_DIR}}/{{.APP_NAME | lower}}" "{{.BIN_DIR}}/{{.APP_NAME}}.app/"
       - cp build/ios/Info.plist "{{.BIN_DIR}}/{{.APP_NAME}}.app/"
       - |
         # Embed the provisioning profile for device builds when provided
@@ -206,15 +205,15 @@ tasks:
     summary: Generates bindings for iOS with proper CGO flags
     sources:
       - "**/*.go"
-      - "{{.REPO_ROOT}}/go.mod"
-      - "{{.REPO_ROOT}}/go.sum"
+      - go.mod
+      - go.sum
     generates:
-      - "{{.FRONTEND_DIR}}/bindings/**/*"
+      - frontend/bindings/**/*
     vars:
       SDK_PATH:
         sh: xcrun --sdk {{.IOS_SDK}} --show-sdk-path
     cmds:
-      - cd "{{.APP_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
+      - wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true
     env:
       GOOS: ios
       CGO_ENABLED: 1
@@ -267,19 +266,11 @@ tasks:
     summary: Generate Go build overlay and iOS shim
     sources:
       - build/config.yml
-      - build/ios/Taskfile.yml
     generates:
       - build/ios/xcode/overlay.json
       - build/ios/xcode/gen/main_ios.gen.go
     cmds:
       - wails3 ios overlay:gen -out build/ios/xcode/overlay.json -config build/config.yml
-      # Non-template: generated overlay shim must be injected into the app package.
-      - |
-        PROJECT_MAIN="$(pwd)/main_ios.gen.go"
-        APP_MAIN="{{.APP_DIR}}/main_ios.gen.go"
-        GENERATED_MAIN_ABS="$(pwd)/build/ios/xcode/gen/main_ios.gen.go"
-        GENERATED_MAIN="build/ios/xcode/gen/main_ios.gen.go"
-        perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${APP_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/ios/xcode/overlay.json
 
   generate:ios:xcode:
     internal: true
@@ -302,7 +293,7 @@ tasks:
     cmds:
       - rm -rf "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app"
       - mkdir -p "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app"
-      - cp "{{.BIN_DIR}}/{{.APP_NAME}}" "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app/{{.APP_NAME}}"
+      - cp "{{.BIN_DIR}}/{{.APP_NAME | lower}}" "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app/{{.APP_NAME | lower}}"
       - cp build/ios/Info.dev.plist "{{.BIN_DIR}}/{{.APP_NAME}}.dev.app/Info.plist"
       - |
         # Compile asset catalog and embed icons for dev bundle

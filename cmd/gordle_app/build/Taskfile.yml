@@ -7,8 +7,6 @@ tasks:
     # Universal/multi-arch builds invoke this concurrently from parallel deps;
     # two `go mod tidy` processes racing on go.mod can corrupt it (#4637).
     run: once
-    # This repository keeps Go module files at the repo root.
-    dir: "{{.REPO_ROOT}}"
     cmds:
       - go mod tidy
 
@@ -19,14 +17,14 @@ tasks:
       - task: install:frontend:deps:{{.PACKAGE_MANAGER}}
 
   install:frontend:deps:npm:
-    # Non-template: npm workspaces install from the repo root.
-    dir: "{{.REPO_ROOT}}"
+    dir: frontend
+    # Repository adaptation: npm dependencies and lockfile live at the workspace root.
     sources:
       - package.json
-      - package-lock.json
-      - "{{.FRONTEND_PATH}}/package.json"
+      - ../../../package.json
+      - ../../../package-lock.json
     generates:
-      - node_modules
+      - ../../../node_modules
     preconditions:
       - sh: npm version
         msg: "Looks like npm isn't installed. Npm is part of the Node installer: https://nodejs.org/en/download/"
@@ -34,7 +32,7 @@ tasks:
       - npm install
 
   install:frontend:deps:bun:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     sources:
       - package.json
       - bun.lock
@@ -48,7 +46,7 @@ tasks:
       - bun install
 
   install:frontend:deps:pnpm:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     sources:
       - package.json
       - pnpm-lock.yaml
@@ -61,7 +59,7 @@ tasks:
       - pnpm install
 
   install:frontend:deps:yarn:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     sources:
       - package.json
       - yarn.lock
@@ -82,13 +80,13 @@ tasks:
     # other's bundler is reading it, failing intermittently with
     # 'Could not resolve "./bindings/<pkg>"' (#4637).
     run: once
-    # Non-template: frontend lives inside the app.
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     sources:
       - "**/*"
-      - "../../../pkg/**/*"
+      # Repository adaptation: Gordle imports shared TypeScript from the repo-level pkg directory.
+      - "../../../pkg/**/*.ts"
+      - "../../../pkg/**/*.tsx"
       - exclude: node_modules/**/*
-      - exclude: dist/**/*
     generates:
       - dist/**/*
     deps:
@@ -116,33 +114,69 @@ tasks:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:npm:
-    # Non-template: run frontend scripts through the root npm workspace.
-    dir: "{{.REPO_ROOT}}"
+    dir: frontend
     cmds:
-      - npm --workspace "{{.FRONTEND_WORKSPACE}}" run {{.SCRIPT}} -q
+      - npm run {{.SCRIPT}} -q
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:yarn:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - yarn {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:pnpm:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - pnpm run {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
   frontend:run:bun:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - bun run {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
+
+  frontend:vendor:puppertino:
+    summary: Fetches Puppertino CSS into frontend/public for consistent mobile styling
+    sources:
+      - frontend/public/puppertino/puppertino.css
+    generates:
+      - frontend/public/puppertino/puppertino.css
+    cmds:
+      - |
+        set -euo pipefail
+        mkdir -p frontend/public/puppertino
+        # If bundled Puppertino exists, prefer it. Otherwise, try to fetch, but don't fail build on error.
+        if [ ! -f frontend/public/puppertino/puppertino.css ]; then
+          echo "No bundled Puppertino found. Attempting to fetch from GitHub..."
+          if curl -fsSL https://raw.githubusercontent.com/codedgar/Puppertino/main/dist/css/full.css -o frontend/public/puppertino/puppertino.css; then
+            curl -fsSL https://raw.githubusercontent.com/codedgar/Puppertino/main/LICENSE -o frontend/public/puppertino/LICENSE || true
+            echo "Puppertino CSS downloaded to frontend/public/puppertino/puppertino.css"
+          else
+            echo "Warning: Could not fetch Puppertino CSS. Proceeding without download since template may bundle it."
+          fi
+        else
+          echo "Using bundled Puppertino at frontend/public/puppertino/puppertino.css"
+        fi
+        # Ensure index.html includes Puppertino CSS and button classes
+        INDEX_HTML=frontend/index.html
+        if [ -f "$INDEX_HTML" ]; then
+          if ! grep -q 'href="/puppertino/puppertino.css"' "$INDEX_HTML"; then
+            # Insert Puppertino link tag after style.css link
+            awk '
+              /href="\/style.css"\/?/ && !x { print; print "    <link rel=\"stylesheet\" href=\"/puppertino/puppertino.css\"/>"; x=1; next }1
+            ' "$INDEX_HTML" > "$INDEX_HTML.tmp" && mv "$INDEX_HTML.tmp" "$INDEX_HTML"
+          fi
+          # Replace default .btn with Puppertino primary button classes if present
+          sed -E -i'' 's/class=\"btn\"/class=\"p-btn p-prim-col\"/g' "$INDEX_HTML" || true
+        fi
+
+
 
   generate:bindings:
     summary: Generates bindings for the frontend
@@ -151,18 +185,17 @@ tasks:
       - task: go:mod:tidy
     sources:
       - "**/*.[jt]s"
-      - exclude: "{{.FRONTEND_DIR}}/**/*"
-      - "{{.FRONTEND_DIR}}/bindings/**/*"  # Rerun when switching between dev/production mode causes changes in output
+      - exclude: frontend/**/*
+      - frontend/bindings/**/*  # Rerun when switching between dev/production mode causes changes in output
       - "**/*.go"
-      - "{{.REPO_ROOT}}/cmd/**/*.go"
-      - "{{.REPO_ROOT}}/pkg/**/*.go"
-      - "{{.REPO_ROOT}}/go.mod"
-      - "{{.REPO_ROOT}}/go.sum"
+      # Repository adaptation: Go module and shared binding types live at the repo root.
+      - "../../pkg/**/*.go"
+      - "../../go.mod"
+      - "../../go.sum"
     generates:
-      - "{{.FRONTEND_DIR}}/bindings/**/*"
+      - frontend/bindings/**/*
     cmds:
-      # Non-template: bindings are generated from the app package.
-      - cd "{{.APP_DIR}}" && wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
+      - wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
 
   generate:icons:
     summary: Generates Windows `.ico` and Mac `.icns` from an image; on macOS, `-iconcomposerinput appicon.icon -macassetdir darwin` also produces `Assets.car` from a `.icon` file (skipped on other platforms).
@@ -185,23 +218,22 @@ tasks:
       - task: frontend:dev:{{.PACKAGE_MANAGER}}
 
   frontend:dev:npm:
-    # Non-template: run Vite through the root npm workspace.
-    dir: "{{.REPO_ROOT}}"
+    dir: frontend
     cmds:
-      - npm --workspace "{{.FRONTEND_WORKSPACE}}" run dev -- --port {{.VITE_PORT}} --strictPort
+      - npm run dev -- --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:yarn:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - yarn dev --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:pnpm:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - pnpm dev --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:bun:
-    dir: "{{.FRONTEND_DIR}}"
+    dir: frontend
     cmds:
       - bun run dev --port {{.VITE_PORT}} --strictPort
 
@@ -235,8 +267,7 @@ tasks:
       - sh: '{{if eq .OBFUSCATED "true"}}command -v garble >/dev/null 2>&1{{else}}true{{end}}'
         msg: "garble is required for obfuscated builds. Install it with: go install mvdan.cc/garble@v0.16.0 (requires Go 1.24+). See https://github.com/burrowers/garble/releases for version/toolchain compatibility."
     cmds:
-      # Non-template: build the server from the app package.
-      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}" "{{.APP_DIR}}"'
+      - '{{if eq .OBFUSCATED "true"}}garble {{.GARBLE_ARGS}} build{{else}}go build{{end}} {{.BUILD_FLAGS}} -o "{{.BIN_DIR}}/{{.APP_NAME}}-server{{exeExt}}"'
     vars:
       BUILD_FLAGS: '-tags server{{if eq .DEV "true"}}{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -buildvcs=false -gcflags=all="-l"{{else}},production{{if eq .OBFUSCATED "true"}},wails_obfuscated{{end}}{{if .EXTRA_TAGS}},{{.EXTRA_TAGS}}{{end}} -trimpath -buildvcs=false -ldflags="-w -s"{{end}}'
 
@@ -268,13 +299,16 @@ tasks:
         vars:
           BUILD_FLAGS: "-tags server,production"
     cmds:
+      # Repository adaptation: build with the root module context and nested Gordle path.
       - >-
         docker build
         --build-arg CGO_ENABLED={{.CGO_ENABLED | default "0"}}
         --build-arg GO_IMAGE={{.GO_IMAGE | default "golang:alpine"}}
         --build-arg RUNTIME_IMAGE={{.RUNTIME_IMAGE | default "gcr.io/distroless/static-debian12"}}
+        --build-arg APP_PATH={{.APP_PATH}}
         -t {{.TAG | default (printf "%s:latest" .APP_NAME)}}
-        -f build/docker/Dockerfile.server .
+        -f "{{.ROOT_DIR}}/build/docker/Dockerfile.server"
+        "{{.REPO_ROOT}}"
     vars:
       TAG: "{{.TAG}}"
     preconditions:

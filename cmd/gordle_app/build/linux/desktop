@@ -3,11 +3,11 @@ Version=1.0
 Name=Gordle
 Comment=Gordle
 # The Exec line includes %u to pass the URL to the application
-Exec=/usr/local/bin/Gordle %u
+Exec=/usr/local/bin/gordle %u
 Terminal=false
 Type=Application
-Icon=Gordle
+Icon=gordle
 Categories=Utility;
-StartupWMClass=Gordle
+StartupWMClass=gordle
 
  

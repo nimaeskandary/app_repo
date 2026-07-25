@@ -3,7 +3,7 @@
 #
 # The lines below are called `modelines`. See `:help modeline`
 
-name: "Gordle"
+name: "gordle"
 arch: ${GOARCH}
 platform: "linux"
 version: "0.0.1"
@@ -17,12 +17,12 @@ license: "MIT"
 release: "1"
 
 contents:
-  - src: "./bin/Gordle"
-    dst: "/usr/local/bin/Gordle"
+  - src: "./bin/gordle"
+    dst: "/usr/local/bin/gordle"
   - src: "./build/appicon.png"
-    dst: "/usr/share/icons/hicolor/128x128/apps/Gordle.png"
-  - src: "./build/linux/Gordle.desktop"
-    dst: "/usr/share/applications/Gordle.desktop"
+    dst: "/usr/share/icons/hicolor/128x128/apps/gordle.png"
+  - src: "./build/linux/gordle.desktop"
+    dst: "/usr/share/applications/gordle.desktop"
 
 # Default dependencies for the GTK4 + WebKitGTK 6.0 stack (Ubuntu 24.04+ / Debian 13+)
 depends:

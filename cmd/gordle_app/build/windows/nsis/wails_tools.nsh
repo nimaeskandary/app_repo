@@ -5,7 +5,7 @@
 !include "FileFunc.nsh"
 
 !ifndef INFO_PROJECTNAME
-    !define INFO_PROJECTNAME "Gordle"
+    !define INFO_PROJECTNAME "gordle"
 !endif
 !ifndef INFO_COMPANYNAME
     !define INFO_COMPANYNAME "NimaEskandary"

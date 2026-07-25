@@ -107,9 +107,8 @@ tasks:
         mkdir -p {{.BIN_DIR}}
         mkdir -p build/android/app/src/main/jniLibs/$JNI_DIR
 
-        # Non-template: build the app package.
         go build -buildmode=c-shared -overlay build/android/overlay.json {{.BUILD_FLAGS}} \
-          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so "{{.APP_DIR}}"
+          -o build/android/app/src/main/jniLibs/$JNI_DIR/libwails.so
     vars:
       BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production,android -trimpath -buildvcs=false -ldflags="-w -s"{{else}}-tags android,debug -buildvcs=false -gcflags=all="-l"{{end}}'
 
@@ -245,33 +244,25 @@ tasks:
     summary: Generate Go build overlay that registers the Android main
     sources:
       - build/config.yml
-      - build/android/Taskfile.yml
     generates:
       - build/android/overlay.json
       - build/android/gen/main_android.gen.go
     cmds:
       - wails3 android overlay:gen -out build/android/overlay.json -config build/config.yml
-      # Non-template: generated overlay shim must be injected into the app package.
-      - |
-        PROJECT_MAIN="$(pwd)/main_android.gen.go"
-        APP_MAIN="{{.APP_DIR}}/main_android.gen.go"
-        GENERATED_MAIN_ABS="$(pwd)/build/android/gen/main_android.gen.go"
-        GENERATED_MAIN="build/android/gen/main_android.gen.go"
-        perl -0pi -e "s#\\Q${PROJECT_MAIN}\\E#${APP_MAIN}#g; s#\\Q${GENERATED_MAIN_ABS}\\E#${GENERATED_MAIN}#g" build/android/overlay.json
 
   generate:android:bindings:
     internal: true
     summary: Generates bindings for Android
     sources:
       - "**/*.go"
-      - "{{.REPO_ROOT}}/go.mod"
-      - "{{.REPO_ROOT}}/go.sum"
+      - go.mod
+      - go.sum
     generates:
-      - "{{.FRONTEND_DIR}}/bindings/**/*"
+      - frontend/bindings/**/*
     cmds:
       # Bindings are generated from the Go AST; CGO is disabled so the NDK
       # is not required for this step
-      - cd "{{.APP_DIR}}" && wails3 generate bindings -f '-tags android' -clean=true
+      - wails3 generate bindings -f '-tags android' -clean=true
     env:
       GOOS: android
       CGO_ENABLED: 0

@@ -32,37 +32,36 @@ info:
 
 # Dev mode configuration
 dev_mode:
-  # watch all files in the repo
+  # Repository adaptation: watch shared source from the repository root.
   root_path: ../..
   log_level: warn
   debounce: 1000
   ignore:
-    # ignore changes when a path component contains this dir part
     dir:
       - .git
-      - node_modules
-      # ignore frontend dirs, vite has its own watcher for those
-      - dist
-      - frontend
-      # ignore build related dirs
-      - .wails_bin
-      - tools
       - .task
+      - bin
+      - node_modules
+      - frontend
+      - storybook
+      - wails-init
     file:
       - .DS_Store
+      - .gitignore
+      - .gitkeep
       - "*_test.go"
     watched_extension:
       - "*.go"
-      - "*.js"
-      - "*.ts"
+      - "*.js" # Watch for changes to JS/TS files included using the //wails:include directive.
+      - "*.ts" # The frontend directory will be excluded entirely by the setting above.
     git_ignore: true
   executes:
-    # Non-template: run Wails tasks from the project directory after moving sources.
-    - cmd: wails3 task -dir cmd/gordle_app build DEV=true
+    # Repository adaptation: root_path changes cwd, so return to the Wails app for each command.
+    - cmd: cd cmd/gordle_app && wails3 build DEV=true
       type: blocking
-    - cmd: wails3 task -dir cmd/gordle_app common:dev:frontend
+    - cmd: cd cmd/gordle_app && wails3 task common:dev:frontend
       type: background
-    - cmd: wails3 task -dir cmd/gordle_app run
+    - cmd: cd cmd/gordle_app && wails3 task run
       type: primary
 
 # File Associations

@@ -16,10 +16,14 @@
 ARG GO_IMAGE=golang:alpine
 ARG RUNTIME_IMAGE=gcr.io/distroless/static-debian12
 ARG CGO_ENABLED=0
+# Repository adaptation: Gordle is nested inside the repository-root build context.
+ARG APP_PATH=.
 
 # Build stage
 FROM ${GO_IMAGE} AS builder
 ARG CGO_ENABLED
+ARG APP_PATH
+# Repository adaptation: Gordle uses the experimental encoding/json/v2 package.
 ENV GOEXPERIMENT=jsonv2
 
 WORKDIR /app
@@ -46,16 +50,19 @@ RUN go mod tidy
 #   logger/asset middleware), matching the desktop production build.
 # - CGO_ENABLED defaults to 0 for a fully static binary (distroless/static);
 #   override with --build-arg CGO_ENABLED=1 (see header) for CGO apps.
-RUN CGO_ENABLED=${CGO_ENABLED} go build -tags server,production -trimpath -buildvcs=false -ldflags="-s -w" -o server .
+# Repository adaptation: build the nested Gordle package from the root module context.
+RUN CGO_ENABLED=${CGO_ENABLED} go build -tags server,production -trimpath -buildvcs=false -ldflags="-s -w" -o server "./${APP_PATH}"
 
 # Runtime stage - minimal image
 FROM ${RUNTIME_IMAGE}
+ARG APP_PATH
 
 # Copy the binary
 COPY --from=builder /app/server /server
 
 # Copy frontend assets
-COPY --from=builder /app/frontend/dist /frontend/dist
+# Repository adaptation: frontend assets live under the nested Gordle app.
+COPY --from=builder /app/${APP_PATH}/frontend/dist /frontend/dist
 
 # Expose the default port
 EXPOSE 8080
