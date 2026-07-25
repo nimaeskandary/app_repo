@@ -8,21 +8,31 @@ PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
 cd "${PROJECT_ROOT_DIR}"
 
 GO_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$' || true)
+BIOME_FILES=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '\.(js|jsx|ts|tsx)$' \
+  | grep -v '^cmd/gordle_app/frontend/bindings/' || true)
 
-if [[ -z "$GO_FILES" ]]; then
+if [[ -z "$GO_FILES" && -z "$BIOME_FILES" ]]; then
   exit 0
 fi
 
-echo "running go fix..."
-go fix ./...
+if [[ -n "$GO_FILES" ]]; then
+  echo "running go fix..."
+  go fix ./...
 
-echo "Running gofmt..."
-gofmt -w $GO_FILES
+  echo "Running gofmt..."
+  gofmt -w $GO_FILES
 
-echo "Running golangci-lint..."
-# this needs to be run per package, not per file
-DIRS=$(echo "$GO_FILES" | xargs -n1 dirname | sort -u)
+  echo "Running golangci-lint..."
+  # this needs to be run per package, not per file
+  DIRS=$(echo "$GO_FILES" | xargs -n1 dirname | sort -u)
 
-for dir in $DIRS; do
+  for dir in $DIRS; do
     go tool -modfile=./tools/golangci-lint/go.mod golangci-lint run "$dir" --fix
-done
+  done
+fi
+
+if [[ -n "$BIOME_FILES" ]]; then
+  echo "Running Biome..."
+  npx biome lint --write $BIOME_FILES
+fi
