@@ -13,7 +13,7 @@ import {
   Overline,
   Subtitle1,
   Subtitle2,
-} from '@/pkg/ui/ts/mui/typography'
+} from '@app_repo/pkg_ui/mui/typography'
 
 const meta = {
   title: 'UI/MUI/Typography',

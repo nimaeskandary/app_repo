@@ -16,8 +16,6 @@ pkg/                        # reusable packages
 storybook/                  # frontend component previews
 ```
 
-
-
 ## Setup
 
 ### Dependencies

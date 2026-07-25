@@ -1,19 +1,8 @@
-import { Box } from '@/pkg/ui/ts/mui/box'
-import { Container } from '@/pkg/ui/ts/mui/container'
-import { Grid } from '@/pkg/ui/ts/mui/grid'
-import { H4 } from '@/pkg/ui/ts/mui/typography'
-
-export enum GordleCellState {
-  Unguessed = 'Unguessed',
-  Wrong = 'Wrong',
-  RowCorrect = 'RowCorrect',
-  Correct = 'Correct',
-}
-
-export type GordleCell = {
-  letter: string
-  state: GordleCellState
-}
+import { Box } from '@app_repo/pkg_ui/mui/box'
+import { Container } from '@app_repo/pkg_ui/mui/container'
+import { Grid } from '@app_repo/pkg_ui/mui/grid'
+import { H4 } from '@app_repo/pkg_ui/mui/typography'
+import { GordleCellState, type GordleCell } from '../model/GordleCell'
 
 export type GordleViewProps = {
   cells: GordleCell[][]

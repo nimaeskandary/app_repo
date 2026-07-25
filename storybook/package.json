@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "dependencies": {
+    "@app_repo/pkg_gordle_frontend": "0.0.0",
+    "@app_repo/pkg_ui": "0.0.0"
+  },
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -c . -p 6006",
     "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build -c ."

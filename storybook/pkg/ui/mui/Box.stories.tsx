@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Box } from '@/pkg/ui/ts/mui/box'
-import { Body1 } from '@/pkg/ui/ts/mui/typography'
-import { PrimaryButton } from '@/pkg/ui/ts/mui/button'
+import { Box } from '@app_repo/pkg_ui/mui/box'
+import { PrimaryButton } from '@app_repo/pkg_ui/mui/button'
+import { Body1 } from '@app_repo/pkg_ui/mui/typography'
 
 const meta = {
   title: 'UI/MUI/Box',

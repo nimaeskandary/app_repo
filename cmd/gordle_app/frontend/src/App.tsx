@@ -1,30 +1,27 @@
-import { useEffect } from 'react'
+import { useMemo } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { Events } from '@wailsio/runtime'
-import GordleView, { GordleCell, GordleCellState } from  '@/cmd/gordle_app/frontend/src/pages/gordle/GordleView'
-import MainMenuView from '@/cmd/gordle_app/frontend/src/pages/main_menu/MainMenuView'
-
-const initialGordleCells: GordleCell[][] = Array.from({ length: 6 }, () =>
-  Array.from({ length: 5 }, () => ({ letter: '', state: GordleCellState.Unguessed })),
-)
+import {
+  GordleDependenciesProvider,
+  type GordleDependencies,
+} from '@app_repo/pkg_gordle_frontend/di/GordleDependencies'
+import GordlePage from '@app_repo/pkg_gordle_frontend/gordle/GordlePage'
+import MainMenuPage from '@app_repo/pkg_gordle_frontend/main_menu/MainMenuPage'
 
 function App() {
   const navigate = useNavigate()
-
-  useEffect(() => {
-    Events.On('gordle_app:navigate:path', (event) => navigate(event.data))
-  }, [])
+  const dependencies = useMemo<GordleDependencies>(() => ({
+    navigator: {
+      goToGame: () => navigate('/gordle'),
+    },
+  }), [navigate])
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <MainMenuView />
-        }
-      />
-      <Route path="/gordle" element={<GordleView cells={initialGordleCells} />} />
-    </Routes>
+    <GordleDependenciesProvider value={dependencies}>
+      <Routes>
+        <Route path="/" element={<MainMenuPage />} />
+        <Route path="/gordle" element={<GordlePage />} />
+      </Routes>
+    </GordleDependenciesProvider>
   )
 }
 

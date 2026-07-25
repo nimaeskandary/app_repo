@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Body1 } from '@/pkg/ui/ts/mui/typography'
-import { Grid } from '@/pkg/ui/ts/mui/grid'
+import { Grid } from '@app_repo/pkg_ui/mui/grid'
+import { Body1 } from '@app_repo/pkg_ui/mui/typography'
 
 const meta = {
   title: 'UI/MUI/Grid',

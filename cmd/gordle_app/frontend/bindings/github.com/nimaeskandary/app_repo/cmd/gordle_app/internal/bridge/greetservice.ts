@@ -10,14 +10,15 @@ export function Greet(name: string): $CancellablePromise<string> {
 }
 
 /**
- * Start is called when the Fx system starts.
+ * Start is called when the Fx system starts. Things like connecting to databases or external apis should happen here.
  */
 export function Start(): $CancellablePromise<void> {
     return $Call.ByID(2356088565);
 }
 
 /**
- * Stop is called when the fx system is shutdown, used for graceful shutdown of components
+ * Stop is called when the fx system is shutdown, used for graceful shutdown of components. This should reset the struct
+ * so that it can be started again.
  */
 export function Stop(): $CancellablePromise<void> {
     return $Call.ByID(1940248327);
