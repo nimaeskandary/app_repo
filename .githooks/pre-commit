@@ -11,6 +11,6 @@ if [[ -z "$GO_FILES" ]]; then
 fi
 
 cd "${PROJECT_ROOT_DIR}"
-./bin/lint-new.sh
+./bin/lint-new
 
 git add $GO_FILES

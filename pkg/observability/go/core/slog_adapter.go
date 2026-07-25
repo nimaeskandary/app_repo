@@ -3,6 +3,7 @@ package obs_core
 import (
 	"context"
 	"log/slog"
+	"slices"
 )
 
 // AsSlog adapts Logger for APIs, such as Wails, that require a slog.Logger.
@@ -67,8 +68,8 @@ func (h *slogHandler) WithGroup(name string) slog.Handler {
 }
 
 func (h *slogHandler) withGroups(attr slog.Attr) slog.Attr {
-	for index := len(h.groups) - 1; index >= 0; index-- {
-		attr = slog.Group(h.groups[index], attr)
+	for _, v := range slices.Backward(h.groups) {
+		attr = slog.Group(v, attr)
 	}
 	return attr
 }
