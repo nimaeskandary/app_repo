@@ -8,9 +8,7 @@ import (
 
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/config"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
-	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/bridge"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
-	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
 	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -29,9 +27,8 @@ var assets embed.FS
 func main() {
 	ctx := context.Background()
 
-	var greetService greet_core.GreetService
 	var logger obs_core.Logger
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &greetService, &logger)
+	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &logger)
 	if fxApp == nil {
 		slog.Error("dependency injection system failed to initialize")
 		return
@@ -62,9 +59,7 @@ func main() {
 		Name:        "Gordle",
 		Description: "Wails3 react example app",
 		Logger:      obs_core.AsSlog(logger),
-		Services: []application.Service{
-			application.NewService(&bridge.GreetService{GreetService: greetService}),
-		},
+		Services:    []application.Service{},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),
 		},

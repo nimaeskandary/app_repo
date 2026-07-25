@@ -1,3 +1,16 @@
+# bridge
+
+wails application.New takes a service list, e.g. 
+
+```
+Services: []application.Service{
+			application.NewService(&bridge.GreetService{GreetService: greetService}),
+		},
+```
+
+since these need concrete structs and not the interface types our fx di uses, you can use a pattern like this:
+
+```
 package bridge
 
 import (
@@ -16,3 +29,4 @@ import (
 type GreetService struct {
 	greet_core.GreetService
 }
+```
