@@ -1,44 +1,62 @@
 import { useState } from 'react'
 import { Box } from '@app_repo/pkg_ui/mui/box'
-import { PrimaryButton } from '@app_repo/pkg_ui/mui/button'
+import { ErrorButton, PrimaryButton } from '@app_repo/pkg_ui/mui/button'
 import { Grid } from '@app_repo/pkg_ui/mui/grid'
 import { Stack } from '@app_repo/pkg_ui/mui/stack'
 import { Body1 } from '@app_repo/pkg_ui/mui/typography'
 
 export type KeyboardProps = {
-  onLetterCommit: (letter: string) => void
+  onWordCommit: (word: string) => boolean
 }
 
 const letters = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index))
 
-// Renders an alphabet keyboard and commits the currently selected letter.
-function Keyboard({ onLetterCommit }: KeyboardProps) {
-  const [selectedLetter, setSelectedLetter] = useState('')
+// Renders an alphabet keyboard and stages a word for submission.
+function Keyboard({ onWordCommit }: KeyboardProps) {
+  const [stagedWord, setStagedWord] = useState('')
 
-  // Commits a selection and clears the landing area.
-  const commitSelectedLetter = () => {
-    if (!selectedLetter) {
+  // Submits a complete word and clears it only when accepted.
+  const commitStagedWord = () => {
+    if (stagedWord.length !== 5) {
       return
     }
 
-    onLetterCommit(selectedLetter)
-    setSelectedLetter('')
+    if (onWordCommit(stagedWord)) {
+      setStagedWord('')
+    }
   }
 
   return (
     <Stack spacing={1}>
-      <Box
-        sx={{
-          border: 2,
-          borderColor: '#3a3a3c',
-          borderRadius: 2,
-          color: '#ffffff',
-          display: 'grid',
-          minHeight: 40,
-          placeItems: 'center',
-        }}>
-        <Body1>{selectedLetter}</Body1>
-      </Box>
+      <Stack direction="row" spacing={1}>
+        <ErrorButton
+          aria-label="Delete last letter"
+          className="not-draggable"
+          disabled={!stagedWord}
+          onClick={() => setStagedWord((currentWord) => currentWord.slice(0, -1))}>
+          <Body1>⌫</Body1>
+        </ErrorButton>
+        <Box
+          sx={{
+            border: 2,
+            borderColor: '#3a3a3c',
+            borderRadius: 2,
+            color: '#ffffff',
+            display: 'grid',
+            flex: 1,
+            minHeight: 40,
+            placeItems: 'center',
+          }}>
+          <Body1>{stagedWord}</Body1>
+        </Box>
+        <PrimaryButton
+          aria-label="Commit staged word"
+          className="not-draggable"
+          disabled={stagedWord.length !== 5}
+          onClick={commitStagedWord}>
+          <Body1>⇧</Body1>
+        </PrimaryButton>
+      </Stack>
       <Grid container columns={9} spacing={1}>
         {letters.map((letter) => (
           <Grid key={letter} size={1}>
@@ -46,7 +64,11 @@ function Keyboard({ onLetterCommit }: KeyboardProps) {
               aria-label={`Select ${letter}`}
               className="not-draggable"
               component="button"
-              onClick={() => setSelectedLetter(letter)}
+              onClick={() =>
+                setStagedWord((currentWord) =>
+                  currentWord.length < 5 ? `${currentWord}${letter}` : currentWord,
+                )
+              }
               sx={{
                 aspectRatio: '1',
                 backgroundColor: 'transparent',
@@ -65,22 +87,6 @@ function Keyboard({ onLetterCommit }: KeyboardProps) {
             </Box>
           </Grid>
         ))}
-        <Grid size={1}>
-          <PrimaryButton
-            aria-label="Commit selected letter"
-            className="not-draggable"
-            disabled={!selectedLetter}
-            onClick={commitSelectedLetter}
-            sx={{
-              aspectRatio: '1',
-              containerType: 'inline-size',
-              minWidth: 0,
-              padding: 0,
-              width: '100%',
-            }}>
-            <Body1 sx={{ fontSize: '70cqi', lineHeight: 1 }}>→</Body1>
-          </PrimaryButton>
-        </Grid>
       </Grid>
     </Stack>
   )

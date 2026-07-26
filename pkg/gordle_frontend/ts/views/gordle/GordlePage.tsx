@@ -8,7 +8,7 @@ function GordlePage() {
   return (
     <GordleView
       cells={viewModel.cells}
-      onLetterCommit={viewModel.commitLetter}
+      onWordCommit={viewModel.commitWord}
       rubricWord={viewModel.rubricWord}
     />
   )

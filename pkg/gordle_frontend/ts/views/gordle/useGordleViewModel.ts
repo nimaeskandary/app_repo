@@ -6,7 +6,7 @@ import {
 
 export type GordleViewModel = {
   cells: GordleCell[][]
-  commitLetter: (letter: string) => void
+  commitWord: (word: string) => boolean
   rubricWord: string
 }
 
@@ -37,26 +37,29 @@ export function useGordleViewModel(): GordleViewModel {
     () => rubricWords[Math.floor(Math.random() * rubricWords.length)],
   )
 
-  // Adds a letter to the first empty board cell.
-  const commitLetter = (letter: string) => {
+  // Adds a valid word to the first empty board row.
+  const commitWord = (word: string) => {
+    if (!rubricWords.includes(word)) {
+      return false
+    }
+
+    const rowIndex = cells.findIndex((row) => row.every((cell) => !cell.letter))
+    if (rowIndex === -1) {
+      return false
+    }
+
     setCells((currentCells) => {
-      const rowIndex = currentCells.findIndex((row) => row.some((cell) => !cell.letter))
-
-      if (rowIndex === -1) {
-        return currentCells
-      }
-
-      const columnIndex = currentCells[rowIndex].findIndex((cell) => !cell.letter)
       const nextCells = [...currentCells]
-      nextCells[rowIndex] = [...currentCells[rowIndex]]
-      nextCells[rowIndex][columnIndex] = {
-        ...currentCells[rowIndex][columnIndex],
-        letter,
-      }
+      nextCells[rowIndex] = currentCells[rowIndex].map((cell, index) => ({
+        ...cell,
+        letter: word[index],
+      }))
 
       return nextCells
     })
+
+    return true
   }
 
-  return { cells, commitLetter, rubricWord }
+  return { cells, commitWord, rubricWord }
 }

@@ -33,3 +33,21 @@ prefix_rule(
         "docker exec"
     ]
 )
+
+prefix_rule(
+    pattern = ["rg"],
+    decision = "allow",
+    justification = "simple search tool",
+    match = [
+        "rg --files"
+    ]
+)
+
+prefix_rule(
+    pattern = ["sed", "-n"],
+    decision = "allow",
+    justification = "codex uses this often to print parts of a file for it to inspect",
+    match = [
+        "sed -n '1,220p'"
+    ]
+)
