@@ -7,13 +7,14 @@ import type { GordleCell } from '@app_repo/pkg_gordle_frontend/model/GordleCell'
 export type GordleViewProps = {
   cells: GordleCell[][]
   onLetterCommit: (letter: string) => void
+  rubricWord: string
 }
 
-function GordleView({ cells, onLetterCommit }: GordleViewProps) {
+function GordleView({ cells, onLetterCommit, rubricWord }: GordleViewProps) {
   return (
     <Container>
       <Stack spacing={2}>
-        <Board cells={cells} />
+        <Board cells={cells} rubricWord={rubricWord} />
         <Keyboard onLetterCommit={onLetterCommit} />
       </Stack>
     </Container>

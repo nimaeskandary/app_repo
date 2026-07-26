@@ -7,7 +7,21 @@ import {
 export type GordleViewModel = {
   cells: GordleCell[][]
   commitLetter: (letter: string) => void
+  rubricWord: string
 }
+
+const rubricWords = [
+  'CRANE',
+  'SLATE',
+  'BRICK',
+  'CLOUD',
+  'GHOST',
+  'PLANT',
+  'SHORE',
+  'MIGHT',
+  'FEAST',
+  'WOMAN',
+]
 
 // Creates a blank board for a new game.
 function createInitialCells(): GordleCell[][] {
@@ -19,6 +33,9 @@ function createInitialCells(): GordleCell[][] {
 // Owns the state displayed by the Gordle view.
 export function useGordleViewModel(): GordleViewModel {
   const [cells, setCells] = useState(createInitialCells)
+  const [rubricWord] = useState(
+    () => rubricWords[Math.floor(Math.random() * rubricWords.length)],
+  )
 
   // Adds a letter to the first empty board cell.
   const commitLetter = (letter: string) => {
@@ -41,5 +58,5 @@ export function useGordleViewModel(): GordleViewModel {
     })
   }
 
-  return { cells, commitLetter }
+  return { cells, commitLetter, rubricWord }
 }
