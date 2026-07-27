@@ -60,7 +60,7 @@ function Board({ cells, rubricWord }: BoardProps) {
 
         return row.map((cell, columnIndex) => (
           <Grid key={`${rowIndex}-${columnIndex}`} size={1}>
-            <Fade key={`${cell.letter}-${rowStates[columnIndex]}`} in>
+            <Fade key={`${cell.letter}-${rowStates[columnIndex]}`} in timeout={1000}>
               <Box
                 sx={{
                   ...cellStyles[rowStates[columnIndex]],
