@@ -4,6 +4,8 @@ import { ErrorButton, PrimaryButton } from '@app_repo/pkg_ui/mui/button'
 import { Grid } from '@app_repo/pkg_ui/mui/grid'
 import { Stack } from '@app_repo/pkg_ui/mui/stack'
 import { Body1 } from '@app_repo/pkg_ui/mui/typography'
+import BackspaceIcon from '@mui/icons-material/Backspace'
+import InputIcon from '@mui/icons-material/Input'
 
 export type KeyboardProps = {
   onWordCommit: (word: string) => boolean
@@ -34,7 +36,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
           className="not-draggable"
           disabled={!stagedWord}
           onClick={() => setStagedWord((currentWord) => currentWord.slice(0, -1))}>
-          <Body1>⌫</Body1>
+            <BackspaceIcon />
         </ErrorButton>
         <Box
           sx={{
@@ -54,7 +56,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
           className="not-draggable"
           disabled={stagedWord.length !== 5}
           onClick={commitStagedWord}>
-          <Body1>⇧</Body1>
+          <InputIcon />
         </PrimaryButton>
       </Stack>
       <Grid container columns={9} spacing={1}>
