@@ -59,7 +59,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
           <InputIcon />
         </PrimaryButton>
       </Stack>
-      <Grid container columns={9} spacing={1}>
+      <Grid container columns={7} spacing={1}>
         {letters.map((letter) => (
           <Grid key={letter} size={1}>
             <Box
