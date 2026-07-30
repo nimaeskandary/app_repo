@@ -10,7 +10,9 @@
 
 ## 1. Agent start up / Initialization
 
-* you must read this project's ./README.md completely before starting a new task
+* you must read this project's `./README.md` and `./docs/DEV_GUIDE.md` completely before starting a new task
+* when asked to do a task involving golang, you must read `./docs/GO_GUIDE.md` completely before starting
+* when asked to do a task involving frontend, you must read `./docs/FRONTEND_GUIDE.md` completely before starting
 
 ## 2. Think Before Coding
 

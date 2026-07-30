@@ -3,6 +3,17 @@
 This directory keeps the Wails build flow close to a fresh `wails3 init`
 project generated with Wails `v3.0.0-alpha2.117`.
 
+## Common commands
+
+Run commands from this directory, or use `bin/wails-gordle` from the root directory:
+
+* run as local window with hot reload - `bin/wails-gordle dev`
+   * this is not the same as mobile, but can be good enough for a lot of cases
+* run the app on iphone emulator -  `bin/wails-gordle task ios:run`
+* build - `bin/wails-gordle build`
+* regenerate frontend bindings - `bin/wails-gordle task common:generate:bindings`
+   * this is done as part of building the project as well
+
 ## Project configuration
 
 ### Application identity
@@ -52,18 +63,6 @@ Wails CLI.
 Native Wails commands run from this directory. Cross-compilation and server
 Docker builds instead mount the repository root because it owns `go.mod`, then
 select `cmd/gordle_app` as the package and frontend path.
-
-## Commands
-
-Run commands from this directory:
-
-```sh
-cd cmd/gordle_app
-wails3 dev
-wails3 build
-wails3 task ios:run
-wails3 task common:generate:bindings
-```
 
 ## Updating Wails build files
 

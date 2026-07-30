@@ -6,7 +6,7 @@ import (
 	config "github.com/nimaeskandary/app_repo/pkg/config/go"
 	config_core "github.com/nimaeskandary/app_repo/pkg/config/go/core"
 	database "github.com/nimaeskandary/app_repo/pkg/database/go"
-	observability "github.com/nimaeskandary/app_repo/pkg/observability/go"
+	obs "github.com/nimaeskandary/app_repo/pkg/observability/go"
 	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 	"go.uber.org/fx"
 )
@@ -41,6 +41,6 @@ func ModuleList(configBytes []byte) []fx.Option {
 			app_database.AppDatabaseMigrator,
 			app_database.AppDatabaseMigrateAllOnStart,
 		](),
-		observability.NewSlogLoggerModule(),
+		obs.NewSlogLoggerModule(),
 	}
 }

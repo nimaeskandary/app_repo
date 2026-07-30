@@ -1,4 +1,4 @@
-package observability
+package obs
 
 import (
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
