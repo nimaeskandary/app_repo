@@ -10,7 +10,6 @@ function GordlePage() {
       cells={viewModel.cells}
       isGameComplete={viewModel.isGameComplete}
       onWordCommit={viewModel.commitWord}
-      rubricWord={viewModel.rubricWord}
     />
   )
 }

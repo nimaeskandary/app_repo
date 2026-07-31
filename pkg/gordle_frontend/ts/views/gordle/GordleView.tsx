@@ -9,21 +9,21 @@ export type GordleViewProps = {
   cells: GordleCell[][]
   isGameComplete: boolean
   onWordCommit: (word: string) => boolean
-  rubricWord: string
 }
 
 function GordleView({
   cells,
   isGameComplete,
   onWordCommit,
-  rubricWord,
 }: GordleViewProps) {
   return (
     <Container>
       <Stack spacing={2}>
-        <Board cells={cells} rubricWord={rubricWord} />
+        <Board cells={cells} />
         {isGameComplete
-          ? <H3 sx={{ textAlign: 'center', color: 'yellow' }}>YOU WON!</H3>
+          ? <H3 data-testid="game-won" sx={{ textAlign: 'center', color: 'yellow' }}>
+              YOU WON!
+            </H3>
           : <Keyboard onWordCommit={onWordCommit} />}
       </Stack>
     </Container>

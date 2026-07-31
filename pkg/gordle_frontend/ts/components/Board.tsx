@@ -9,7 +9,6 @@ import {
 
 export type BoardProps = {
   cells: GordleCell[][]
-  rubricWord: string
 }
 
 const cellStyles = {
@@ -19,51 +18,17 @@ const cellStyles = {
   [GordleCellState.Correct]: { backgroundColor: '#538d4e', borderColor: '#538d4e' },
 }
 
-// Scores a completed row against the rubric word.
-function getRowStates(row: GordleCell[], rubricWord: string): GordleCellState[] {
-  if (row.some((cell) => !cell.letter)) {
-    return row.map(() => GordleCellState.Unguessed)
-  }
-
-  const states = row.map(() => GordleCellState.Wrong)
-  const remainingLetters = rubricWord.split('')
-
-  row.forEach((cell, index) => {
-    if (cell.letter === remainingLetters[index]) {
-      states[index] = GordleCellState.Correct
-      remainingLetters[index] = ''
-    }
-  })
-
-  row.forEach((cell, index) => {
-    if (states[index] === GordleCellState.Correct) {
-      return
-    }
-
-    const rubricIndex = remainingLetters.indexOf(cell.letter)
-
-    if (rubricIndex !== -1) {
-      states[index] = GordleCellState.RowCorrect
-      remainingLetters[rubricIndex] = ''
-    }
-  })
-
-  return states
-}
-
 // Renders the Gordle cell grid.
-function Board({ cells, rubricWord }: BoardProps) {
+function Board({ cells }: BoardProps) {
   return (
     <Grid container columns={5} spacing={1}>
-      {cells.flatMap((row, rowIndex) => {
-        const rowStates = getRowStates(row, rubricWord)
-
-        return row.map((cell, columnIndex) => (
+      {cells.flatMap((row, rowIndex) =>
+        row.map((cell, columnIndex) => (
           <Grid key={`${rowIndex}-${columnIndex}`} size={1}>
-            <Fade key={`${cell.letter}-${rowStates[columnIndex]}`} in timeout={1000}>
+            <Fade key={`${cell.letter}-${cell.state}`} in timeout={1000}>
               <Box
                 sx={{
-                  ...cellStyles[rowStates[columnIndex]],
+                  ...cellStyles[cell.state],
                   aspectRatio: '1',
                   border: 2,
                   borderRadius: 2,
@@ -80,8 +45,8 @@ function Board({ cells, rubricWord }: BoardProps) {
               </Box>
             </Fade>
           </Grid>
-        ))
-      })}
+        )),
+      )}
     </Grid>
   )
 }

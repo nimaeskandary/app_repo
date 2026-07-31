@@ -8,7 +8,6 @@ export type GordleViewModel = {
   cells: GordleCell[][]
   commitWord: (word: string) => boolean
   isGameComplete: boolean
-  rubricWord: string
 }
 
 const rubricWords = [
@@ -29,6 +28,38 @@ function createInitialCells(): GordleCell[][] {
   return Array.from({ length: 6 }, () =>
     Array.from({ length: 5 }, () => ({ letter: '', state: GordleCellState.Unguessed })),
   )
+}
+
+// Scores a completed row against the rubric word.
+function getRowStates(row: GordleCell[], rubricWord: string): GordleCellState[] {
+  if (row.some((cell) => !cell.letter)) {
+    return row.map(() => GordleCellState.Unguessed)
+  }
+
+  const states = row.map(() => GordleCellState.Wrong)
+  const remainingLetters = rubricWord.split('')
+
+  row.forEach((cell, index) => {
+    if (cell.letter === remainingLetters[index]) {
+      states[index] = GordleCellState.Correct
+      remainingLetters[index] = ''
+    }
+  })
+
+  row.forEach((cell, index) => {
+    if (states[index] === GordleCellState.Correct) {
+      return
+    }
+
+    const rubricIndex = remainingLetters.indexOf(cell.letter)
+
+    if (rubricIndex !== -1) {
+      states[index] = GordleCellState.RowCorrect
+      remainingLetters[rubricIndex] = ''
+    }
+  })
+
+  return states
 }
 
 // Owns the state displayed by the Gordle view.
@@ -54,9 +85,14 @@ export function useGordleViewModel(): GordleViewModel {
 
     setCells((currentCells) => {
       const nextCells = [...currentCells]
-      nextCells[rowIndex] = currentCells[rowIndex].map((cell, index) => ({
+      const committedRow = currentCells[rowIndex].map((cell, index) => ({
         ...cell,
         letter: word[index],
+      }))
+      const rowStates = getRowStates(committedRow, rubricWord)
+      nextCells[rowIndex] = committedRow.map((cell, index) => ({
+        ...cell,
+        state: rowStates[index],
       }))
 
       return nextCells
@@ -65,5 +101,5 @@ export function useGordleViewModel(): GordleViewModel {
     return true
   }
 
-  return { cells, commitWord, isGameComplete, rubricWord }
+  return { cells, commitWord, isGameComplete }
 }

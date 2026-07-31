@@ -107,8 +107,60 @@ While not always possible, aim to [Material UI components](https://mui.com/mater
 
 Storybook is used to preview frontend components. See `storybook/`
 
-To launch the local storybook server: `npm run storybook`
+Colocate `*.stories.tsx` files with the Views they cover. Define each reusable View state as a story driven by props:
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import FooView from './FooView'
+
+const meta = {
+  title: 'Foo/Views/Foo',
+  component: FooView,
+} satisfies Meta<typeof FooView>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: { isComplete: false },
+}
+
+export const Complete: Story = {
+  args: { isComplete: true },
+}
+```
+
+Run Storybook with `npm run storybook`. Use the **App shell** toolbar to preview package stories in different application layouts.
 
 ## Testing
 
-TODO
+* this project uses
+    * [Vitest](https://vitest.dev/guide/)
+    * [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+* for Views, it is reasonable that storybook is used an alternative to writing Vitest cases
+* run all frontend tests with `npm test`
+* run one test file with `npm test -- <path-to-test>`
+* run tests in watch mode with `npm run test:watch`
+* colocate `*.test.ts(x)` files with the code they cover
+
+For example, say you had a ViewModel `FootViewModel`:
+
+```ts
+import { act, renderHook } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import { useFooViewModel } from './useFooViewModel'
+
+describe('useFooViewModel', () => {
+  describe('increment', () => {
+    it('should increment the count', () => {
+      const { result } = renderHook(() => useFooViewModel())
+
+      act(() => {
+        result.current.increment()
+      })
+
+      expect(result.current.count).toBe(1)
+    })
+  })
+})
+```

@@ -7,7 +7,10 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const config: StorybookConfig = {
-  stories: ['./**/*.stories.@(ts|tsx)'],
+  stories: [
+    './**/*.stories.@(ts|tsx)',
+    '../pkg/**/*.stories.@(ts|tsx)',
+  ],
   staticDirs: ['../cmd/gordle_app/frontend/public'],
   framework: {
     name: '@storybook/react-vite',

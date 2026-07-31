@@ -5,6 +5,7 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
+import GordleAppPreview from '@/storybook/cmd/gordle_app/GordlePreview'
 import './preview.css'
 
 const lightTheme = createTheme({ palette: { mode: 'light' } })
@@ -21,18 +22,34 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    previewShell: {
+      description: 'Application shell wrapped around the story',
+      toolbar: {
+        title: 'App shell',
+        icon: 'browser',
+        items: [
+          { value: 'none', title: 'None' },
+          { value: 'gordleApp', title: 'Gordle app' },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
   initialGlobals: {
+    previewShell: 'none',
     theme: 'dark',
   },
   decorators: [
     (Story, context) => {
       const theme = context.globals.theme === 'light' ? lightTheme : darkTheme
+      const story = <Story />
 
       return (
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Story />
+          {context.globals.previewShell === 'gordleApp'
+            ? <GordleAppPreview>{story}</GordleAppPreview>
+            : story}
         </ThemeProvider>
       )
     },

@@ -39,6 +39,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
             <BackspaceIcon />
         </ErrorButton>
         <Box
+          data-testid="staged-word"
           sx={{
             border: 2,
             borderColor: '#3a3a3c',
@@ -54,6 +55,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
         <PrimaryButton
           aria-label="Commit staged word"
           className="not-draggable"
+          data-testid="commit-word"
           disabled={stagedWord.length !== 5}
           onClick={commitStagedWord}>
           <InputIcon />
@@ -66,6 +68,7 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
               aria-label={`Select ${letter}`}
               className="not-draggable"
               component="button"
+              data-testid={`select-letter-${letter}`}
               onClick={() =>
                 setStagedWord((currentWord) =>
                   currentWord.length < 5 ? `${currentWord}${letter}` : currentWord,

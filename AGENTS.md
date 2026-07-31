@@ -7,6 +7,7 @@
 * if the plan needs changes while we are in the implementation phase of a step, check in with me to make sure I am aligned.
 * you must make small targeted changes to easily rollback if something needs to be changed.
 * after each incremental change, ask me to review before moving forward to ensure I am aligned with the changes.
+* if you need to install any dependencues, e.g. via go get or npm, do not try to install them yourself, tell me the commands to install them, and pause for me to run them.
 
 ## 1. Agent start up / Initialization
 
