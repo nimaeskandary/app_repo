@@ -4,8 +4,17 @@ This repo contains a Wails v3 sample app in a monorepo organized around deployab
 
 ## Table of Contents
 
-1. [Project structure](#project-structure)
-2. [Docs](#docs)
+1. [Quickstart](#quickstart)
+2. [Project structure](#project-structure)
+3. [Docs](#docs)
+
+## Quickstart
+
+* Ensure you have npm installed as described in `docs/DEV_GUIDE.md` 
+* `npm install`
+* `npm run storybook`
+
+This is the fastest way to preview app components, without setting up emulation and other dependencies
 
 ## Project structure
 

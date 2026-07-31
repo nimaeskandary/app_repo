@@ -11,7 +11,7 @@
 ### Dependencies
 
 * go 1.27rc2
-* node 26
+* npm 11
 * docker
 
 After installing these dependencies, you can run 
