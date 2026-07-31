@@ -6,6 +6,7 @@ import {
 } from '@app_repo/pkg_gordle_frontend/di/GordleDependencies'
 import GordlePage from '@app_repo/pkg_gordle_frontend/views/gordle/GordlePage'
 import MainMenuPage from '@app_repo/pkg_gordle_frontend/views/main_menu/MainMenuPage'
+import Layout from './Layout'
 
 function App() {
   const navigate = useNavigate()
@@ -16,12 +17,14 @@ function App() {
   }), [navigate])
 
   return (
-    <GordleDependenciesProvider value={dependencies}>
-      <Routes>
-        <Route path="/" element={<MainMenuPage />} />
-        <Route path="/gordle" element={<GordlePage />} />
-      </Routes>
-    </GordleDependenciesProvider>
+    <Layout>
+      <GordleDependenciesProvider value={dependencies}>
+        <Routes>
+          <Route path="/" element={<MainMenuPage />} />
+          <Route path="/gordle" element={<GordlePage />} />
+        </Routes>
+      </GordleDependenciesProvider>
+    </Layout>
   )
 }
 

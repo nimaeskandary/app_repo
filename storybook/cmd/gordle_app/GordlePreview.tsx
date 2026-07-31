@@ -1,12 +1,11 @@
 import type { PropsWithChildren } from 'react'
 import { MemoryRouter } from 'react-router-dom'
+import Layout from '@/cmd/gordle_app/frontend/src/Layout'
 
 function GordlePreview({ children }: PropsWithChildren) {
   return (
     <MemoryRouter>
-      <div style={{ background: '#06070f', minHeight: '100vh' }}>
-        {children}
-      </div>
+      <Layout>{children}</Layout>
     </MemoryRouter>
   )
 }
