@@ -7,6 +7,7 @@ import {
 export type GordleViewModel = {
   cells: GordleCell[][]
   commitWord: (word: string) => boolean
+  isGameComplete: boolean
   rubricWord: string
 }
 
@@ -36,10 +37,13 @@ export function useGordleViewModel(): GordleViewModel {
   const [rubricWord] = useState(
     () => rubricWords[Math.floor(Math.random() * rubricWords.length)],
   )
+  const isGameComplete = cells.some(
+    (row) => row.map((cell) => cell.letter).join('') === rubricWord,
+  )
 
-  // Adds a valid word to the first empty board row.
+  // Adds a complete word to the first empty board row.
   const commitWord = (word: string) => {
-    if (!rubricWords.includes(word)) {
+    if (isGameComplete) {
       return false
     }
 
@@ -61,5 +65,5 @@ export function useGordleViewModel(): GordleViewModel {
     return true
   }
 
-  return { cells, commitWord, rubricWord }
+  return { cells, commitWord, isGameComplete, rubricWord }
 }

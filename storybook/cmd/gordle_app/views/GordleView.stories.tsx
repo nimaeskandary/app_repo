@@ -3,7 +3,6 @@ import GordleView from '@app_repo/pkg_gordle_frontend/views/gordle/GordleView'
 import { GordleCellState } from '@app_repo/pkg_gordle_frontend/model/GordleCell'
 import GordlePreview from '@/storybook/cmd/gordle_app/GordlePreview'
 
-
 const meta = {
   title: 'Cmd/Gordle/Views/Gordle',
   component: GordleView,
@@ -46,7 +45,15 @@ export const Default: Story = {
       unguessedRow,
       unguessedRow,
     ],
+    isGameComplete: false,
     onWordCommit: () => true,
     rubricWord: 'CRANE',
+  },
+}
+
+export const Won: Story = {
+  args: {
+    ...Default.args,
+    isGameComplete: true,
   },
 }
