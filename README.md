@@ -1,6 +1,6 @@
-# wails3-react
+# app_repo
 
-This repo contains a Wails v3 sample app in a monorepo organized around deployable apps and shared packages.
+This repo contains a Wails v3 sample app in a monorepo organized to re use components across multiple apps. The target audience is for developers who are proficient in React and Go and want to use those technologies to create mobile and desktop apps. Frontend components are developed in such a way that they can also be reused for web targets.
 
 ## Table of Contents
 
