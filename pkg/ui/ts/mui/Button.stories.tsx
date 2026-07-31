@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ErrorButton, InfoButton, PrimaryButton, SecondaryButton, SuccessButton } from '@app_repo/pkg_ui/mui/button'
+import { ErrorButton, InfoButton, PrimaryButton, SecondaryButton, SuccessButton } from './button'
 
 const meta = {
   title: 'UI/MUI/Button',
