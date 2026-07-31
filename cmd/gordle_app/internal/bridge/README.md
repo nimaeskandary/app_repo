@@ -2,7 +2,7 @@
 
 wails application.New takes a service list, e.g. 
 
-```
+```go
 Services: []application.Service{
 			application.NewService(&bridge.GreetService{GreetService: greetService}),
 		},
@@ -10,7 +10,7 @@ Services: []application.Service{
 
 since these need concrete structs and not the interface types our fx di uses, you can use a pattern like this:
 
-```
+```go
 package bridge
 
 import (
@@ -41,7 +41,7 @@ fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &logger)
 
 wailsApp := application.New(application.Options{
 	Services:  []application.Service{
-			application.NewService(&bridge.GreetService{Logger: logger}),
+			application.NewService(&bridge.Logger{Logger: logger}),
 		},
 	//...
 ```
