@@ -14,7 +14,7 @@ since these need concrete structs and not the interface types our fx di uses, yo
 package bridge
 
 import (
-	greet_core "github.com/nimaeskandary/app_repo/pkg/greet/go/core"
+	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
 )
 
 // structs in this package embed the interface we want to expose to the frontend. Wails will generate bindings
@@ -26,7 +26,25 @@ import (
 // dependency graph. Those concrete struct implementations are usually private though, and the interface
 // definition can't be used by wails, so this is glue.
 
-type GreetService struct {
-	greet_core.GreetService
+type Logger struct {
+	obs_core.Logger
 }
 ```
+
+This way, when calling `application.New` in your `main.go`, you can do something like this:
+
+```go
+var logger obs_core.Logger
+fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &logger)
+
+//...
+
+wailsApp := application.New(application.Options{
+	Services:  []application.Service{
+			application.NewService(&bridge.GreetService{Logger: logger}),
+		},
+	//...
+```
+
+giving the frontend access to the go component from your go dependency tree via wails generated bindings
+
