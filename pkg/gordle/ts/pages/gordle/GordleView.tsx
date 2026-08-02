@@ -1,12 +1,12 @@
 import { Container } from '@app_repo/pkg_ui/mui/container'
 import { Stack } from '@app_repo/pkg_ui/mui/stack'
 import { H3 } from '@app_repo/pkg_ui/mui/typography'
-import Board from '@app_repo/pkg_gordle_frontend/components/Board'
-import Keyboard from '@app_repo/pkg_gordle_frontend/components/Keyboard'
-import type { GordleCell } from '@app_repo/pkg_gordle_frontend/model/GordleCell'
+import Board from '@app_repo/pkg_gordle/pages/gordle/components/Board'
+import Keyboard from '@app_repo/pkg_gordle/pages/gordle/components/Keyboard'
+import type { Cell } from '@app_repo/pkg_gordle/domain/Cell'
 
 export type GordleViewProps = {
-  cells: GordleCell[][]
+  cells: Cell[][]
   isGameComplete: boolean
   onWordCommit: (word: string) => boolean
 }

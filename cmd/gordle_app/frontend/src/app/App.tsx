@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import {
-  GordleDependenciesProvider,
-  type GordleDependencies,
-} from '@app_repo/pkg_gordle_frontend/di/GordleDependencies'
-import GordlePage from '@app_repo/pkg_gordle_frontend/views/gordle/GordlePage'
-import MainMenuPage from '@app_repo/pkg_gordle_frontend/views/main_menu/MainMenuPage'
+  DependenciesProvider,
+  type Dependencies,
+} from '@app_repo/pkg_gordle/app/Dependencies'
+import GordlePage from '@app_repo/pkg_gordle/pages/gordle/GordlePage'
+import MainMenuPage from '@app_repo/pkg_gordle/pages/main_menu/MainMenuPage'
 import Layout from './Layout'
 
 function App() {
   const navigate = useNavigate()
-  const dependencies = useMemo<GordleDependencies>(() => ({
+  const dependencies = useMemo<Dependencies>(() => ({
     navigator: {
       goToGame: () => navigate('/gordle'),
     },
@@ -18,12 +18,12 @@ function App() {
 
   return (
     <Layout>
-      <GordleDependenciesProvider value={dependencies}>
+      <DependenciesProvider value={dependencies}>
         <Routes>
           <Route path="/" element={<MainMenuPage />} />
           <Route path="/gordle" element={<GordlePage />} />
         </Routes>
-      </GordleDependenciesProvider>
+      </DependenciesProvider>
     </Layout>
   )
 }

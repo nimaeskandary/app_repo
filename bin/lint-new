@@ -28,6 +28,16 @@ if [[ -n "$GO_FILES" ]]; then
   DIRS=$(echo "$GO_FILES" | xargs -n1 dirname | sort -u)
 
   for dir in $DIRS; do
+    # these directories have go files that are meant to build with different os and arch flags, and
+    # the same have to be provided to the linter. Accounting for that is complex.
+    # just skipping linting these directories.
+    case "$dir" in
+      */build/android|*/build/ios)
+        echo "Skipping Wails platform scaffold package: $dir"
+        continue
+        ;;
+    esac
+
     go tool -modfile=./tools/golangci-lint/go.mod golangci-lint run "$dir" --fix
   done
 fi

@@ -33,7 +33,6 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
       <Stack direction="row" spacing={1}>
         <ErrorButton
           aria-label="Delete last letter"
-          className="not-draggable"
           disabled={!stagedWord}
           onClick={() => setStagedWord((currentWord) => currentWord.slice(0, -1))}>
             <BackspaceIcon />
@@ -54,7 +53,6 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
         </Box>
         <PrimaryButton
           aria-label="Commit staged word"
-          className="not-draggable"
           data-testid="commit-word"
           disabled={stagedWord.length !== 5}
           onClick={commitStagedWord}>
@@ -66,7 +64,6 @@ function Keyboard({ onWordCommit }: KeyboardProps) {
           <Grid key={letter} size={1}>
             <Box
               aria-label={`Select ${letter}`}
-              className="not-draggable"
               component="button"
               data-testid={`select-letter-${letter}`}
               onClick={() =>

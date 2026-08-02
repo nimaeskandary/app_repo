@@ -52,7 +52,7 @@ func newAppSQLiteConfig(
 		return AppSQLiteConfig{}, fmt.Errorf("get Wails application data directory: %w", err)
 	}
 	if rootDir == "" {
-		return AppSQLiteConfig{}, fmt.Errorf("Wails application data directory is empty")
+		return AppSQLiteConfig{}, fmt.Errorf("wails application data directory is empty")
 	}
 
 	appDir := filepath.Join(rootDir, config.AppDir)

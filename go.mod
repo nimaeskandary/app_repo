@@ -7,7 +7,7 @@ require (
 	github.com/pressly/goose/v3 v3.27.3
 	github.com/stretchr/testify v1.11.1
 	github.com/tailscale/hujson v0.0.0-20260718110524-10d7940d4c87
-	github.com/wailsapp/wails/v3 v3.0.0-alpha2.117
+	github.com/wailsapp/wails/v3 v3.0.0-alpha2.120
 	go.uber.org/fx v1.24.0
 	modernc.org/sqlite v1.54.0
 )

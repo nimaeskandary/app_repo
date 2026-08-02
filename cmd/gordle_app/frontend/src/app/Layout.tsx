@@ -5,7 +5,6 @@ import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import type { PropsWithChildren } from 'react'
-import './style.css'
 
 const theme = createTheme({
   palette: {
@@ -19,8 +18,10 @@ const theme = createTheme({
 function Layout({ children }: PropsWithChildren) {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div className="flex min-h-dvh flex-col">{children}</div>
+      <CssBaseline enableColorScheme />
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
+        {children}
+      </div>
     </ThemeProvider>
   )
 }

@@ -1,7 +1,7 @@
 # Gordle Wails application
 
 This directory keeps the Wails build flow close to a fresh `wails3 init`
-project generated with Wails `v3.0.0-alpha2.117`.
+project generated with Wails `v3.0.0-alpha2.120`.
 
 ## Common commands
 

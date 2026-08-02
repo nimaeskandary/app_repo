@@ -1,6 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,7 +18,7 @@ const config: StorybookConfig = {
   viteFinal(config) {
     return {
       ...config,
-      plugins: [...(config.plugins ?? []), react(), tailwindcss()],
+      plugins: [...(config.plugins ?? []), react()],
       optimizeDeps: {
         ...config.optimizeDeps,
         include: [

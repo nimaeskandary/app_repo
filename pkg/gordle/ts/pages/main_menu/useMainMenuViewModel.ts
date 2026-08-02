@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useGordleDependencies } from '@app_repo/pkg_gordle_frontend/di/GordleDependencies'
+import { useDependencies } from '@app_repo/pkg_gordle/app/Dependencies'
 
 export type MainMenuViewModel = {
   play: () => void
@@ -7,7 +7,7 @@ export type MainMenuViewModel = {
 
 // Exposes main-menu state and commands to its view.
 export function useMainMenuViewModel(): MainMenuViewModel {
-  const { navigator } = useGordleDependencies()
+  const { navigator } = useDependencies()
   const play = useCallback(() => navigator.goToGame(), [navigator])
 
   return { play }

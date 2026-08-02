@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Stack } from './stack'
 import {
   Body1,
   Body2,
@@ -28,7 +29,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <Stack spacing={2}>
       <H1>h1. Heading</H1>
       <H2>h2. Heading</H2>
       <H3>h3. Heading</H3>
@@ -42,6 +43,6 @@ export const Default: Story = {
       <ButtonText>button text</ButtonText>
       <Caption>caption text</Caption>
       <Overline>overline text</Overline>
-    </div>
+    </Stack>
   ),
 }

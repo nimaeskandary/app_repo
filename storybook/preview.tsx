@@ -4,7 +4,6 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import GordleAppPreview from '@/storybook/cmd/gordle_app/GordlePreview'
-import './preview.css'
 
 const preview: Preview = {
   globalTypes: {

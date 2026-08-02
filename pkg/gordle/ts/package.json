@@ -1,5 +1,5 @@
 {
-  "name": "@app_repo/pkg_gordle_frontend",
+  "name": "@app_repo/pkg_gordle",
   "private": true,
   "version": "0.0.0",
   "type": "module",

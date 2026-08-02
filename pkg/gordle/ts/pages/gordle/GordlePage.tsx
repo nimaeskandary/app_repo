@@ -1,5 +1,5 @@
-import GordleView from '@app_repo/pkg_gordle_frontend/views/gordle/GordleView'
-import { useGordleViewModel } from '@app_repo/pkg_gordle_frontend/views/gordle/useGordleViewModel'
+import GordleView from '@app_repo/pkg_gordle/pages/gordle/GordleView'
+import { useGordleViewModel } from '@app_repo/pkg_gordle/pages/gordle/useGordleViewModel'
 
 // Connects the Gordle view to its view model.
 function GordlePage() {

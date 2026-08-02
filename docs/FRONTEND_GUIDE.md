@@ -26,33 +26,33 @@ Dependency injection for React can be achieved via [Contexts](https://react.dev/
 
 Define the dependency tree:
 
-DependencyTree.ts
+Dependencies.tsx
 ```ts
-export type DepTree = {
+export type Dependencies = {
   serviceA: ServiceA
   serviceB: ServiceB
 }
 
-export type DepTreeProviderProps = PropsWithChildren<{
-  value: DepTree
+export type DependenciesProviderProps = PropsWithChildren<{
+  value: Dependencies
 }>
 
-const DepTreeContext = createContext<DepTree | undefined>(undefined)
+const DependenciesContext = createContext<Dependencies | undefined>(undefined)
 
 // Makes the dependency graph available to view models.
-export function DepTreeProvider({ value, children }: DepTreeProviderProps) {
+export function DependenciesProvider({ value, children }: DependenciesProviderProps) {
   return (
-    <DepTreeContext.Provider value={value}>
+    <DependenciesContext.Provider value={value}>
       {children}
-    </DepTreeContext.Provider>
+    </DependenciesContext.Provider>
   )
 }
 
 // Returns the dependency graph configured by the current application.
 export function useDependencies() {
-  const dependencies = useContext(DepTreeContext)
+  const dependencies = useContext(DependenciesContext)
   if (!dependencies) {
-    throw new Error('DepTreeProvider is missing')
+    throw new Error('DependenciesProvider is missing')
   }
 
   return dependencies
@@ -66,17 +66,17 @@ App.tsx
 function App() {
     const serviceA = ...
     const serviceB = ...
-    const dependencies = useMemo<DepTree>(() => ({
+    const dependencies = useMemo<Dependencies>(() => ({
         serviceA: serviceA
         serviceB: serviceB
     }), [serviceA, serviceB])
 
     return (
-        <DepTreeProvider value={dependencies}>
+        <DependenciesProvider value={dependencies}>
             <Routes>
                 <Route path="/" element={<MainMenuPage />} />
             </Routes>
-        </DepTreeProvider>
+        </DependenciesProvider>
     )
 }
 ```

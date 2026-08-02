@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import MainMenuView from '@app_repo/pkg_gordle_frontend/views/main_menu/MainMenuView'
+import MainMenuView from '@app_repo/pkg_gordle/pages/main_menu/MainMenuView'
 
 const meta = {
   title: 'Gordle/Views/MainMenu',

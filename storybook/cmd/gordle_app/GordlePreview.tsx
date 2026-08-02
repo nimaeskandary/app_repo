@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import Layout from '@/cmd/gordle_app/frontend/src/Layout'
+import Layout from '@/cmd/gordle_app/frontend/src/app/Layout'
 
 function GordlePreview({ children }: PropsWithChildren) {
   return (

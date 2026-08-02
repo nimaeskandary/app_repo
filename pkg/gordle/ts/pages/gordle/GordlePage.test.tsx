@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import GordlePage from '@app_repo/pkg_gordle_frontend/views/gordle/GordlePage'
+import GordlePage from '@app_repo/pkg_gordle/pages/gordle/GordlePage'
 
 beforeEach(() => {
   vi.spyOn(Math, 'random').mockReturnValue(0)

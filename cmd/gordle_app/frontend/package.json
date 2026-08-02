@@ -1,10 +1,10 @@
 {
-  "name": "@app_repo/cmd_gordle_frontend",
+  "name": "@app_repo/cmd_gordle",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
-    "@app_repo/pkg_gordle_frontend": "0.0.0"
+    "@app_repo/pkg_gordle": "0.0.0"
   },
   "scripts": {
     "//": "the wails3 tasks make use of these",

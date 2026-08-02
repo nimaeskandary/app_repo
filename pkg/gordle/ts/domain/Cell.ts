@@ -1,11 +1,11 @@
-export enum GordleCellState {
+export enum CellState {
   Unguessed = 'Unguessed',
   Wrong = 'Wrong',
   RowCorrect = 'RowCorrect',
   Correct = 'Correct',
 }
 
-export type GordleCell = {
+export type Cell = {
   letter: string
-  state: GordleCellState
+  state: CellState
 }

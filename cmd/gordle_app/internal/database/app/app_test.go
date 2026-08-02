@@ -65,6 +65,6 @@ func TestNewAppSQLiteConfig(t *testing.T) {
 		)
 
 		assert.Empty(t, config)
-		assert.EqualError(t, err, "Wails application data directory is empty")
+		assert.EqualError(t, err, "wails application data directory is empty")
 	})
 }

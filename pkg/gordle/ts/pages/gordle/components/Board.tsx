@@ -3,19 +3,19 @@ import { Grid } from '@app_repo/pkg_ui/mui/grid'
 import { Fade } from '@app_repo/pkg_ui/mui/transitions'
 import { H3 } from '@app_repo/pkg_ui/mui/typography'
 import {
-  GordleCellState,
-  type GordleCell,
-} from '@app_repo/pkg_gordle_frontend/model/GordleCell'
+  CellState,
+  type Cell,
+} from '@app_repo/pkg_gordle/domain/Cell'
 
 export type BoardProps = {
-  cells: GordleCell[][]
+  cells: Cell[][]
 }
 
 const cellStyles = {
-  [GordleCellState.Unguessed]: { borderColor: '#3a3a3c' },
-  [GordleCellState.Wrong]: { backgroundColor: '#3a3a3c', borderColor: '#3a3a3c' },
-  [GordleCellState.RowCorrect]: { backgroundColor: '#b59f3b', borderColor: '#b59f3b' },
-  [GordleCellState.Correct]: { backgroundColor: '#538d4e', borderColor: '#538d4e' },
+  [CellState.Unguessed]: { borderColor: '#3a3a3c' },
+  [CellState.Wrong]: { backgroundColor: '#3a3a3c', borderColor: '#3a3a3c' },
+  [CellState.RowCorrect]: { backgroundColor: '#b59f3b', borderColor: '#b59f3b' },
+  [CellState.Correct]: { backgroundColor: '#538d4e', borderColor: '#538d4e' },
 }
 
 // Renders the Gordle cell grid.

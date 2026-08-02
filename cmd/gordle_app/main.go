@@ -76,7 +76,7 @@ func main() {
 	// 'URL' is the URL that will be loaded into the webview.
 	wailsApp.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title: "Gordle",
-		// using phone dimensions
+		// using phone dimensions on desktop for dev ex. this is ignored on mobile
 		Width:  402,
 		Height: 874,
 		Mac: application.MacWindow{
