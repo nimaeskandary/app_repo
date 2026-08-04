@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# see ../docs/USING_AGENTS.md
+# runs codex in an sbx sandbox.
+# do not use codex without sbx, as there is risk the llm agent can access credentials
+# on your device and perform destructive actions
+
+set -euo pipefail
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
+
+cd "$PROJECT_ROOT_DIR"
+
+# by default `sbx run --name app_repo` tries to start in YOLO mode, this way respects .codex configs
+sbx exec -it app_repo codex

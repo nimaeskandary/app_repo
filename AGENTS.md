@@ -2,18 +2,19 @@
 
 * you are never permitted to run commands that include "git push".
 * you are never permitted to run any aws, gcp, or azure command.
+* when asked to do something, first generate a detailed plan, and wait for me to review and approve the plan before implementing changes.
 * you must avoid any command that alters the state of a system other than the local machine, local docker containers, or local test devices.
-* when you are asked to do something, you must enter a planning mode where you come up with a detailed plan for the change first, and ask me to review it. We will work on the plan before you start making code changes. Do not assume a plan is approved until I explicitly say so.
 * if the plan needs changes while we are in the implementation phase of a step, check in with me to make sure I am aligned.
 * you must make small targeted changes to easily rollback if something needs to be changed.
-* after each incremental change, ask me to review before moving forward to ensure I am aligned with the changes.
-* if you need to install any dependencues, e.g. via go get or npm, do not try to install them yourself, tell me the commands to install them, and pause for me to run them.
+* after implementing each major step of the plan, stop, and allow me to check the changes so far. Unless the next step is verification, in that case, first run verification steps, then stop.
 
 ## 1. Agent start up / Initialization
 
-* you must read this project's `./README.md` and `./docs/DEV_GUIDE.md` completely before starting a new task
-* when asked to do a task involving golang, you must read `./docs/GO_GUIDE.md` completely before starting
-* when asked to do a task involving frontend, you must read `./docs/FRONTEND_GUIDE.md` completely before starting
+* verify that the env var `IN_SANDBOX` is exactly `1`.
+* if `IN_SANDBOX` is absent or has any other value, stop and tell the user: "Codex is not running in the project's Docker Sandbox. Using Codex outside a sandbox is unsafe. See `docs/USING_AGENTS.md`".
+* you must read this project's `./README.md` and `./docs/DEV_GUIDE.md` completely before starting a new task.
+* when asked to do a task involving golang, you must read `./docs/GO_GUIDE.md` completely before starting.
+* when asked to do a task involving frontend, you must read `./docs/FRONTEND_GUIDE.md` completely before starting.
 
 ## 2. Think Before Coding
 

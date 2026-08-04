@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# see ../docs/USING_AGENTS.md
+# sets up a sbx docker sandbox for running codex with less access to your host.
+# do not use codex without sbx, as there is risk the llm agent can access credentials
+# on your device and perform destructive actions
+set -euo pipefail
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
+TEMPLATE_NAME="app_repo-codex:latest"
+TEMPLATE_DIR="${PROJECT_ROOT_DIR}/docker/codex-sbx"
+TEMPLATE_EXPORT_DIR="$(mktemp -d "${TMPDIR:-/tmp}/app_repo-codex.XXXXXX")"
+TEMPLATE_ARCHIVE="${TEMPLATE_EXPORT_DIR}/template.tar"
+
+trap 'rm -f "$TEMPLATE_ARCHIVE"; rmdir "$TEMPLATE_EXPORT_DIR"' EXIT
+
+cd "$PROJECT_ROOT_DIR"
+
+docker build --build-arg PROJECT_ROOT_DIR="$PROJECT_ROOT_DIR" --tag "$TEMPLATE_NAME" "$TEMPLATE_DIR"
+docker image save --output "$TEMPLATE_ARCHIVE" "$TEMPLATE_NAME"
+sbx template load "$TEMPLATE_ARCHIVE"
+
+env -u SSH_AUTH_SOCK \
+sbx create \
+--name app_repo \
+--template "$TEMPLATE_NAME" \
+--no-share-skills \
+codex \
+"$PROJECT_ROOT_DIR"
+
+# the sbx network policy can be too restrictive, e.g. go commands access the network
+# commonly. we are going to rely on codex's default network rules
+sbx policy allow network --sandbox app_repo "**"
+
+sbx exec app_repo bash -lc '
+set -euo pipefail
+npm install
+bin/go mod download all
+bin/go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-alpha2.120
+go version
+node --version
+npm --version
+codex --version
+docker version --format "client={{.Client.Version}} server={{.Server.Version}}"
+docker compose version
+'

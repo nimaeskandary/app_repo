@@ -31,6 +31,7 @@ playground/                 # dev scripting / experimentation
 
 See 
 
-* general dev guide - `docs/DEV_GUIDE.md`
-* go guide - `docs/GO_GUIDE.md`
-* frontend guide - `docs/FRONTEND_GUIDE.md`
+* [DEV GUIDE](./docs/DEV_GUIDE.md)
+* [GO GUIDE](./docs/GO_GUIDE.md)
+* [FRONTEND GUIDE](./docs/FRONTEND_GUIDE.md)
+* [USING AGENTS](./docs/USING_AGENTS.md)

@@ -1,6 +1,6 @@
-approval_policy = "untrusted"
+approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
-# running go commands requires access to cache
 [sandbox_workspace_write]
-writable_roots = ["~/Library/Caches/go-build"]
+writable_roots = ["/home/agent/.cache/go-build", "/home/agent/go/pkg/mod"]
+network_access = true
