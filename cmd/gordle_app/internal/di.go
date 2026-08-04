@@ -29,17 +29,21 @@ func ModuleList(configBytes []byte) []fx.Option {
 				return loader.GetConfig().Logger
 			},
 		),
-		database.NewSQLiteDatabaseModule[
-			app_database.AppDatabase,
+		database.NewSQLiteWriterModule[
+			app_database.AppDBWriter,
 			app_database.AppSQLiteConfig,
 		](),
 		database.NewMigratorModule[
-			app_database.AppDatabase,
+			app_database.AppDBWriter,
 			app_database.AppDatabaseMigrator,
 		](app_migrations.MigrationSource()),
 		database.NewMigrateAllOnStartModule[
 			app_database.AppDatabaseMigrator,
 			app_database.AppDatabaseMigrateAllOnStart,
+		](),
+		database.NewSQLiteReaderModule[
+			app_database.AppDBReader,
+			app_database.AppSQLiteConfig,
 		](),
 		obs.NewSlogLoggerModule(),
 	}

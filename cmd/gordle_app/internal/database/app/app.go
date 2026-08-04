@@ -9,8 +9,11 @@ import (
 	"github.com/nimaeskandary/app_repo/pkg/wails/go/storage_path"
 )
 
-// AppDatabase identifies the App Database in the dependency graph.
-type AppDatabase db_core.SQLDatabase
+// AppDBReader identifies the query-only App Database connection in the dependency graph.
+type AppDBReader db_core.SQLDatabase
+
+// AppDBWriter identifies the writable App Database connection in the dependency graph.
+type AppDBWriter db_core.SQLDatabase
 
 // AppDatabaseMigrator identifies the App Database migrator in the dependency graph.
 type AppDatabaseMigrator db_core.Migrator

@@ -7,15 +7,26 @@ import (
 	"go.uber.org/fx"
 )
 
-// NewSQLiteDatabaseModule provides a SQLite database managed by the Fx lifecycle.
-func NewSQLiteDatabaseModule[
+// NewSQLiteReaderModule provides a query-only SQLite database managed by the Fx lifecycle.
+func NewSQLiteReaderModule[
 	Database db_core.SQLDatabase,
 	Config db_core.SQLiteConfigProvider,
 ]() fx.Option {
 	constructor := func(config Config) (db_core.SQLDatabase, error) {
-		return internal.NewSQLiteDatabase(config.SQLiteConfig())
+		return internal.NewSQLiteReader(config.SQLiteConfig())
 	}
-	return di.NewFxModule[Database]("sqlite_database", constructor)
+	return di.NewFxModule[Database]("sqlite_reader", constructor)
+}
+
+// NewSQLiteWriterModule provides a WAL-backed SQLite database managed by the Fx lifecycle.
+func NewSQLiteWriterModule[
+	Database db_core.SQLDatabase,
+	Config db_core.SQLiteConfigProvider,
+]() fx.Option {
+	constructor := func(config Config) (db_core.SQLDatabase, error) {
+		return internal.NewSQLiteWriter(config.SQLiteConfig())
+	}
+	return di.NewFxModule[Database]("sqlite_writer", constructor)
 }
 
 // NewMigratorModule provides a tool-neutral migrator backed by Goose.

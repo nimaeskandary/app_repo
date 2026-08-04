@@ -17,7 +17,7 @@ func TestNewSQLDatabase(t *testing.T) {
 	t.Run("should open and ping the database during Start", func(t *testing.T) {
 		t.Parallel()
 
-		sqlDB, err := sql.Open("sqlite", ":memory:")
+		sqlDB, err := sql.Open("sqlite3", ":memory:")
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = sqlDB.Close() })
 
@@ -34,7 +34,7 @@ func TestNewSQLDatabase(t *testing.T) {
 		t.Parallel()
 
 		source := filepath.Join(t.TempDir(), "missing", "test.db")
-		sqlDB, err := sql.Open("sqlite", source)
+		sqlDB, err := sql.Open("sqlite3", source)
 		require.NoError(t, err)
 
 		db := newSQLDatabase(func() (*sql.DB, error) {
@@ -83,7 +83,7 @@ func TestSQLDatabase(t *testing.T) {
 
 		var opened []*sql.DB
 		db := newSQLDatabase(func() (*sql.DB, error) {
-			sqlDB, err := sql.Open("sqlite", ":memory:")
+			sqlDB, err := sql.Open("sqlite3", ":memory:")
 			if err == nil {
 				opened = append(opened, sqlDB)
 				t.Cleanup(func() { _ = sqlDB.Close() })
@@ -109,7 +109,7 @@ func TestSQLDatabase(t *testing.T) {
 	t.Run("should allow Stop before Start", func(t *testing.T) {
 		t.Parallel()
 
-		sqlDB, err := sql.Open("sqlite", ":memory:")
+		sqlDB, err := sql.Open("sqlite3", ":memory:")
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = sqlDB.Close() })
 
@@ -136,7 +136,7 @@ func TestSQLDatabase(t *testing.T) {
 				return nil, startError
 			}
 
-			sqlDB, err := sql.Open("sqlite", ":memory:")
+			sqlDB, err := sql.Open("sqlite3", ":memory:")
 			if err == nil {
 				t.Cleanup(func() { _ = sqlDB.Close() })
 			}
@@ -155,7 +155,7 @@ func TestSQLDatabase(t *testing.T) {
 func newTestSQLDatabase(t *testing.T) (db_core.SQLDatabase, *sql.DB) {
 	t.Helper()
 
-	sqlDB, err := sql.Open("sqlite", ":memory:")
+	sqlDB, err := sql.Open("sqlite3", ":memory:")
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = sqlDB.Close() })
 

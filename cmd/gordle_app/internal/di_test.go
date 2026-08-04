@@ -20,7 +20,8 @@ func TestModuleListLoadsConfig(t *testing.T) {
 		source,
 	))
 
-	var appDatabase app_database.AppDatabase
+	var appDBReader app_database.AppDBReader
+	var appDBWriter app_database.AppDBWriter
 	var appDatabaseMigrator app_database.AppDatabaseMigrator
 	var appDatabaseMigrateAllOnStart app_database.AppDatabaseMigrateAllOnStart
 	var loggerConfig obs_core.SlogLoggerConfig
@@ -28,7 +29,8 @@ func TestModuleListLoadsConfig(t *testing.T) {
 		append(
 			ModuleList(configBytes),
 			fx.Populate(
-				&appDatabase,
+				&appDBReader,
+				&appDBWriter,
 				&appDatabaseMigrator,
 				&appDatabaseMigrateAllOnStart,
 				&loggerConfig,
@@ -38,20 +40,24 @@ func TestModuleListLoadsConfig(t *testing.T) {
 	)
 
 	require.NoError(t, app.Start(t.Context()))
-	assert.Equal(t, db_core.DialectSQLite, appDatabase.Dialect())
+	assert.Equal(t, db_core.DialectSQLite, appDBReader.Dialect())
+	assert.Equal(t, db_core.DialectSQLite, appDBWriter.Dialect())
 	assert.FileExists(t, source)
 	assert.NotNil(t, appDatabaseMigrator)
 	assert.NotNil(t, appDatabaseMigrateAllOnStart)
 
 	var migrationTable string
-	require.NoError(t, appDatabase.DB().QueryRow(
+	require.NoError(t, appDBReader.DB().QueryRow(
 		"SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'goose_db_version'",
 	).Scan(&migrationTable))
 	assert.Equal(t, "goose_db_version", migrationTable)
 
 	assert.Equal(t, "DEBUG", loggerConfig.Level)
-	sqlDB := appDatabase.DB()
+	readerSQLDB := appDBReader.DB()
+	writerSQLDB := appDBWriter.DB()
 	require.NoError(t, app.Stop(t.Context()))
-	assert.Nil(t, appDatabase.DB())
-	assert.Error(t, sqlDB.Ping())
+	assert.Nil(t, appDBReader.DB())
+	assert.Nil(t, appDBWriter.DB())
+	assert.Error(t, readerSQLDB.Ping())
+	assert.Error(t, writerSQLDB.Ping())
 }

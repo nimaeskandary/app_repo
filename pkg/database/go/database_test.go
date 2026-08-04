@@ -15,6 +15,27 @@ import (
 func TestDatabaseModules(t *testing.T) {
 	t.Parallel()
 
+	t.Run("should provide separate reader and writer databases", func(t *testing.T) {
+		t.Parallel()
+
+		config := firstSQLiteConfig{Source: filepath.Join(t.TempDir(), "app.db")}
+		var reader sqliteReader
+		var writer sqliteWriter
+		app := di.CreateFxAppAndExtract(
+			[]fx.Option{
+				fx.Supply(config),
+				NewSQLiteWriterModule[sqliteWriter, firstSQLiteConfig](),
+				NewSQLiteReaderModule[sqliteReader, firstSQLiteConfig](),
+			},
+			&reader,
+			&writer,
+		)
+
+		require.NoError(t, app.Start(t.Context()))
+		assert.NotSame(t, reader.DB(), writer.DB())
+		require.NoError(t, app.Stop(t.Context()))
+	})
+
 	t.Run("should pair multiple databases with their migrators", func(t *testing.T) {
 		t.Parallel()
 
@@ -24,8 +45,8 @@ func TestDatabaseModules(t *testing.T) {
 			[]fx.Option{
 				fx.Supply(firstSQLiteConfig{Source: filepath.Join(t.TempDir(), "first.db")}),
 				fx.Supply(secondSQLiteConfig{Source: filepath.Join(t.TempDir(), "second.db")}),
-				NewSQLiteDatabaseModule[firstDatabase, firstSQLiteConfig](),
-				NewSQLiteDatabaseModule[secondDatabase, secondSQLiteConfig](),
+				NewSQLiteWriterModule[firstDatabase, firstSQLiteConfig](),
+				NewSQLiteWriterModule[secondDatabase, secondSQLiteConfig](),
 				NewMigratorModule[firstDatabase, firstMigrator](testSQLMigrationSource("first_records")),
 				NewMigratorModule[secondDatabase, secondMigrator](testSQLMigrationSource("second_records")),
 				NewMigrateAllOnStartModule[firstMigrator, firstMigrateAllOnStart](),
@@ -53,6 +74,8 @@ func TestDatabaseModules(t *testing.T) {
 
 type firstDatabase db_core.SQLDatabase
 type secondDatabase db_core.SQLDatabase
+type sqliteReader db_core.SQLDatabase
+type sqliteWriter db_core.SQLDatabase
 type firstMigrator db_core.Migrator
 type secondMigrator db_core.Migrator
 type firstMigrateAllOnStart db_core.MigrateAllOnStart

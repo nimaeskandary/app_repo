@@ -19,7 +19,7 @@ func TestNewGooseMigrator(t *testing.T) {
 	t.Run("should provide a migrator", func(t *testing.T) {
 		t.Parallel()
 
-		database := newTestSQLiteDatabase(t, filepath.Join(t.TempDir(), "test.db"))
+		database := newTestSQLiteWriter(t, filepath.Join(t.TempDir(), "test.db"))
 
 		migrator, err := NewGooseMigrator(database, testMigrationSource())
 
@@ -177,7 +177,7 @@ func TestGooseDialect(t *testing.T) {
 func newTestMigrator(t *testing.T) (db_core.Migrator, db_core.SQLDatabase) {
 	t.Helper()
 
-	database := newTestSQLiteDatabase(t, filepath.Join(t.TempDir(), "test.db"))
+	database := newTestSQLiteWriter(t, filepath.Join(t.TempDir(), "test.db"))
 	migrator, err := NewGooseMigrator(database, testMigrationSource())
 	require.NoError(t, err)
 	require.NoError(t, migrator.Start(t.Context()))

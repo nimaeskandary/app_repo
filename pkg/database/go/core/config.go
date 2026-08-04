@@ -4,6 +4,10 @@ package db_core
 type SQLiteConfig struct {
 	// Source is a SQLite filename or connection URI.
 	Source string
+	// IsEncrypted enables Adiantum encryption at rest.
+	IsEncrypted bool
+	// EncryptionKey is the 32-byte Adiantum encryption key.
+	EncryptionKey []byte
 }
 
 // SQLiteConfig returns this configuration for generic database modules.

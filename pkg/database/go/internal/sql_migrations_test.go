@@ -56,7 +56,7 @@ func TestLoadMigrations(t *testing.T) {
 			"0001_create_records.down.sql": {Data: []byte("DROP TABLE records;")},
 		}})
 		require.NoError(t, err)
-		db, err := sql.Open("sqlite", ":memory:")
+		db, err := sql.Open("sqlite3", ":memory:")
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = db.Close() })
 		tx, err := db.BeginTx(t.Context(), nil)
