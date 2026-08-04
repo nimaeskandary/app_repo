@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	db_core "github.com/nimaeskandary/app_repo/pkg/database/go/core"
-	"github.com/nimaeskandary/app_repo/pkg/wails/go/storage_path"
+	wails "github.com/nimaeskandary/app_repo/pkg/wails/go"
 )
 
 // AppDBReader identifies the query-only App Database connection in the dependency graph.
@@ -33,7 +33,7 @@ type AppSQLiteConfig db_core.SQLiteConfig
 // NewAppSQLiteConfig does some work on the original AppConfig, we need to dynamically get the app data path
 // to nest the sqlite db file under which depends on host OS
 func NewAppSQLiteConfig(config AppConfig) (AppSQLiteConfig, error) {
-	return newAppSQLiteConfig(config, storage_path.DataDir)
+	return newAppSQLiteConfig(config, wails.DataDir)
 }
 
 func newAppSQLiteConfig(

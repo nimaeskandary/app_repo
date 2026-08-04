@@ -9,12 +9,14 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/tailscale/hujson v0.0.0-20260718110524-10d7940d4c87
 	github.com/wailsapp/wails/v3 v3.0.0-alpha2.120
+	github.com/zalando/go-keyring v0.2.8
 	go.uber.org/fx v1.24.0
 )
 
 require (
 	github.com/adrg/xdg v0.5.3 // indirect
 	github.com/coder/websocket v1.8.15 // indirect
+	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect

@@ -25,35 +25,72 @@ my_package/
 
 This project uses [fx](https://github.com/uber-go/fx) for golang dependency injection.
 
-Say you want to implement some component that does foo and bar. To make this component testable, auto wired to interact with downstream and upstream consumers components, and more easily replaced with a different implementation, follow this format:
-
-core/my_component.go
+pkg/go/foo/core/foo.go
 ```go
-type MyComponent interface {
-    BehaviorFoo()
-    BehaviorBar()
+package foo_core
+
+type Foo interface {
+    // our di.NewFxModule requires that your component implements lifecycle. Its okay to just make
+    // Start and Stop implementations simple no ops if needed via di.NoOpLifecycle
+    di.Lifecycle
+    FooBehavior()
 }
 ```
 
-internal/my_component_impl.go
+pkg/go/bar/core/bar.go
 ```go
-type myComponentImpl struct {}
+package bar_core
 
-// any dependencies on other components can be in this constructor's params
-func NewMyComponentImpl MyComponent() {
-
-}
-
-func (c *myComponentImpl) BehaviorBar() {}
-func (c *myComponentImpl) BehaviorFoo() {}
-```
-
-my_component.go
-```go
-func NewMyComponentImplModule fx.Option {
-    return di.NewFxModule[core.MyComponent]("my_component", internal.NewMyComponentImpl)
+type Bar interface {
+    di.Lifecycle
+    BarBehavior()
 }
 ```
+
+pkg/go/foo/internal/some_foo.go
+```go
+package internal
+
+type someFoo struct {
+    // can use this if the component has no need for Start or Stop lifecycle hooks
+    di.NoOpLifecycle
+    bar bar_core.Bar
+}
+
+func NewSomeFoo (bar bar_core.Bar) foo_core.Foo {
+    return &someFoo{
+        bar: bar
+    }
+}
+
+func (c *myComponentImpl) FooBehavior() {}
+```
+
+pkg/go/foo/foo.go
+```go
+package foo
+
+func NewSomeFooModule() fx.Option {
+    return di.NewFxModule[foo_core.Foo]("foo", internal.NewSomeFoo)
+}
+```
+
+Often your component will just rely on other components in the dependency tree, but in the event you need to pass in something custom at the edge that is not in the dep tree, you can use this pattern:
+
+pkg/go/foo/foo.go
+```go
+package foo
+
+func NewSomeFooModule(edgeComponent EdgeComponent) fx.Option {
+    constructor := func(bar bar_core.Bar) foo_core.Foo {
+        return internal.NewSomeFoo(bar, edgeComponent)
+    }
+
+    return di.NewFxModule[my_component_core.MyComponent]("foo", constructor)
+}
+```
+
+This pattern allows you to add a wrapped Foo constructor that still resolves bar from the dep tree, but is supplied the EdgeComponent out of band.
 
 ## Testing
 
@@ -87,9 +124,11 @@ func Test_MyInterfaceImpl(t *testing.T) {
 	f := test_utils.SetupStandardFixture(t)
 	underTest := f.InterfaceBeingTested
 
+    // Create a t.Run boundary for an interface method
 	t.Run("BehaviorFoo", func(t *testing.T) {
 		t.Parallel()
 
+        // Create a t.Run boundary for each test case
 		t.Run("Should do foo happy path", func(t *testing.T) {
         }
 
@@ -104,7 +143,10 @@ func Test_MyInterfaceImpl(t *testing.T) {
 		t.Run("Should do bar happy path", func(t *testing.T) {
         }
 
-        t.Run("Should handle bar error path", func(t *testing.T) {
+        t.Run("Should do bar edge case A", func(t *testing.T) {
+        }
+
+        t.Run("Should handle bar error path B", func(t *testing.T) {
         }
         // etc
     }

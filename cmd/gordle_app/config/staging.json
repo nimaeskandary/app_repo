@@ -5,5 +5,8 @@
   },
   "Logger": {
     "Level": "INFO"
+  },
+  "SecureStorage": {
+    "Namespace": "com.nimaeskandary.gordle"
   }
 }

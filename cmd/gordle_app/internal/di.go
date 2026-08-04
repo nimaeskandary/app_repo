@@ -8,12 +8,15 @@ import (
 	database "github.com/nimaeskandary/app_repo/pkg/database/go"
 	obs "github.com/nimaeskandary/app_repo/pkg/observability/go"
 	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
+	secure_storage "github.com/nimaeskandary/app_repo/pkg/secure_storage/go"
+	secure_storage_core "github.com/nimaeskandary/app_repo/pkg/secure_storage/go/core"
 	"go.uber.org/fx"
 )
 
 type Config struct {
-	AppDatabase app_database.AppConfig    `json:"AppDatabase" validate:"required"`
-	Logger      obs_core.SlogLoggerConfig `json:"Logger" validate:"required"`
+	AppDatabase   app_database.AppConfig     `json:"AppDatabase" validate:"required"`
+	Logger        obs_core.SlogLoggerConfig  `json:"Logger" validate:"required"`
+	SecureStorage secure_storage_core.Config `json:"SecureStorage" validate:"required"`
 }
 
 func ModuleList(configBytes []byte) []fx.Option {
@@ -27,6 +30,9 @@ func ModuleList(configBytes []byte) []fx.Option {
 			app_database.NewAppSQLiteConfig,
 			func(loader config_core.ConfigLoader[Config]) obs_core.SlogLoggerConfig {
 				return loader.GetConfig().Logger
+			},
+			func(loader config_core.ConfigLoader[Config]) secure_storage_core.Config {
+				return loader.GetConfig().SecureStorage
 			},
 		),
 		database.NewSQLiteWriterModule[
@@ -46,5 +52,6 @@ func ModuleList(configBytes []byte) []fx.Option {
 			app_database.AppSQLiteConfig,
 		](),
 		obs.NewSlogLoggerModule(),
+		secure_storage.NewSecureStorageModule(),
 	}
 }

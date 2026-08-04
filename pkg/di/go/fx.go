@@ -16,6 +16,16 @@ type Lifecycle interface {
 	Stop(ctx context.Context) error
 }
 
+type NoOpLifecycle struct{}
+
+func (*NoOpLifecycle) Start(ctx context.Context) error {
+	return nil
+}
+
+func (*NoOpLifecycle) Stop(ctx context.Context) error {
+	return nil
+}
+
 // New - Helper for creating a module for the fx dependency framework. T is the interface
 // being added to the dependency graph. The constructor must return a concrete implementation of T.
 // The constructor may require other components of the dependency graph, which will be resolved by fx.

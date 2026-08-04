@@ -1,6 +1,6 @@
-//go:build android || ios
+//go:build !android && !ios
 
-package storage_path
+package wails
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 func DataDir() (string, error) {
-	dataHome := application.Mobile.StoragePath()
+	dataHome := application.Path(application.PathDataHome)
 	if dataHome == "" {
 		return "", fmt.Errorf("application.PathDataHome is empty")
 	}
