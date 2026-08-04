@@ -10,10 +10,9 @@ import (
 // NewSQLiteReaderModule provides a query-only SQLite database managed by the Fx lifecycle.
 func NewSQLiteReaderModule[
 	Database db_core.SQLDatabase,
-	Config db_core.SQLiteConfigProvider,
-]() fx.Option {
-	constructor := func(config Config) (db_core.SQLDatabase, error) {
-		return internal.NewSQLiteReader(config.SQLiteConfig())
+](config db_core.SQLiteConfig, dbDir string) fx.Option {
+	constructor := func() (db_core.SQLDatabase, error) {
+		return internal.NewSQLiteReader(config, dbDir)
 	}
 	return di.NewFxModule[Database]("sqlite_reader", constructor)
 }
@@ -21,10 +20,9 @@ func NewSQLiteReaderModule[
 // NewSQLiteWriterModule provides a WAL-backed SQLite database managed by the Fx lifecycle.
 func NewSQLiteWriterModule[
 	Database db_core.SQLDatabase,
-	Config db_core.SQLiteConfigProvider,
-]() fx.Option {
-	constructor := func(config Config) (db_core.SQLDatabase, error) {
-		return internal.NewSQLiteWriter(config.SQLiteConfig())
+](config db_core.SQLiteConfig, dbDir string) fx.Option {
+	constructor := func() (db_core.SQLDatabase, error) {
+		return internal.NewSQLiteWriter(config, dbDir)
 	}
 	return di.NewFxModule[Database]("sqlite_writer", constructor)
 }

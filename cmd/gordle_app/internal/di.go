@@ -3,42 +3,14 @@ package internal
 import (
 	app_database "github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/database/app"
 	app_migrations "github.com/nimaeskandary/app_repo/cmd/gordle_app/internal/database/app/migrations"
-	config "github.com/nimaeskandary/app_repo/pkg/config/go"
-	config_core "github.com/nimaeskandary/app_repo/pkg/config/go/core"
 	database "github.com/nimaeskandary/app_repo/pkg/database/go"
 	obs "github.com/nimaeskandary/app_repo/pkg/observability/go"
-	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
-	secure_storage "github.com/nimaeskandary/app_repo/pkg/secure_storage/go"
-	secure_storage_core "github.com/nimaeskandary/app_repo/pkg/secure_storage/go/core"
 	"go.uber.org/fx"
 )
 
-type Config struct {
-	AppDatabase   app_database.AppConfig     `json:"AppDatabase" validate:"required"`
-	Logger        obs_core.SlogLoggerConfig  `json:"Logger" validate:"required"`
-	SecureStorage secure_storage_core.Config `json:"SecureStorage" validate:"required"`
-}
-
-func ModuleList(configBytes []byte) []fx.Option {
+func ModuleList(config Config) []fx.Option {
 	return []fx.Option{
-		config.NewJsonConfigLoaderModule[Config](configBytes, nil),
-		fx.Provide(
-			func(loader config_core.ConfigLoader[Config]) app_database.AppConfig {
-				return loader.GetConfig().AppDatabase
-			},
-			// takes the AppConfig and does transformations before putting it back on dep graph
-			app_database.NewAppSQLiteConfig,
-			func(loader config_core.ConfigLoader[Config]) obs_core.SlogLoggerConfig {
-				return loader.GetConfig().Logger
-			},
-			func(loader config_core.ConfigLoader[Config]) secure_storage_core.Config {
-				return loader.GetConfig().SecureStorage
-			},
-		),
-		database.NewSQLiteWriterModule[
-			app_database.AppDBWriter,
-			app_database.AppSQLiteConfig,
-		](),
+		database.NewSQLiteWriterModule[app_database.AppDBWriter](config.AppDatabase, config.AppConfig.DataDir),
 		database.NewMigratorModule[
 			app_database.AppDBWriter,
 			app_database.AppDatabaseMigrator,
@@ -47,11 +19,7 @@ func ModuleList(configBytes []byte) []fx.Option {
 			app_database.AppDatabaseMigrator,
 			app_database.AppDatabaseMigrateAllOnStart,
 		](),
-		database.NewSQLiteReaderModule[
-			app_database.AppDBReader,
-			app_database.AppSQLiteConfig,
-		](),
-		obs.NewSlogLoggerModule(),
-		secure_storage.NewSecureStorageModule(),
+		database.NewSQLiteReaderModule[app_database.AppDBReader](config.AppDatabase, config.AppConfig.DataDir),
+		obs.NewSlogLoggerModule(config.Logger),
 	}
 }

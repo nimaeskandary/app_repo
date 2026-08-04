@@ -4,12 +4,15 @@ import (
 	"context"
 	"embed"
 	"log/slog"
+	"path/filepath"
 	"sync"
 
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/config"
 	"github.com/nimaeskandary/app_repo/cmd/gordle_app/internal"
+	config_loader "github.com/nimaeskandary/app_repo/pkg/config/go"
 	di "github.com/nimaeskandary/app_repo/pkg/di/go"
 	obs_core "github.com/nimaeskandary/app_repo/pkg/observability/go/core"
+	wails "github.com/nimaeskandary/app_repo/pkg/wails/go"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -26,9 +29,24 @@ var assets embed.FS
 // logs any error that might occur.
 func main() {
 	ctx := context.Background()
+	appConfig, err := config_loader.LoadJsonConfig[internal.Config](config.Bytes, nil)
+	if err != nil {
+		slog.Error("failed to load application configuration", "error", err)
+		return
+	}
+
+	dataDir, err := wails.DataDir()
+	if err != nil {
+		slog.Error("failed to get Wails application data directory", "error", err)
+		return
+	}
+	appConfig.AppConfig.DataDir = filepath.Join(dataDir, "Gordle")
 
 	var logger obs_core.Logger
-	fxApp := di.CreateFxAppAndExtract(internal.ModuleList(config.Bytes), &logger)
+	fxApp := di.CreateFxAppAndExtract(
+		internal.ModuleList(appConfig),
+		&logger,
+	)
 	if fxApp == nil {
 		slog.Error("dependency injection system failed to initialize")
 		return
@@ -89,7 +107,7 @@ func main() {
 	})
 
 	// Run the application. This blocks until the application has been exited.
-	err := wailsApp.Run()
+	err = wailsApp.Run()
 
 	// If an error occurred while running the application, log it and exit.
 	if err != nil {

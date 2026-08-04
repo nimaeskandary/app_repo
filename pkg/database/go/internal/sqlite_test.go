@@ -21,14 +21,17 @@ func TestNewSQLiteWriter(t *testing.T) {
 	t.Run("should defer opening until Start", func(t *testing.T) {
 		t.Parallel()
 
-		source := filepath.Join(t.TempDir(), "test.db")
-		db, err := NewSQLiteWriter(db_core.SQLiteConfig{Source: source})
+		dbDir := filepath.Join(t.TempDir(), "database")
+		source := filepath.Join(dbDir, "test.db")
+		db, err := NewSQLiteWriter(db_core.SQLiteConfig{DBFilename: "test.db"}, dbDir)
 
 		require.NoError(t, err)
 		assert.Nil(t, db.DB())
+		assert.NoDirExists(t, dbDir)
 		assert.NoFileExists(t, source)
 
 		require.NoError(t, db.Start(t.Context()))
+		assert.DirExists(t, dbDir)
 		assert.FileExists(t, source)
 		require.NoError(t, db.Stop(t.Context()))
 	})
@@ -63,39 +66,23 @@ func TestNewSQLiteWriter(t *testing.T) {
 		assert.Equal(t, "saved", value)
 	})
 
-	t.Run("should preserve source URI parameters", func(t *testing.T) {
-		t.Parallel()
-
-		source := filepath.Join(t.TempDir(), "test.db")
-		writer := newTestSQLiteWriter(t, source)
-		_, err := writer.DB().Exec("CREATE TABLE records (value TEXT NOT NULL)")
-		require.NoError(t, err)
-
-		readOnly := newTestSQLiteReader(t, "file:"+source+"?mode=ro")
-		_, err = readOnly.DB().Exec("PRAGMA query_only = OFF")
-		require.NoError(t, err)
-		_, err = readOnly.DB().Exec("INSERT INTO records (value) VALUES ('blocked')")
-
-		assert.Error(t, err)
-	})
-
 	t.Run("should persist encrypted data after reopening", func(t *testing.T) {
 		t.Parallel()
 
-		source := filepath.Join(t.TempDir(), "test.db")
+		dbDir := t.TempDir()
 		config := db_core.SQLiteConfig{
-			Source:        source,
+			DBFilename:    "test.db",
 			IsEncrypted:   true,
 			EncryptionKey: testSQLiteEncryptionKey,
 		}
-		db := newTestSQLiteWriterWithConfig(t, config)
+		db := newTestSQLiteWriterWithConfig(t, config, dbDir)
 		_, err := db.DB().Exec("CREATE TABLE records (value TEXT NOT NULL)")
 		require.NoError(t, err)
 		_, err = db.DB().Exec("INSERT INTO records (value) VALUES ('saved')")
 		require.NoError(t, err)
 		require.NoError(t, db.Stop(t.Context()))
 
-		reopened := newTestSQLiteWriterWithConfig(t, config)
+		reopened := newTestSQLiteWriterWithConfig(t, config, dbDir)
 		var value string
 		require.NoError(t, reopened.DB().QueryRow("SELECT value FROM records").Scan(&value))
 
@@ -105,46 +92,24 @@ func TestNewSQLiteWriter(t *testing.T) {
 	t.Run("should reject an incorrect encryption key", func(t *testing.T) {
 		t.Parallel()
 
-		source := filepath.Join(t.TempDir(), "test.db")
+		dbDir := t.TempDir()
 		db := newTestSQLiteWriterWithConfig(t, db_core.SQLiteConfig{
-			Source:        source,
+			DBFilename:    "test.db",
 			IsEncrypted:   true,
 			EncryptionKey: testSQLiteEncryptionKey,
-		})
+		}, dbDir)
 		_, err := db.DB().Exec("CREATE TABLE records (value TEXT NOT NULL)")
 		require.NoError(t, err)
 		require.NoError(t, db.Stop(t.Context()))
 
 		reopened, err := NewSQLiteWriter(db_core.SQLiteConfig{
-			Source:        source,
+			DBFilename:    "test.db",
 			IsEncrypted:   true,
 			EncryptionKey: bytes.Repeat([]byte{0x24}, 32),
-		})
+		}, dbDir)
 		require.NoError(t, err)
 
 		assert.Error(t, reopened.Start(t.Context()))
-	})
-
-	t.Run("should preserve encrypted source URI parameters", func(t *testing.T) {
-		t.Parallel()
-
-		source := filepath.Join(t.TempDir(), "test.db")
-		writer := newTestSQLiteWriterWithConfig(t, db_core.SQLiteConfig{
-			Source:        source,
-			IsEncrypted:   true,
-			EncryptionKey: testSQLiteEncryptionKey,
-		})
-		_, err := writer.DB().Exec("CREATE TABLE records (value TEXT NOT NULL)")
-		require.NoError(t, err)
-
-		reader := newTestSQLiteReaderWithConfig(t, db_core.SQLiteConfig{
-			Source:        "file:" + source + "?mode=ro",
-			IsEncrypted:   true,
-			EncryptionKey: testSQLiteEncryptionKey,
-		})
-		_, err = reader.DB().Exec("INSERT INTO records (value) VALUES ('blocked')")
-
-		assert.Error(t, err)
 	})
 
 	t.Run("should require a 32-byte encryption key", func(t *testing.T) {
@@ -152,26 +117,38 @@ func TestNewSQLiteWriter(t *testing.T) {
 
 		for _, encryptionKey := range [][]byte{nil, bytes.Repeat([]byte{0x42}, 31)} {
 			db, err := NewSQLiteWriter(db_core.SQLiteConfig{
-				Source:        filepath.Join(t.TempDir(), "test.db"),
+				DBFilename:    "test.db",
 				IsEncrypted:   true,
 				EncryptionKey: encryptionKey,
-			})
+			}, t.TempDir())
 
 			assert.Nil(t, db)
 			assert.EqualError(t, err, "SQLite encryption key must be 32 bytes")
 		}
 	})
 
-	t.Run("should return an error when source is empty", func(t *testing.T) {
+	t.Run("should require a database directory and filename", func(t *testing.T) {
 		t.Parallel()
 
-		reader, readerErr := NewSQLiteReader(db_core.SQLiteConfig{})
-		writer, writerErr := NewSQLiteWriter(db_core.SQLiteConfig{})
+		reader, readerErr := NewSQLiteReader(db_core.SQLiteConfig{DBFilename: "test.db"}, "")
+		writer, writerErr := NewSQLiteWriter(db_core.SQLiteConfig{}, t.TempDir())
 
 		assert.Nil(t, reader)
 		assert.Nil(t, writer)
-		assert.EqualError(t, readerErr, "SQLite database source is required")
-		assert.EqualError(t, writerErr, "SQLite database source is required")
+		assert.EqualError(t, readerErr, "SQLite database directory is required")
+		assert.EqualError(t, writerErr, "SQLite database filename is required")
+	})
+
+	t.Run("should reject a filename containing a directory", func(t *testing.T) {
+		t.Parallel()
+
+		db, err := NewSQLiteWriter(
+			db_core.SQLiteConfig{DBFilename: filepath.Join("nested", "test.db")},
+			t.TempDir(),
+		)
+
+		assert.Nil(t, db)
+		assert.EqualError(t, err, "SQLite database filename must not contain a directory")
 	})
 }
 
@@ -230,13 +207,13 @@ func TestSQLiteReaderWriter(t *testing.T) {
 func newTestSQLiteReader(t *testing.T, source string) db_core.SQLDatabase {
 	t.Helper()
 
-	return newTestSQLiteReaderWithConfig(t, db_core.SQLiteConfig{Source: source})
+	return newTestSQLiteReaderWithConfig(t, db_core.SQLiteConfig{DBFilename: filepath.Base(source)}, filepath.Dir(source))
 }
 
-func newTestSQLiteReaderWithConfig(t *testing.T, config db_core.SQLiteConfig) db_core.SQLDatabase {
+func newTestSQLiteReaderWithConfig(t *testing.T, config db_core.SQLiteConfig, dbDir string) db_core.SQLDatabase {
 	t.Helper()
 
-	db, err := NewSQLiteReader(config)
+	db, err := NewSQLiteReader(config, dbDir)
 	require.NoError(t, err)
 	require.NoError(t, db.Start(t.Context()))
 	t.Cleanup(func() { _ = db.Stop(context.Background()) })
@@ -247,13 +224,13 @@ func newTestSQLiteReaderWithConfig(t *testing.T, config db_core.SQLiteConfig) db
 func newTestSQLiteWriter(t *testing.T, source string) db_core.SQLDatabase {
 	t.Helper()
 
-	return newTestSQLiteWriterWithConfig(t, db_core.SQLiteConfig{Source: source})
+	return newTestSQLiteWriterWithConfig(t, db_core.SQLiteConfig{DBFilename: filepath.Base(source)}, filepath.Dir(source))
 }
 
-func newTestSQLiteWriterWithConfig(t *testing.T, config db_core.SQLiteConfig) db_core.SQLDatabase {
+func newTestSQLiteWriterWithConfig(t *testing.T, config db_core.SQLiteConfig, dbDir string) db_core.SQLDatabase {
 	t.Helper()
 
-	db, err := NewSQLiteWriter(config)
+	db, err := NewSQLiteWriter(config, dbDir)
 	require.NoError(t, err)
 	require.NoError(t, db.Start(t.Context()))
 	t.Cleanup(func() { _ = db.Stop(context.Background()) })

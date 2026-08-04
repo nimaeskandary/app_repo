@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -21,24 +22,31 @@ const (
 )
 
 // NewSQLiteReader creates a query-only SQLite database that opens during Start.
-func NewSQLiteReader(config db_core.SQLiteConfig) (db_core.SQLDatabase, error) {
-	return newSQLiteDatabase(config, configureSQLiteReader)
+func NewSQLiteReader(config db_core.SQLiteConfig, dbDir string) (db_core.SQLDatabase, error) {
+	return newSQLiteDatabase(config, dbDir, configureSQLiteReader)
 }
 
 // NewSQLiteWriter creates a WAL-backed SQLite database that opens during Start.
-func NewSQLiteWriter(config db_core.SQLiteConfig) (db_core.SQLDatabase, error) {
-	return newSQLiteDatabase(config, configureSQLiteWriter)
+func NewSQLiteWriter(config db_core.SQLiteConfig, dbDir string) (db_core.SQLDatabase, error) {
+	return newSQLiteDatabase(config, dbDir, configureSQLiteWriter)
 }
 
 func newSQLiteDatabase(
 	config db_core.SQLiteConfig,
+	dbDir string,
 	configure func(*sqlite3.Conn) error,
 ) (db_core.SQLDatabase, error) {
-	if config.Source == "" {
-		return nil, errors.New("SQLite database source is required")
+	if dbDir == "" {
+		return nil, errors.New("SQLite database directory is required")
+	}
+	if config.DBFilename == "" {
+		return nil, errors.New("SQLite database filename is required")
+	}
+	if filepath.Base(config.DBFilename) != config.DBFilename {
+		return nil, errors.New("SQLite database filename must not contain a directory")
 	}
 
-	source := config.Source
+	source := filepath.Join(dbDir, config.DBFilename)
 	configureConnection := configure
 	if config.IsEncrypted {
 		if len(config.EncryptionKey) != sqliteEncryptionKeySize {
@@ -60,6 +68,9 @@ func newSQLiteDatabase(
 	}
 
 	open := func() (*sql.DB, error) {
+		if err := os.MkdirAll(dbDir, 0o755); err != nil {
+			return nil, fmt.Errorf("create SQLite database directory: %w", err)
+		}
 		db, err := sqlite_driver.Open(source, configureConnection)
 		if err != nil {
 			return nil, fmt.Errorf("open SQLite database: %w", err)

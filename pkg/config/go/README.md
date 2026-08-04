@@ -1,8 +1,18 @@
 # Config
 
-`NewJsonConfigLoaderModule` parses JSON configuration, validates struct tags, and provides a
-`ConfigLoader[T]` through Fx. The application passes its complete slice of custom JSON unmarshalers
-when it builds the dependency graph.
+`LoadJsonConfig` parses JSON configuration and validates struct tags before the application builds
+its dependency graph.
+
+```go
+appConfig, err := config.LoadJsonConfig[AppConfig](configBytes, nil)
+if err != nil {
+	return err
+}
+```
+
+`NewJsonConfigLoaderModule` remains available when a `ConfigLoader[T]` needs to be provided through
+Fx. The application passes its complete slice of custom JSON unmarshalers when it builds the
+dependency graph.
 
 ```go
 type AppConfig struct {

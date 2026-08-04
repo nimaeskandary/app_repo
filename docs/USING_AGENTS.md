@@ -33,7 +33,7 @@ The setup script:
 
 1. Builds the `app_repo-codex:latest` template.
 2. Loads it into the Docker Sandbox image store.
-3. Creates the `app_repo` sandbox with this repository mounted read-write.
+3. Creates the `app-repo` sandbox with this repository mounted read-write.
 4. Prints the installed tool versions.
 
 ## Start Codex
@@ -47,13 +47,13 @@ bin/codex-sbx
 The sandbox persists after Codex exits. Stop it when it is not needed:
 
 ```sh
-sbx stop app_repo
+sbx stop app-repo
 ```
 
 Open a shell inside it for troubleshooting:
 
 ```sh
-sbx exec -it app_repo bash
+sbx exec -it app-repo bash
 ```
 
 ## Workspace and Docker state
@@ -69,7 +69,7 @@ state but does not delete the host working tree.
 To rebuild the sandbox after changing its Dockerfile:
 
 ```sh
-sbx stop app_repo
-sbx rm app_repo
+sbx stop app-repo
+sbx rm app-repo
 bin/setup-codex-sbx
 ```

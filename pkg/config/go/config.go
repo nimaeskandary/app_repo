@@ -10,6 +10,17 @@ import (
 	"go.uber.org/fx"
 )
 
+// LoadJsonConfig parses and validates JSON configuration outside an Fx dependency graph.
+func LoadJsonConfig[T any](from []byte, unmarshalers []*json.Unmarshalers) (T, error) {
+	loader, err := internal.NewJsonConfigLoader[T](from, unmarshalers)
+	if err != nil {
+		var zero T
+		return zero, fmt.Errorf("load JSON config: %w", err)
+	}
+
+	return loader.GetConfig(), nil
+}
+
 func NewJsonConfigLoaderModule[T any](from []byte, unmarshalers []*json.Unmarshalers) fx.Option {
 	constructor := func() (config_core.ConfigLoader[T], error) {
 		loader, err := internal.NewJsonConfigLoader[T](from, unmarshalers)

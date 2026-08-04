@@ -22,7 +22,7 @@ sbx template load "$TEMPLATE_ARCHIVE"
 
 env -u SSH_AUTH_SOCK \
 sbx create \
---name app_repo \
+--name app-repo \
 --template "$TEMPLATE_NAME" \
 --no-share-skills \
 codex \
@@ -30,9 +30,9 @@ codex \
 
 # the sbx network policy can be too restrictive, e.g. go commands access the network
 # commonly. we are going to rely on codex's default network rules
-sbx policy allow network --sandbox app_repo "**"
+sbx policy allow network --sandbox app-repo "**"
 
-sbx exec app_repo bash -lc '
+sbx exec app-repo bash -lc '
 set -euo pipefail
 npm install
 bin/go mod download all

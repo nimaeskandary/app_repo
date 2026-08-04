@@ -46,14 +46,6 @@ func SetupStandardFixture(t *testing.T, overrides ...any) StandardFixture {
 
 func TestModules() []fx.Option {
 	return []fx.Option{
-		fx.Provide(
-			func() Config {
-				return NewTestConfig()
-			},
-			func(c Config) obs_core.SlogLoggerConfig {
-				return c.Slog
-			},
-		),
-		observability.NewSlogLoggerModule(),
+		observability.NewSlogLoggerModule(NewTestConfig().Slog),
 	}
 }

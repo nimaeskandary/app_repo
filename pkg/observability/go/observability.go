@@ -8,8 +8,11 @@ import (
 	"go.uber.org/fx"
 )
 
-func NewSlogLoggerModule() fx.Option {
-	return di.NewFxModule[obs_core.Logger]("slog_logger", internal.NewSlogLogger)
+func NewSlogLoggerModule(config obs_core.SlogLoggerConfig) fx.Option {
+	constructor := func() (obs_core.Logger, error) {
+		return internal.NewSlogLogger(config)
+	}
+	return di.NewFxModule[obs_core.Logger]("slog_logger", constructor)
 }
 
 func NewNoopLoggerModule() fx.Option {

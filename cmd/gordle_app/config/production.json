@@ -1,12 +1,8 @@
 {
   "AppDatabase": {
-    "AppDir": "Gordle",
-    "DbFile": "app.db"
+    "DBFilename": "app.db"
   },
   "Logger": {
     "Level": "INFO"
-  },
-  "SecureStorage": {
-    "Namespace": "com.nimaeskandary.gordle"
   }
 }

@@ -18,14 +18,14 @@ func TestDatabaseModules(t *testing.T) {
 	t.Run("should provide separate reader and writer databases", func(t *testing.T) {
 		t.Parallel()
 
-		config := firstSQLiteConfig{Source: filepath.Join(t.TempDir(), "app.db")}
+		dbDir := t.TempDir()
+		config := db_core.SQLiteConfig{DBFilename: "app.db"}
 		var reader sqliteReader
 		var writer sqliteWriter
 		app := di.CreateFxAppAndExtract(
 			[]fx.Option{
-				fx.Supply(config),
-				NewSQLiteWriterModule[sqliteWriter, firstSQLiteConfig](),
-				NewSQLiteReaderModule[sqliteReader, firstSQLiteConfig](),
+				NewSQLiteWriterModule[sqliteWriter](config, dbDir),
+				NewSQLiteReaderModule[sqliteReader](config, dbDir),
 			},
 			&reader,
 			&writer,
@@ -41,12 +41,12 @@ func TestDatabaseModules(t *testing.T) {
 
 		var firstDB firstDatabase
 		var secondDB secondDatabase
+		firstDBDir := filepath.Join(t.TempDir(), "first")
+		secondDBDir := filepath.Join(t.TempDir(), "second")
 		app := di.CreateFxAppAndExtract(
 			[]fx.Option{
-				fx.Supply(firstSQLiteConfig{Source: filepath.Join(t.TempDir(), "first.db")}),
-				fx.Supply(secondSQLiteConfig{Source: filepath.Join(t.TempDir(), "second.db")}),
-				NewSQLiteWriterModule[firstDatabase, firstSQLiteConfig](),
-				NewSQLiteWriterModule[secondDatabase, secondSQLiteConfig](),
+				NewSQLiteWriterModule[firstDatabase](db_core.SQLiteConfig{DBFilename: "first.db"}, firstDBDir),
+				NewSQLiteWriterModule[secondDatabase](db_core.SQLiteConfig{DBFilename: "second.db"}, secondDBDir),
 				NewMigratorModule[firstDatabase, firstMigrator](testSQLMigrationSource("first_records")),
 				NewMigratorModule[secondDatabase, secondMigrator](testSQLMigrationSource("second_records")),
 				NewMigrateAllOnStartModule[firstMigrator, firstMigrateAllOnStart](),
@@ -80,18 +80,6 @@ type firstMigrator db_core.Migrator
 type secondMigrator db_core.Migrator
 type firstMigrateAllOnStart db_core.MigrateAllOnStart
 type secondMigrateAllOnStart db_core.MigrateAllOnStart
-
-type firstSQLiteConfig db_core.SQLiteConfig
-
-func (c firstSQLiteConfig) SQLiteConfig() db_core.SQLiteConfig {
-	return db_core.SQLiteConfig(c)
-}
-
-type secondSQLiteConfig db_core.SQLiteConfig
-
-func (c secondSQLiteConfig) SQLiteConfig() db_core.SQLiteConfig {
-	return db_core.SQLiteConfig(c)
-}
 
 func testSQLMigrationSource(tableName string) db_core.MigrationSource {
 	return db_core.MigrationSource{SQLFiles: fstest.MapFS{

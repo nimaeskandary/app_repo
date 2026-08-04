@@ -12,4 +12,4 @@ PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
 cd "$PROJECT_ROOT_DIR"
 
 # by default `sbx run --name app_repo` tries to start in YOLO mode, this way respects .codex configs
-sbx exec -it app_repo codex
+sbx exec -it app-repo codex
