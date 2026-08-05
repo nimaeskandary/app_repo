@@ -12,7 +12,7 @@ This repo contains a Wails v3 sample app in a monorepo organized to re use compo
 
 ## Quickstart
 
-* Ensure you have npm installed as described in `docs/DEV_GUIDE.md` 
+* Ensure you have npm installed as described in [DEV GUIDE](./docs/DEV_GUIDE.md)
 * `npm install`
 * `npm run storybook`
 

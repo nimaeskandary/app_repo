@@ -25,19 +25,19 @@ my_package/
 
 This project uses [fx](https://github.com/uber-go/fx) for golang dependency injection.
 
-pkg/go/foo/core/foo.go
+pkg/foo/go/core/foo.go
 ```go
 package foo_core
 
 type Foo interface {
-    // our di.NewFxModule requires that your component implements lifecycle. Its okay to just make
+    // our di.NewFxModule requires that your component implements lifecycle. Its okay to just make 
     // Start and Stop implementations simple no ops if needed via di.NoOpLifecycle
     di.Lifecycle
     FooBehavior()
 }
 ```
 
-pkg/go/bar/core/bar.go
+pkg/bar/go/core/bar.go
 ```go
 package bar_core
 
@@ -47,7 +47,7 @@ type Bar interface {
 }
 ```
 
-pkg/go/foo/internal/some_foo.go
+pkg/foo/go/internal/some_foo.go
 ```go
 package internal
 
@@ -66,7 +66,7 @@ func NewSomeFoo (bar bar_core.Bar) foo_core.Foo {
 func (c *myComponentImpl) FooBehavior() {}
 ```
 
-pkg/go/foo/foo.go
+pkg/foo/go/foo.go
 ```go
 package foo
 
@@ -77,7 +77,7 @@ func NewSomeFooModule() fx.Option {
 
 Often your component will just rely on other components in the dependency tree, but in the event you need to pass in something custom at the edge that is not in the dep tree, you can use this pattern:
 
-pkg/go/foo/foo.go
+pkg/foo/go/foo.go
 ```go
 package foo
 
@@ -90,12 +90,12 @@ func NewSomeFooModule(edgeComponent EdgeComponent) fx.Option {
 }
 ```
 
-This pattern allows you to add a wrapped Foo constructor that still resolves bar from the dep tree, but is supplied the EdgeComponent out of band.
+This pattern allows you to add a wrapped Foo constructor that still resolves Bar from the dep tree, but is supplied the EdgeComponent out of band.
 
 ## Testing
 
 * run `bin/go test ./...` to run all tests
-* run `bin/go test <path-to-package> to run tests for a specific package
+* run `bin/go test <path-to-package>` to run tests for a specific package
 
 ### Style
 
@@ -114,7 +114,7 @@ The test cases should generally aim to be parallel if possible. They should be b
 
 ```go
 import (
-    "github.com/nimaeskandary/app_repo/pkg/test_utils/go"
+    "github.com/nimaeskandary/nima_apps/pkg/test_utils/go"
 )
 
 func Test_MyInterfaceImpl(t *testing.T) {
