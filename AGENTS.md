@@ -12,6 +12,7 @@
 
 * verify that the env var `IN_SANDBOX` is exactly `1`.
 * if `IN_SANDBOX` is absent or has any other value, stop and tell the user: "Codex is not running in the project's Docker Sandbox. Using Codex outside a sandbox is unsafe. See `docs/USING_AGENTS.md`".
+    * you can ignore this and continue if the user explicitly tells you to continue anyway
 * you must read this project's `./README.md` and `./docs/DEV_GUIDE.md` completely before starting a new task.
 * when asked to do a task involving golang, you must read `./docs/GO_GUIDE.md` completely before starting.
 * when asked to do a task involving frontend, you must read `./docs/FRONTEND_GUIDE.md` completely before starting.
@@ -35,7 +36,6 @@ Before implementing:
 - No "flexibility" or "configurability" that wasn't requested.
 - No error handling for impossible scenarios.
 - If you write 200 lines and it could be 50, rewrite it.
-- For new functions, add brief and to the point comments on what they do. If the functions have any complex logic, briefly document those in the function body as well around the complexity.
 
 Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
@@ -45,7 +45,7 @@ Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, sim
 
 When editing existing code:
 - Don't "improve" adjacent code, or formatting.
-- Don't "improve" existing comments, unless your code changes make the comments outdated. In that case update the comments to be correct, but do not try to simplify what was already there.
+- Don't "improve" existing comments, unless your code changes make the comments outdated. In that case update the comments to be correct.
 - Don't refactor things that aren't broken.
 - Match existing style, even if you'd do it differently.
 - If you notice unrelated dead code, mention it - don't delete it.
@@ -73,3 +73,10 @@ For multi-step tasks, state a brief plan:
 ```
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## 7. Documentation
+
+* You must add concise comments to new code you write. It is important to document what the code does, without being too verbose, breif and to the point is better than a long explanation. Cut out filler words.
+* Add function docstrings explaining their purpose and what they do and include brief examples if deemed appropiate.
+* If the body of a function contains complex logic add comments for those sections too.
+* When deciding how often to write comments, and what tone to use, consider that you are documenting the code for a junior engineer that may join the team at any time, and you are writing the comments for them.
